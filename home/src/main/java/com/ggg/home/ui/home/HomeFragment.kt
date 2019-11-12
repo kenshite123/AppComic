@@ -41,7 +41,6 @@ class HomeFragment : HomeBaseFragment() {
     companion object {
         val TAG = "HomeFragment"
         @JvmStatic
-        fun create() =
-                HomeFragment()
+        fun create() = HomeFragment()
     }
 }

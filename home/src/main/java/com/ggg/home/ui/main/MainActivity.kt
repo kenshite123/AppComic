@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
 
     @Inject
     lateinit var navigationController: NavigationController
-    public var fragNavController: FragNavController = FragNavController(this.supportFragmentManager, R.id.container)
+    var fragNavController: FragNavController = FragNavController(this.supportFragmentManager, R.id.container)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

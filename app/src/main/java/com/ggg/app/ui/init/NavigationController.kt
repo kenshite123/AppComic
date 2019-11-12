@@ -3,7 +3,7 @@ package com.ggg.app.ui.init
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
 import com.ggg.app.R
-import com.ggg.home.ui.login.LoginActivity
+//import com.ggg.home.ui.login.LoginActivity
 import com.ggg.home.ui.main.MainActivity
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class NavigationController @Inject constructor(activity: InitialActivity) {
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
     private var weakActivity = WeakReference(activity)
     fun showSplash(){
-        val fragment: SplashFragment = SplashFragment()
+        val fragment = SplashFragment.create()
         fragmentManager.beginTransaction()
                 .replace(containerId, fragment)
                 .commitAllowingStateLoss()
@@ -32,12 +32,12 @@ class NavigationController @Inject constructor(activity: InitialActivity) {
         }
     }
 
-    fun showLoginModule(){
-        if (weakActivity.get() != null){
-            var activity = weakActivity.get()
-            val intent = Intent(activity, LoginActivity::class.java)
-            activity!!.startActivity(intent)
-        }
-    }
+//    fun showLoginModule(){
+//        if (weakActivity.get() != null){
+//            var activity = weakActivity.get()
+//            val intent = Intent(activity, LoginActivity::class.java)
+//            activity!!.startActivity(intent)
+//        }
+//    }
 
 }
