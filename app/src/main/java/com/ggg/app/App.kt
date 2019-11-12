@@ -1,0 +1,61 @@
+package com.ggg.app
+
+import android.app.Activity
+import android.content.Context
+import androidx.multidex.MultiDexApplication
+import com.facebook.stetho.Stetho
+import com.ggg.app.di.AppInjector
+import com.ggg.common.GGGAppInterface
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import io.vrinda.kotlinpermissions.DeviceInfo
+import timber.log.Timber
+import javax.inject.Inject
+
+
+/**
+ * Created by TuanNguyen on 12/12/17.
+ */
+class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInterface {
+    override fun getCtx(): Context {
+        return this
+    }
+
+    @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
+    override fun activityInjector(): AndroidInjector<Activity> {
+        return dispatching
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        /**
+         * only log with debug and staging
+         */
+        if (BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("staging")) {
+            Timber.plant(Timber.DebugTree())
+        }
+        Stetho.initializeWithDefaults(this);
+        GGGAppInterface.initInstance(this)
+        AppInjector.init(this)
+//        GlobalInfo.instance.mUserInfo = PrefsUtil.instance.getUserInfoObject()
+        Stetho.initializeWithDefaults(this)
+        DeviceInfo.getBuildBrand()
+        DeviceInfo.getAppName(applicationContext)
+//        val token = FirebaseInstanceId.getInstance().token
+//        if (token != null && token.isNotEmpty()){
+//            PrefsUtil.instance.setUserFCMToken(token)
+//        }
+//        FirebaseMessaging.getInstance().subscribeToTopic("news")
+//                .addOnCompleteListener { task ->
+//                    var msg = getString(R.string.msg_subscribed)
+//                    if (!task.isSuccessful) {
+//                        msg = getString(R.string.msg_subscribe_failed)
+//                    }
+//                    Log.d(TAG, msg)
+//                    Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+//                }
+
+    }
+}

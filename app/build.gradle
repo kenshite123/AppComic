@@ -1,0 +1,103 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.ggg.app"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 8
+        versionName "1.3"
+        multiDexEnabled true
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+//    dexOptions {
+//        javaMaxHeapSize "2g"
+//    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+//kapt {
+//    generateStubs = true
+//}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation rootProject.ext.libs.rxBinding
+    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation rootProject.ext.libs.kotlinstdlib
+    // android
+    implementation rootProject.ext.libs.design
+    implementation rootProject.ext.libs.cardview
+    implementation rootProject.ext.libs.supportV4
+//    implementation rootProject.ext.libs.appCompat
+    implementation rootProject.ext.libs.constraintLayout
+    implementation rootProject.ext.libs.recyclerview
+    implementation rootProject.ext.libs.anko
+    implementation rootProject.ext.libs.anko_common
+    implementation rootProject.ext.libs.anko_design
+    //dagger
+    compileOnly rootProject.ext.libs.dagger2
+    kapt rootProject.ext.kapt.dagger2
+    implementation rootProject.ext.libs.dagger2Android
+    implementation rootProject.ext.libs.dagger2AndroidSupport
+    kapt rootProject.ext.kapt.dagger2Android
+    // android
+    implementation rootProject.ext.libs.lifecycleRT
+    implementation rootProject.ext.libs.lifecycleEXT
+    kapt rootProject.ext.kapt.lifecycleCompiler
+    implementation rootProject.ext.libs.roomRT
+    implementation rootProject.ext.libs.roomRx
+    kapt rootProject.ext.kapt.roomCompiler
+    // gson
+    implementation rootProject.ext.libs.gson
+    // reactive
+    implementation rootProject.ext.libs.rxjava
+    implementation rootProject.ext.libs.rxandroid
+    // network
+    implementation rootProject.ext.libs.retrofit
+    implementation rootProject.ext.libs.convertGson
+    implementation rootProject.ext.libs.adapterRx
+    implementation rootProject.ext.libs.okhttp
+    implementation rootProject.ext.libs.logginInterceptor
+    //permisson
+    implementation rootProject.ext.libs.kotlinPermissions
+    //glide
+    implementation rootProject.ext.libs.glide
+    implementation rootProject.ext.libs.picasso
+    //timber
+    implementation rootProject.ext.libs.timber
+    implementation rootProject.ext.libs.fragNav
+    //slider image
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    //setho
+    implementation rootProject.ext.libs.stetho
+    implementation rootProject.ext.libs.stethoHTTP
+    //test
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:4.12'
+    implementation project(path: ':home')
+    implementation project(path: ':common')
+}
+//apply plugin: 'com.google.gms.google-services'

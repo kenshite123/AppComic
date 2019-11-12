@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ggg.home">
+
+    <application>
+        <activity android:name=".ui.login.LoginActivity"></activity>
+        <activity android:name=".ui.main.MainActivity" />
+    </application>
+
+</manifest>

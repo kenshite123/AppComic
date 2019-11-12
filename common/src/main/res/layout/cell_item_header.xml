@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorHeader">
+
+    <View
+        android:id="@+id/header_blank_grey"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:background="@color/colorHeader"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_cell_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_blank_grey"
+        android:layout_marginHorizontal="@dimen/margin_10"
+        android:layout_marginVertical="@dimen/margin_5">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/caret"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_18" />
+
+        <ImageView
+            android:id="@+id/caret"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/content_inset"
+            android:src="@drawable/ic_arrow_down_black" />
+
+    </RelativeLayout>
+</RelativeLayout>
