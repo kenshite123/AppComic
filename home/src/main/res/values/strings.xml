@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="TEXT_HOME">Home</string>
+    <string name="TEXT_CATEGORY">Category</string>
+    <string name="TEXT_LIBRARY">Library</string>
+    <string name="TEXT_ACCOUNT">Account</string>
+    <string name="TEXT_USER">User</string>
 </resources>

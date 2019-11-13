@@ -2,8 +2,10 @@ package com.ggg.home.ui.main
 
 import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
+import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.home.HomeFragment
-import com.ggg.home.ui.promotion.PromotionFragment
+import com.ggg.home.ui.library.LibraryFragment
+import com.ggg.home.ui.user.UserFragment
 import com.ncapdevi.fragnav.FragNavController
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -17,8 +19,18 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
-    fun showPromotion(){
-        val fragment = PromotionFragment.create()
+    fun showCategory(){
+        val fragment = CategoryFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showLibrary(){
+        val fragment = LibraryFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showUser(){
+        val fragment = UserFragment.create()
         fragNavController.pushFragment(fragment)
     }
 

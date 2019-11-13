@@ -5,11 +5,9 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.ggg.app"
+        applicationId "org.heavenmanga"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.3"
         multiDexEnabled true
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

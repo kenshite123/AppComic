@@ -15,8 +15,6 @@ open class HomeBaseFragment: BaseFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initObserver()
-        initEvent()
     }
     open fun initObserver(){
 

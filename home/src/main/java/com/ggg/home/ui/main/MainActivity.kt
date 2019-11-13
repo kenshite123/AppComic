@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
 import com.ggg.home.R
+import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.home.HomeFragment
+import com.ggg.home.ui.library.LibraryFragment
+import com.ggg.home.ui.user.UserFragment
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -30,6 +33,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
         return dispatch
     }
 
+    override val numberOfRootFragments: Int = 1
+
+    override fun getRootFragment(index: Int): Fragment {
+        when (index) {
+            0 -> return HomeFragment.create()
+        }
+        throw IllegalStateException("Need to send an index that we know")
+    }
+
     @Inject
     lateinit var navigationController: NavigationController
     var fragNavController: FragNavController = FragNavController(this.supportFragmentManager, R.id.container)
@@ -42,7 +54,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
         fragNavController.rootFragments = fragments
         fragNavController.initialize(0, savedInstanceState)
 
+        initEvents()
+
     }
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         fragNavController.onSaveInstanceState(outState!!)
@@ -50,11 +65,42 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
     }
 
     override fun onBackPressed() {
-        if (fragNavController.popFragment().not()) {
-            super.onBackPressed()
+        when {
+            fragNavController.isRootFragment.not() -> {
+                fragNavController.popFragment()
+                fragNavController.currentFrag?.let {
+                    when (it::class.java.simpleName) {
+                        HomeFragment.TAG -> {
+                            bottomNavView.selectedItemId = R.id.navHome
+                        }
+
+                        CategoryFragment.TAG -> {
+                            bottomNavView.selectedItemId = R.id.navCategory
+                        }
+
+                        LibraryFragment.TAG -> {
+                            bottomNavView.selectedItemId = R.id.navLib
+                        }
+
+                        UserFragment.TAG -> {
+                            bottomNavView.selectedItemId = R.id.navUser
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+            else -> {
+                normalBack()
+            }
         }
     }
 
+    fun normalBack() {
+        super.onBackPressed()
+    }
 
     fun hideSoftKeyboard() {
         if (this.currentFocus != null) {
@@ -69,12 +115,47 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
 //        toolbar_title.text = title
     }
 
-    override val numberOfRootFragments: Int = 1
+    private fun initEvents() {
+        bottomNavView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navHome -> {
+                    fragNavController.currentFrag?.let {
+                        if (it::class.java.simpleName != HomeFragment.TAG) {
+                            navigationController.showHome()
+                        }
+                    }
+                    true
+                }
 
-    override fun getRootFragment(index: Int): Fragment {
-        when (index) {
-            0 -> return HomeFragment.create()
+                R.id.navCategory -> {
+                    fragNavController.currentFrag?.let {
+                        if (it::class.java.simpleName != CategoryFragment.TAG) {
+                            navigationController.showCategory()
+                        }
+                    }
+                    true
+                }
+
+                R.id.navLib -> {
+                    fragNavController.currentFrag?.let {
+                        if (it::class.java.simpleName != LibraryFragment.TAG) {
+                            navigationController.showLibrary()
+                        }
+                    }
+                    true
+                }
+
+                R.id.navUser -> {
+                    fragNavController.currentFrag?.let {
+                        if (it::class.java.simpleName != UserFragment.TAG) {
+                            navigationController.showUser()
+                        }
+                    }
+                    true
+                }
+
+                else -> false
+            }
         }
-        throw IllegalStateException("Need to send an index that we know")
     }
 }
