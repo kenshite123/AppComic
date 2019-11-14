@@ -6,6 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
+import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.home.HomeFragment
@@ -18,16 +19,13 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
+class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
 
 
     private val registry = LifecycleRegistry(this)
     override fun getLifecycle(): LifecycleRegistry {
         return registry
     }
-
-    @Inject
-    lateinit var dispatch: DispatchingAndroidInjector<Fragment>
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatch
@@ -68,6 +66,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, FragNavCon
         when {
             fragNavController.isRootFragment.not() -> {
                 fragNavController.popFragment()
+                hideSoftKeyboard()
+
                 fragNavController.currentFrag?.let {
                     when (it::class.java.simpleName) {
                         HomeFragment.TAG -> {
