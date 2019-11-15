@@ -137,10 +137,36 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         hideSoftKeyboard()
     }
 
+    fun showLoading(){
+        if (activity is BaseActivity){
+            (activity as BaseActivity).showLoading()
+        }
+    }
+    fun hideLoading(){
+        if (activity is BaseActivity){
+            (activity as BaseActivity).hideLoading()
+        }
+    }
+    fun <T> loading(data: Resource<T>){
+        if (activity is BaseActivity){
+            if (data.status == Status.LOADING) {
+                (activity as BaseActivity).showLoading()
+            }else if (data.status == Status.SUCCESS || data.status == Status.ERROR){
+                (activity as BaseActivity).hideLoading()
+            }
+        }
+    }
+
     //endregion
 
     //region support
+    fun showMsg(msg:String) {
+        Toast.makeText(activity, msg.toString(), Toast.LENGTH_LONG).show()
+    }
 
+    fun showUnderContruction(){
+        showMsg("Tính năng này đang được phát triển")
+    }
 
     open fun addRightButton() {
 

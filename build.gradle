@@ -115,7 +115,8 @@ ext {
             adapterRx:"com.squareup.retrofit2:adapter-rxjava2:${retrofit_version}",
             rxBinding:"com.jakewharton.rxbinding2:rxbinding:${rxbinding2}",
             rxBindingAndroid:"com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:${rxbinding2}",
-            fragNav:"com.ncapdevi:frag-nav:3.2.0"
+            fragNav:"com.ncapdevi:frag-nav:3.2.0",
+            loading: "com.github.d-max:spots-dialog:1.1@aar"
     ]
 
     kapt=[

@@ -57,4 +57,5 @@
     <color name="color_yellow">#fffb00</color>
     <color name="cOptionRead">#70000000</color>
     <color name="cText">#1b1b1b</color>
+    <color name="bgBottomNavigation">#fe485a</color>
 </resources>

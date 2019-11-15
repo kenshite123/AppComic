@@ -87,11 +87,13 @@ dependencies {
     //timber
     implementation rootProject.ext.libs.timber
     implementation rootProject.ext.libs.fragNav
+    implementation rootProject.ext.libs.loading
     implementation 'com.github.javadev:underscore:1.27'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    implementation 'io.vrinda.kotlinpermissions:kotlinpermissions:1.1'
 
     //slider image
     implementation 'com.nineoldandroids:library:2.4.0'
-    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
     //test
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
