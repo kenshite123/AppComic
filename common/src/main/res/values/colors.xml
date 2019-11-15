@@ -55,5 +55,7 @@
     <color name="color_search_background">#d6d6d8</color>
     <color name="color_acacac">#acacac</color>
     <color name="color_yellow">#fffb00</color>
+    <color name="cOptionRead">#70000000</color>
+    <color name="cText">#1b1b1b</color>
     <color name="bgBottomNavigation">#fe485a</color>
 </resources>
