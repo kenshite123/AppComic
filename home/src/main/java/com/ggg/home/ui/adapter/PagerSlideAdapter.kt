@@ -32,7 +32,7 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
         val url = listImage[position]
         Glide.with(context)
                 .load(url)
-                .thumbnail(Glide.with(context).load(R.drawable.loading))
+//                .thumbnail(Glide.with(context).load(R.drawable.loading))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.ivSlide)
     }

@@ -25,7 +25,9 @@ class HomeFragment : HomeBaseFragment() {
     lateinit var pagerSlideAdapter: PagerSlideAdapter
     lateinit var listImage: ArrayList<String>
     lateinit var timer: Timer
+    lateinit var timerTask: TimerTask
     var currentPage = 0
+    var isLoadFirst = true
 
     companion object {
         val TAG = "HomeFragment"
@@ -70,6 +72,7 @@ class HomeFragment : HomeBaseFragment() {
         indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
 
         initTimerToSlide()
+        isLoadFirst = false
     }
 
     private fun initTimerToSlide() {
@@ -82,11 +85,30 @@ class HomeFragment : HomeBaseFragment() {
             rvSlide.scrollToPosition(currentPage++)
         }
         timer = Timer()
-        timer.schedule(object : TimerTask() {
+        timerTask = object : TimerTask() {
             override fun run() {
-                handler.post(runnable)
+                Timber.d("timer is running")
+                if (isVisible) {
+                    handler.post(runnable)
+                }
             }
-        }, DELAY_MS, PERIOD_MS)
+        }
+        timer.schedule(timerTask, DELAY_MS, PERIOD_MS)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+        timerTask.cancel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isLoadFirst) {
+            initTimerToSlide()
+        }
+
+        Timber.d("onResume")
     }
 
     override fun initObserver() {
