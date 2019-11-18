@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".ui.user.UserFragment">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp80"
+        android:layout_height="@dimen/dp100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -33,10 +34,10 @@
             android:orientation="horizontal"
             android:padding="@dimen/item_add_floor_padding_height">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivAvatar"
-                android:layout_width="@dimen/dp60"
-                android:layout_height="@dimen/dp60"
+                android:layout_width="@dimen/dp70"
+                android:layout_height="@dimen/dp70"
                 android:scaleType="centerCrop"
                 android:src="@drawable/i_avatar" />
 
@@ -51,12 +52,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="4"
                     android:text="@string/LOGIN"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp18" />
+                    android:textSize="@dimen/sp20"
+                    android:ellipsize="end"
+                    android:lines="1" />
 
                 <TextView
                     android:id="@+id/tvNameUser"
@@ -69,7 +69,7 @@
                     android:shadowRadius="4"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp18"
+                    android:textSize="@dimen/sp20"
                     android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
@@ -94,11 +94,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/item_add_floor_rooom_number_padding">
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10">
 
                 <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/margin_5"
                     android:src="@drawable/i_rate" />
 
@@ -108,7 +109,9 @@
                     android:layout_marginStart="@dimen/margin_10"
                     android:text="@string/APP_REVIEWS"
                     android:textColor="@color/cText"
-                    android:textSize="@dimen/sp14" />
+                    android:textSize="@dimen/sp20"
+                    android:ellipsize="end"
+                    android:lines="1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -117,13 +120,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/item_add_floor_rooom_number_padding">
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10">
 
                 <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/margin_5"
-                    android:src="@drawable/i_share" />
+                    android:src="@drawable/icon_share" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -131,7 +135,9 @@
                     android:layout_marginStart="@dimen/margin_10"
                     android:text="@string/SHARE_FRIENDS"
                     android:textColor="@color/cText"
-                    android:textSize="@dimen/sp14" />
+                    android:textSize="@dimen/sp20"
+                    android:ellipsize="end"
+                    android:lines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -140,13 +146,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/item_add_floor_rooom_number_padding">
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:ellipsize="end"
+                android:lines="1">
 
                 <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/margin_5"
-                    android:src="@drawable/i_chat_group" />
+                    android:src="@drawable/icon_my_comment" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -154,7 +163,7 @@
                     android:layout_marginStart="@dimen/margin_10"
                     android:text="@string/MY_COMMENT"
                     android:textColor="@color/cText"
-                    android:textSize="@dimen/sp14" />
+                    android:textSize="@dimen/sp20" />
             </LinearLayout>
 
             <LinearLayout
@@ -163,21 +172,24 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/adapter_contract_rate_padding">
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10">
 
                 <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/margin_5"
-                    android:src="@drawable/i_feedback" />
+                    android:src="@drawable/icon_feedback" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_10"
-                    android:text="@string/FEEDBACK_COMMENTS"
+                    android:text="@string/FEEDBACK"
                     android:textColor="@color/cText"
-                    android:textSize="@dimen/sp14" />
+                    android:textSize="@dimen/sp20"
+                    android:ellipsize="end"
+                    android:lines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -186,14 +198,15 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/item_add_floor_rooom_number_padding"
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
-                    android:padding="@dimen/item_add_floor_floor_number_padding"
-                    android:src="@drawable/i_logout" />
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:src="@drawable/i_logout"
+                    android:layout_marginStart="@dimen/margin_5"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -201,7 +214,7 @@
                     android:layout_marginStart="@dimen/margin_10"
                     android:text="@string/LOG_OUT"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/sp14" />
+                    android:textSize="@dimen/sp20" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

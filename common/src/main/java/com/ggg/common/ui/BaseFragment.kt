@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -15,19 +16,22 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ggg.common.R
 import com.ggg.common.di.Injectable
 import com.ggg.common.ui.utils.BaseCellAdapter
 import com.ggg.common.ui.utils.BaseInfoCell
 import com.ggg.common.ui.utils.BaseInfoCellModel
 import com.ggg.common.ui.utils.BaseSectionData
 import com.ggg.common.utils.LanguageManager
+import com.ggg.common.utils.OnEventControlListener
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Resource
 import com.ggg.common.vo.Status
 import com.ggg.common.ws.BaseResponse
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickListener {
+open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickListener, OnEventControlListener {
 
     //region properties
 
@@ -59,6 +63,26 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         dialog.show()
 
         return dialog
+    }
+
+    fun showDialog(message: String) {
+        showDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), message)
+    }
+
+    fun showDialog(title: String, message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.setCancelable(false)
+
+        val dialog = builder.create()
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
 
@@ -244,7 +268,7 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         if (null != response) {
             if (response.status!!.equals(Status.SUCCESS)) {
                 onSuccess(response.data!!.data)
-            } else if (response.status!!.equals(Status.ERROR)) {
+            } else if (response.status.equals(Status.ERROR)) {
                 if (response.message.equals("401")) {
                     Timber.d("response 401")
                 } else {
@@ -253,10 +277,14 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
             }
         }
     }
+
     override fun cellClicked(viewModel: BaseInfoCellModel?, section: Int, position: Int) {
     }
 
     override fun buttonClicked(cell: BaseInfoCell?, section: Int, position: Int, action: String?) {
+    }
+
+    override fun onEvent(eventAction: Int, control: View?, data: Any?) {
     }
     //endregion
 }

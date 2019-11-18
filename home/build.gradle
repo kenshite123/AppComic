@@ -90,6 +90,8 @@ dependencies {
     //slider image
 //    implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'me.relex:circleindicator:2.1.4'
+    implementation 'com.github.rey5137:material:1.2.4'
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
 
     //select Image handle
 //    implementation 'com.github.jkwiecien:EasyImage:1.3.1'

@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.home.R
+import com.ggg.home.ui.adapter.PagerLibraryAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import kotlinx.android.synthetic.main.fragment_library.*
 import timber.log.Timber
 
 class LibraryFragment : HomeBaseFragment() {
     private lateinit var viewModel: LibraryViewModel
+    lateinit var pagerLibraryAdapter: PagerLibraryAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +27,15 @@ class LibraryFragment : HomeBaseFragment() {
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LibraryViewModel::class.java)
         navigationController.setTitle("Library")
+        initViews()
+        initObserver()
+        initEvent()
+    }
+
+    private fun initViews() {
+        pagerLibraryAdapter = PagerLibraryAdapter(context!!, this)
+        viewPager.adapter = pagerLibraryAdapter
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun initObserver() {

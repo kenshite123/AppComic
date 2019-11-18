@@ -1,5 +1,7 @@
 package com.ggg.common.utils;
 
+import com.ggg.common.GGGAppInterface;
+
 /**
  * Created by vihuynh on 8/28/17.
  */
@@ -11,6 +13,14 @@ public class StringUtil {
                     && etText.toString().trim().length() > 0)
             return false;
         return true;
+    }
+
+    public static String getString(int id) {
+        return GGGAppInterface.gggApp.getCtx().getResources().getString(id);
+    }
+
+    public static String getString(int id, Object args) {
+        return GGGAppInterface.gggApp.getCtx().getResources().getString(id, args);
     }
 
     public static String toStringObject(Object text){

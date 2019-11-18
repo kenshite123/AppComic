@@ -3,6 +3,7 @@ package com.ggg.app
 import android.app.Activity
 import android.content.Context
 import androidx.multidex.MultiDexApplication
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.facebook.stetho.Stetho
 import com.ggg.app.di.AppInjector
 import com.ggg.common.GGGAppInterface
@@ -18,11 +19,17 @@ import javax.inject.Inject
  * Created by TuanNguyen on 12/12/17.
  */
 class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInterface {
+
+    private lateinit var circularProgressDrawable: CircularProgressDrawable
+    @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
+
     override fun getCtx(): Context {
         return this
     }
+    override fun getCircularProgressDrawable(): CircularProgressDrawable {
+        return this.circularProgressDrawable
+    }
 
-    @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
     override fun activityInjector(): AndroidInjector<Activity> {
         return dispatching
     }
@@ -43,6 +50,12 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         Stetho.initializeWithDefaults(this)
         DeviceInfo.getBuildBrand()
         DeviceInfo.getAppName(applicationContext)
+
+        circularProgressDrawable = CircularProgressDrawable(this)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
 //        val token = FirebaseInstanceId.getInstance().token
 //        if (token != null && token.isNotEmpty()){
 //            PrefsUtil.instance.setUserFCMToken(token)

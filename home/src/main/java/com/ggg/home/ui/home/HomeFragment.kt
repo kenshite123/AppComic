@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ggg.home.R
+import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 import java.util.*
@@ -24,6 +26,9 @@ class HomeFragment : HomeBaseFragment() {
     private lateinit var viewModel: HomeViewModel
     lateinit var pagerSlideAdapter: PagerSlideAdapter
     lateinit var listImage: ArrayList<String>
+
+    lateinit var listComicAdapter: ListComicAdapter
+
     lateinit var timer: Timer
     lateinit var timerTask: TimerTask
     var currentPage = 0
@@ -61,7 +66,7 @@ class HomeFragment : HomeBaseFragment() {
         listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/ruler-of-the-land-banner.jpg")
         listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/magi-the-labyrinth-of-magic-banner.jpg")
 
-        pagerSlideAdapter = PagerSlideAdapter(context!!, listImage)
+        pagerSlideAdapter = PagerSlideAdapter(context!!, this, listImage)
         rvSlide.setHasFixedSize(false)
         val layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         layoutManager.stackFromEnd = true
@@ -70,6 +75,8 @@ class HomeFragment : HomeBaseFragment() {
         val pagerSnapHelper = PagerSnapHelper()
         pagerSnapHelper.attachToRecyclerView(rvSlide)
         indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
+
+
 
         initTimerToSlide()
         isLoadFirst = false
@@ -82,7 +89,9 @@ class HomeFragment : HomeBaseFragment() {
                 currentPage = 0
             }
 
-            rvSlide.scrollToPosition(currentPage++)
+            if (isVisible) {
+                rvSlide.scrollToPosition(currentPage++)
+            }
         }
         timer = Timer()
         timerTask = object : TimerTask() {
@@ -99,15 +108,10 @@ class HomeFragment : HomeBaseFragment() {
     override fun onPause() {
         super.onPause()
         Timber.d("onPause")
-        timerTask.cancel()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!isLoadFirst) {
-            initTimerToSlide()
-        }
-
         Timber.d("onResume")
     }
 
@@ -116,5 +120,28 @@ class HomeFragment : HomeBaseFragment() {
     }
 
     override fun initEvent() {
+        ivRank.setOnClickListener {
+            showLoading()
+        }
+
+        ivLatestUpdate.setOnClickListener {
+
+        }
+
+        ivSearch.setOnClickListener {
+
+        }
+    }
+
+    override fun onEvent(eventAction: Int, control: View?, data: Any?) {
+        when (eventAction) {
+            Constant.ACTION_CLICK_ON_SLIDE -> {
+                showDialog(data.toString())
+            }
+
+            else -> {
+
+            }
+        }
     }
 }
