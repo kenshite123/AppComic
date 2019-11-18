@@ -12,5 +12,6 @@
     <string name="translate">Translate</string>
     <string name="advance">Nâng Cao</string>
     <string name="standar">Cơ Bản</string>
+    <string name="TEXT_ANNOUNCE">Announce</string>
 
 </resources>

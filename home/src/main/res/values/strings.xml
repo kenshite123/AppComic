@@ -8,10 +8,16 @@
     <string name="TEXT_LIBRARY">Library</string>
     <string name="TEXT_ACCOUNT">Account</string>
     <string name="TEXT_USER">User</string>
+    <string name="TEXT_MINE">Mine</string>
     <string name="LOGIN">Log In</string>
     <string name="LOG_OUT">Log Out</string>
     <string name="APP_REVIEWS">App reviews</string>
     <string name="SHARE_FRIENDS">Share friends</string>
     <string name="MY_COMMENT">My comment</string>
-    <string name="FEEDBACK_COMMENTS">Feedback comments</string>
+    <string name="FEEDBACK">Feedback</string>
+    <string name="TEXT_COMIC_LATEST_UPDATE">New comics updated</string>
+    <string name="TEXT_ANNOUNCE">Announce</string>
+    <string name="TEXT_HISTORY">History</string>
+    <string name="TEXT_FOLLOW">Follow</string>
+    <string name="TEXT_DOWNLOAD">Download</string>
 </resources>

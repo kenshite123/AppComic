@@ -12,7 +12,6 @@ import timber.log.Timber
 class CategoryFragment : HomeBaseFragment() {
     private lateinit var viewModel: CategoryViewModel
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

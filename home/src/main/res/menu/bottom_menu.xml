@@ -18,5 +18,5 @@
     <item
         android:id="@+id/navUser"
         android:icon="@drawable/icon_user"
-        android:title="@string/TEXT_USER" />
+        android:title="@string/TEXT_MINE" />
 </menu>
