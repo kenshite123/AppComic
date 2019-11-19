@@ -47,22 +47,53 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         hideSoftKeyboard()
     }
 
+    fun showActionBar() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showActionBar()
+        }
+    }
+
+    fun hideActionBar() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).hideActionBar()
+        }
+    }
+
+    fun showBottomNavView() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showBottomNavView()
+        }
+    }
+
+    fun hideBottomNavView() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).hideBottomNavView()
+        }
+    }
+
+    fun setTitleActionBar(title: String) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).setTitleActionBar(title)
+        }
+    }
+
+    fun showConfirmDialog(messageId: Int,
+                          leftBtnId: Int, leftClick: DialogInterface.OnClickListener,
+                          rightBtnId: Int, rightClick: DialogInterface.OnClickListener) {
+        showConfirmDialog(StringUtil.getString(messageId),
+                    StringUtil.getString(leftBtnId), leftClick, StringUtil.getString(rightBtnId), rightClick)
+    }
+
     fun showConfirmDialog(message: String,
                           leftBtn: String, leftClick: DialogInterface.OnClickListener,
-                          rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage(message)
-        builder.setPositiveButton(rightBtn, rightClick)
-        builder.setNegativeButton(leftBtn, leftClick)
-        builder.setCancelable(false)
+                          rightBtn: String, rightClick: DialogInterface.OnClickListener) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showConfirmDialog(message, leftBtn, leftClick, rightBtn, rightClick)
+        }
+    }
 
-        val dialog = builder.create()
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
-        dialog.show()
-
-        return dialog
+    fun showDialog(id: Int) {
+        showDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), StringUtil.getString(id))
     }
 
     fun showDialog(message: String) {
@@ -70,19 +101,9 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
     }
 
     fun showDialog(title: String, message: String) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton("OK") { dialog, _ ->
-            dialog.dismiss()
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showDialog(title, message)
         }
-        builder.setCancelable(false)
-
-        val dialog = builder.create()
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
-        dialog.show()
     }
 
 
@@ -121,6 +142,11 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
      *
      * @param msg message
      */
+
+    fun showToastRelease(id: Int) {
+        Toast.makeText(activity, StringUtil.getString(id), Toast.LENGTH_LONG).show()
+    }
+
     fun showToastRelease(msg: String) {
         Toast.makeText(activity, msg.toString(), Toast.LENGTH_LONG).show()
     }
@@ -184,6 +210,10 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
     //endregion
 
     //region support
+    fun showMsg(id: Int) {
+        Toast.makeText(activity, StringUtil.getString(id), Toast.LENGTH_LONG).show()
+    }
+
     fun showMsg(msg:String) {
         Toast.makeText(activity, msg.toString(), Toast.LENGTH_LONG).show()
     }

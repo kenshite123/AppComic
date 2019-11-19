@@ -4,8 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
 import com.ggg.home.R
@@ -15,7 +20,8 @@ class PagerLibraryAdapter : PagerAdapter {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var tvTest: TextView
+//    lateinit var rvListComic: RecyclerView
+
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_HISTORY),
             StringUtil.getString(R.string.TEXT_FOLLOW), StringUtil.getString(R.string.TEXT_DOWNLOAD))
 
@@ -38,12 +44,16 @@ class PagerLibraryAdapter : PagerAdapter {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_library, container, false)
-        tvTest = view.findViewById(R.id.tvTest)
-
-        tvTest.text = "Tab ${listTitle[position]}"
+//        rvListComic = view.findViewById(R.id.rvListComic)
+        val ivComic = view.findViewById<ImageView>(R.id.ivComic)
+        Glide.with(weakContext.get())
+                .load("http://ww5.heavenmanga.org/content/upload/images/images/Solo-Leveling.jpg")
+                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(ivComic)
 
         container.addView(view)
-        return  view
+        return view
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

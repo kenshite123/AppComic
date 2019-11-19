@@ -39,11 +39,11 @@ abstract class NetworkOnlyResource<RequestType>{
                 }
             } else {
                 onFetchFailed()
-                if (response.code == 401){
-                    result.setValue(Resource.error(response.code.toString(), null))
-                }else {
+//                if (response.code == 401){
+//                    result.setValue(Resource.error(response.code.toString(), null))
+//                }else {
                     result.setValue(Resource.error(response.errorMessage ?: "", null))
-                }
+//                }
             }
         }
 

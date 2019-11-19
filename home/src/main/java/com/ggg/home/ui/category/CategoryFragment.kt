@@ -22,7 +22,16 @@ class CategoryFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryViewModel::class.java)
-        navigationController.setTitle("Category")
+        hideActionBar()
+        showBottomNavView()
+
+        initViews()
+        initObserver()
+        initEvent()
+    }
+
+    private fun initViews() {
+
     }
 
     override fun initObserver() {

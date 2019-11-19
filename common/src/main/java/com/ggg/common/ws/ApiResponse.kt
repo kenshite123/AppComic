@@ -39,7 +39,7 @@ class ApiResponse<T> {
                     val jsonObj: JSONObject = JSONObject(errorBody)
                     when {
                         jsonObj.has("error") -> message = jsonObj.getString("error")
-                        jsonObj.has("Message") -> message = jsonObj.getString("Message")
+                        jsonObj.has("message") -> message = jsonObj.getString("message")
                         else -> message = it.string()
                     }
                 } catch(e: JSONException) {

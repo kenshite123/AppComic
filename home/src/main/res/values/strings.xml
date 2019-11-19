@@ -20,4 +20,10 @@
     <string name="TEXT_HISTORY">History</string>
     <string name="TEXT_FOLLOW">Follow</string>
     <string name="TEXT_DOWNLOAD">Download</string>
+    <string name="TEXT_LOGIN">Login</string>
+    <string name="TEXT_INPUT_USERNAME_OR_EMAIL">Username or Email</string>
+    <string name="TEXT_INPUT_PASSWORD">Password</string>
+    <string name="TEXT_ERROR_INPUT_USERNAME_OR_PASSWORD_EMPTY">Username or Email can not be empty</string>
+    <string name="TEXT_ERROR_INPUT_PASSWORD_EMPTY">Password can not be empty</string>
+    <string name="TEXT_LOGIN_SUCCESS">Login Success</string>
 </resources>

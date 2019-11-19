@@ -37,7 +37,7 @@ class FetchResouceTask constructor(private val service: HomeService) : Runnable 
 //                    || !yearOfExpdata.isSuccessful()
 //                    || !bonusTypes.isSuccessful()
 //                    || !salaryTypes.isSuccessful()) {
-//                _liveData.postValue(Resource.error("Error", false))
+//                _liveData.postValue(Resource.error("ErrorResponse", false))
 //                return
 //            }
 //

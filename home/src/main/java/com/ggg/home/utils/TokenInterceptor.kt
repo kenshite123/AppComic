@@ -21,8 +21,8 @@ class TokenInterceptor : Interceptor {
         //handle add authorization
 //        if (!url.equals(loginApi) && !url.contains(googleApi)) {
 //            val userEmail = PrefsUtil.instance.getUserEmail()
-//            requestBuilder.addHeader("X-User-Token", mToken)
-//            requestBuilder.addHeader("X-User-Email", userEmail)
+//            requestBuilder.addHeader("X-UserModel-Token", mToken)
+//            requestBuilder.addHeader("X-UserModel-Email", userEmail)
 //            requestBuilder.header("Content-type", "application/json")
 //        }
         val request = requestBuilder.build()

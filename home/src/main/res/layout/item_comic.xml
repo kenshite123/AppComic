@@ -5,21 +5,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:id="@+id/ivComic"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp200"
+        android:layout_width="@dimen/dp170"
+        android:layout_height="@dimen/dp220"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="1:1.2"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!--<View-->
+        <!--android:id="@+id/viewBackground"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/tvChap"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/tvChap"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/tvChap"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/tvChap"-->
+        <!--android:background="#000000"-->
+        <!--android:alpha="0.5"/>-->
+
+    <TextView
+        android:id="@+id/tvChap"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp30"
+        android:layout_marginTop="@dimen/dp5"
+        android:layout_marginStart="@dimen/dp5"
+        android:layout_marginEnd="@dimen/dp5"
+        android:maxWidth="@dimen/dp100"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="@dimen/sp14"
+        android:text="Chương 101"
+        android:padding="@dimen/dp5"
+        android:textColor="@color/white"
+        android:background="#60000000"
+        android:gravity="center_vertical|left"/>
+
     <TextView
         android:id="@+id/tvComicTitle"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp50"
+        android:layout_height="@dimen/dp45"
         app:layout_constraintTop_toBottomOf="@+id/ivComic"
         app:layout_constraintStart_toStartOf="@+id/ivComic"
         app:layout_constraintEnd_toEndOf="@+id/ivComic"
         android:lines="2"
         android:ellipsize="end"
         android:textColor="@color/black"
-        android:textSize="@dimen/sp16"/>
+        android:textSize="@dimen/sp16"
+        android:text="Naruto"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
