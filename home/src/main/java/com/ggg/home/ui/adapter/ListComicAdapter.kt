@@ -39,7 +39,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comic = listComic[position]
         Glide.with(weakContext.get())
-                .load(comic.thumb)
+                .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.ivComic)

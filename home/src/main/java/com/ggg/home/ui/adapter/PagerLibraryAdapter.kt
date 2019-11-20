@@ -48,6 +48,7 @@ class PagerLibraryAdapter : PagerAdapter {
         val ivComic = view.findViewById<ImageView>(R.id.ivComic)
         Glide.with(weakContext.get())
                 .load("http://ww5.heavenmanga.org/content/upload/images/images/Solo-Leveling.jpg")
+//                .load("http://ww5.heavenmanga.org/include/lib/security.php?1574219282")
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(ivComic)

@@ -9,8 +9,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.ggg.common.vo.Status
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -18,21 +19,20 @@ import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 import java.util.*
-
-
+import kotlin.collections.ArrayList
 
 class HomeFragment : HomeBaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
     lateinit var pagerSlideAdapter: PagerSlideAdapter
-    lateinit var listImage: ArrayList<String>
-
     lateinit var listComicAdapter: ListComicAdapter
+    var listBanners: List<ComicModel> = arrayListOf()
+    val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
     lateinit var timerTask: TimerTask
     var currentPage = 0
-    var isLoadFirst = true
+    var isLoadBannerAlready = false
 
     companion object {
         val TAG = "HomeFragment"
@@ -58,33 +58,23 @@ class HomeFragment : HomeBaseFragment() {
         initViews()
         initObserver()
         initEvent()
+        loadData()
     }
 
     private fun initViews() {
-        listImage = ArrayList()
-        listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/one-piece-banner.png")
-        listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/brawling-go-banner.jpg")
-        listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/ruler-of-the-land-banner.jpg")
-        listImage.add("http://ww5.heavenmanga.org/content/upload/images/images/magi-the-labyrinth-of-magic-banner.jpg")
-
-        pagerSlideAdapter = PagerSlideAdapter(context!!, this, listImage)
+        pagerSlideAdapter = PagerSlideAdapter(context!!, this, listBanners)
         rvSlide.setHasFixedSize(false)
         val layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         layoutManager.stackFromEnd = true
         rvSlide.layoutManager = layoutManager
         rvSlide.adapter = pagerSlideAdapter
-        val pagerSnapHelper = PagerSnapHelper()
         pagerSnapHelper.attachToRecyclerView(rvSlide)
-        indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
-
-        initTimerToSlide()
-        isLoadFirst = false
     }
 
     private fun initTimerToSlide() {
         val handler = Handler()
         val runnable = Runnable {
-            if (currentPage == listImage.count()) {
+            if (currentPage == this.listBanners.count()) {
                 currentPage = 0
             }
 
@@ -95,27 +85,45 @@ class HomeFragment : HomeBaseFragment() {
         timer = Timer()
         timerTask = object : TimerTask() {
             override fun run() {
-                Timber.d("timer is running")
                 if (isVisible) {
-                    handler.post(runnable)
+                    if (isLoadBannerAlready) {
+                        handler.post(runnable)
+                    }
                 }
             }
         }
         timer.schedule(timerTask, DELAY_MS, PERIOD_MS)
     }
 
+    private fun loadData() {
+        viewModel.getBanners()
+    }
+
     override fun onPause() {
         super.onPause()
         Timber.d("onPause")
+        timer.cancel()
+        timerTask.cancel()
     }
 
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
+        initTimerToSlide()
     }
 
     override fun initObserver() {
-
+        viewModel.getBannersResult.observe(this, androidx.lifecycle.Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+                it.data?.let {
+                    this.listBanners = it
+                    isLoadBannerAlready = true
+                    pagerSlideAdapter.notifyData(this.listBanners)
+                    indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
+                }
+            }
+        })
     }
 
     override fun initEvent() {
@@ -135,7 +143,8 @@ class HomeFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_SLIDE -> {
-                showDialog(data.toString())
+                val comic = data as ComicModel
+                showDialog(comic.title)
             }
 
             else -> {
