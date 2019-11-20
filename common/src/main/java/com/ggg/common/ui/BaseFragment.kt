@@ -1,13 +1,9 @@
 package com.ggg.common.ui
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -56,6 +52,18 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
     fun hideActionBar() {
         if (activity is BaseActivity) {
             (activity as BaseActivity).hideActionBar()
+        }
+    }
+
+    fun setColorActionBar(color: Int) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).setColorActionBar(color)
+        }
+    }
+
+    fun setColorActionBar(color: String) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).setColorActionBar(color)
         }
     }
 

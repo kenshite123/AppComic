@@ -11,18 +11,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
 
 class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listImage: ArrayList<String>
+    lateinit var listBanners: List<ComicModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listImage: ArrayList<String>) {
+    constructor(context: Context, listener: OnEventControlListener, listBanners: List<ComicModel>) {
         this.weakContext = WeakReference(context)
         this.listener = listener
-        this.listImage = listImage
+        this.listBanners = listBanners
+    }
+
+    fun notifyData(listBanners: List<ComicModel>) {
+        this.listBanners = listBanners
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,19 +37,19 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
     }
 
     override fun getItemCount(): Int {
-        return listImage.count()
+        return listBanners.count()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val url = listImage[position]
+        val banner = listBanners[position]
         Glide.with(weakContext.get())
-                .load(url)
+                .load(banner.bigImageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.ivSlide)
 
         holder.ivSlide.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_SLIDE, it, url)
+            listener.onEvent(Constant.ACTION_CLICK_ON_SLIDE, it, banner)
         }
     }
 

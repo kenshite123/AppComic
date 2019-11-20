@@ -26,18 +26,15 @@ class LoginFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
-
-        showActionBar()
-        hideBottomNavView()
-        setTitleActionBar(StringUtil.getString(R.string.TEXT_LOGIN))
-
         initViews()
         initObserver()
         initEvent()
     }
 
     private fun initViews() {
-
+        hideActionBar()
+        hideBottomNavView()
+        setTitleActionBar(StringUtil.getString(R.string.TEXT_LOGIN))
     }
 
     override fun initObserver() {

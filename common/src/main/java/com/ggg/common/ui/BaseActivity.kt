@@ -3,6 +3,8 @@ package com.ggg.common.ui
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
@@ -78,6 +80,14 @@ open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, Bas
 
     fun hideActionBar() {
         supportActionBar?.hide()
+    }
+
+    fun setColorActionBar(color: Int) {
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+    }
+
+    fun setColorActionBar(color: String) {
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(color)))
     }
 
     fun setTitleActionBar(title: String) {

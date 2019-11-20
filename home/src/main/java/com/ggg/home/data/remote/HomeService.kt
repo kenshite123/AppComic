@@ -3,6 +3,7 @@ package com.ggg.home.data.remote
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
 import com.ggg.common.ws.BaseResponse
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.RegisterResponse
@@ -24,4 +25,7 @@ interface HomeService {
     fun register(
             @Body registerBody: RegisterBody
     ): LiveData<ApiResponse<RegisterResponse>>
+
+    @GET(ServerPath.BANNERS)
+    fun getBanners() : LiveData<ApiResponse<List<ComicModel>>>
 }
