@@ -2,6 +2,8 @@ package com.ggg.home.ui.main
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -51,7 +53,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
         fragNavController.rootFragments = fragments
         fragNavController.initialize(0, savedInstanceState)
-
         initEvents()
 
     }
@@ -111,8 +112,19 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         }
     }
 
-    fun setTitle(title: String) {
-//        toolbar_title.text = title
+    override fun showBottomNavView() {
+        bottomNavView.visibility = View.VISIBLE
+    }
+
+    override fun hideBottomNavView() {
+        bottomNavView.visibility = View.GONE
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initEvents() {

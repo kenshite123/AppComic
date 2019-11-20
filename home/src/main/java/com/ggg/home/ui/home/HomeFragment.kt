@@ -52,7 +52,8 @@ class HomeFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-        navigationController.setTitle("Home")
+        hideActionBar()
+        showBottomNavView()
 
         initViews()
         initObserver()
@@ -75,8 +76,6 @@ class HomeFragment : HomeBaseFragment() {
         val pagerSnapHelper = PagerSnapHelper()
         pagerSnapHelper.attachToRecyclerView(rvSlide)
         indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
-
-
 
         initTimerToSlide()
         isLoadFirst = false

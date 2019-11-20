@@ -5,6 +5,7 @@ import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
+import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ncapdevi.fragnav.FragNavController
 import java.lang.ref.WeakReference
@@ -31,6 +32,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showUser(){
         val fragment = UserFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showLogin(){
+        val fragment = LoginFragment.create()
         fragNavController.pushFragment(fragment)
     }
 
@@ -61,21 +67,10 @@ class NavigationController @Inject constructor(activity: MainActivity) {
     }
 
     fun popToBackStack() {
-        when {
-            fragNavController.isRootFragment.not() -> {
-                hideSoftKeyboard()
-                fragNavController.popFragment()
-            }
-            else -> {
-
-            }
-        }
+        weakActivity.get()!!.onBackPressed()
     }
     private fun hideSoftKeyboard() {
         weakActivity.get()?.hideSoftKeyboard()
-    }
-    fun setTitle(title: String) {
-        weakActivity.get()?.setTitle(title)
     }
 
     //endregion

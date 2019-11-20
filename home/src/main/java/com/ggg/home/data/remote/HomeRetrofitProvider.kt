@@ -32,7 +32,10 @@ class HomeRetrofitProvider {
                 Timber.tag("OkHttp").d(message)
             }
         })
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.level = HttpLoggingInterceptor.Level.HEADERS
+        logging.level = HttpLoggingInterceptor.Level.BODY
+
+
         client = OkHttpClient.Builder()
 //                .cache(cache)
                 .addNetworkInterceptor(StethoInterceptor())
@@ -42,21 +45,25 @@ class HomeRetrofitProvider {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor { chain ->
                     val original: Request = chain.request()
+                    val request = original.newBuilder()
+                            .method(original.method(), original.body())
+                            .build()
+                    return@addInterceptor chain.proceed(request)
 //                    val url = original.url().url().toString()
 //                    val loginApi = ServerPath.baseUri + ServerPath.LOGIN
 //                    val googleApi = ServerPath.googleUri
-                    val requestBuilder = original.newBuilder()
+//                    val requestBuilder = original.newBuilder()
                     //handle add authorization
 //                    if (!url.equals(loginApi) && !url.contains(googleApi)) {
 //                        if (PrefsUtil.instance.getToken().isNotEmpty()) {
 //                            val token = PrefsUtil.instance.getToken()
 //                            val userEmail = PrefsUtil.instance.getUserEmail()
-//                            requestBuilder.addHeader("X-User-Token", token)
-//                            requestBuilder.addHeader("X-User-Login", userEmail)
+//                            requestBuilder.addHeader("X-UserModel-Token", token)
+//                            requestBuilder.addHeader("X-UserModel-Login", userEmail)
 //                            requestBuilder.header("Content-type", "application/json")
 //                        }
 //                    }
-                    chain.proceed(requestBuilder.build())
+//                    chain.proceed(requestBuilder.build())
                 }
                 .build()
 

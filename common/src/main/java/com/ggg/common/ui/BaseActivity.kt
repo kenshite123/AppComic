@@ -58,6 +58,7 @@ open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, Bas
                 .setContext(this)
                 .setCancelable(false)
                 .build()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 //        dialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
 
     }
@@ -67,7 +68,20 @@ open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, Bas
                 .setContext(this)
                 .setCancelable(false)
                 .build()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 //        dialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
+    fun showActionBar() {
+        supportActionBar?.show()
+    }
+
+    fun hideActionBar() {
+        supportActionBar?.hide()
+    }
+
+    fun setTitleActionBar(title: String) {
+        supportActionBar?.title = title.toString()
     }
 
     fun showConfirmDialog(message: String,
@@ -164,5 +178,11 @@ open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, Bas
     }
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
+    }
+
+    open fun showBottomNavView() {
+    }
+
+    open fun hideBottomNavView() {
     }
 }

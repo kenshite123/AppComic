@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.home.R
 import com.ggg.home.ui.main.HomeBaseFragment
+import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
 
 class UserFragment : HomeBaseFragment() {
@@ -23,7 +24,16 @@ class UserFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-        navigationController.setTitle("User")
+        hideActionBar()
+        showBottomNavView()
+
+        initViews()
+        initObserver()
+        initEvent()
+    }
+
+    private fun initViews() {
+
     }
 
     override fun initObserver() {
@@ -31,6 +41,9 @@ class UserFragment : HomeBaseFragment() {
     }
 
     override fun initEvent() {
+        llLogin.setOnClickListener {
+            navigationController.showLogin()
+        }
     }
 
     companion object {

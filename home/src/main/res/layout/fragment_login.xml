@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <EditText
+        android:id="@+id/edUsername"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp70"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_INPUT_USERNAME_OR_EMAIL"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="text|textEmailAddress"
+        android:lines="1"/>
+
+    <EditText
+        android:id="@+id/edPassword"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp70"
+        app:layout_constraintTop_toBottomOf="@+id/edUsername"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_INPUT_PASSWORD"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="textPassword"
+        android:lines="1" />
+
+    <com.rey.material.widget.Button
+        android:id="@+id/btnLogin"
+        android:layout_width="@dimen/dp250"
+        android:layout_height="@dimen/dp70"
+        android:text="@string/TEXT_LOGIN"
+        style="@style/btn_ripple_normal_0"
+        app:layout_constraintTop_toBottomOf="@+id/edPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_button_login"
+        android:gravity="center"
+        android:textSize="@dimen/sp30"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

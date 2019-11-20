@@ -27,6 +27,7 @@
             android:background="@color/cOptionRead" />
 
         <LinearLayout
+            android:id="@+id/llLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
