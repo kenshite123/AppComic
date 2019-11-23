@@ -12,21 +12,22 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
 
 class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listBanners: List<ComicModel>
+    lateinit var listBanners: List<ComicWithCategoryModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listBanners: List<ComicModel>) {
+    constructor(context: Context, listener: OnEventControlListener, listBanners: List<ComicWithCategoryModel>) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listBanners = listBanners
     }
 
-    fun notifyData(listBanners: List<ComicModel>) {
+    fun notifyData(listBanners: List<ComicWithCategoryModel>) {
         this.listBanners = listBanners
         notifyDataSetChanged()
     }
@@ -41,7 +42,8 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val banner = listBanners[position]
+        val comicWithCategoryModel = listBanners[position]
+        val banner = comicWithCategoryModel.comicModel!!
         Glide.with(weakContext.get())
                 .load(banner.bigImageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
@@ -49,7 +51,7 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
                 .into(holder.ivSlide)
 
         holder.ivSlide.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_SLIDE, it, banner)
+            listener.onEvent(Constant.ACTION_CLICK_ON_SLIDE, it, comicWithCategoryModel)
         }
     }
 

@@ -13,22 +13,26 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.utils.Constant
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listComic: List<ComicModel>
+    lateinit var listComic: List<ComicWithCategoryModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>) {
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicWithCategoryModel>) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
     }
 
-    fun notifyData(listComic: List<ComicModel>) {
+    fun notifyData(listComic: List<ComicWithCategoryModel>) {
         this.listComic = listComic
+        Timber.d("notifyData ListComicAdapter ${listComic.count()}")
         notifyDataSetChanged()
     }
 
@@ -42,7 +46,8 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val comic = listComic[position]
+        val comicWithCategoryModel = listComic[position]
+        val comic = comicWithCategoryModel.comicModel!!
         Glide.with(weakContext.get())
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
@@ -51,6 +56,10 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
         holder.tvComicTitle.text = comic.title
         holder.tvChap.text = comic.latestChapter
+
+        holder.ivComic.setOnClickListener {
+            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {

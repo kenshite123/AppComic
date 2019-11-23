@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -25,15 +26,16 @@ class HomeFragment : HomeBaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
     lateinit var pagerSlideAdapter: PagerSlideAdapter
-    var listBanners: List<ComicModel> = arrayListOf()
+    var listBanners: List<ComicWithCategoryModel> = arrayListOf()
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicLatestUpdate: List<ComicModel> = arrayListOf()
+    var listComicLatestUpdate: List<ComicWithCategoryModel> = arrayListOf()
     val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
     lateinit var timerTask: TimerTask
     var currentPage = 0
     var isLoadBannerAlready = false
+    var isFirstLoad = false
 
     companion object {
         val TAG = "HomeFragment"
@@ -57,7 +59,6 @@ class HomeFragment : HomeBaseFragment() {
         showBottomNavView()
 
         initViews()
-        initObserver()
         initEvent()
         loadData()
     }
@@ -121,6 +122,10 @@ class HomeFragment : HomeBaseFragment() {
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
+        if (!isFirstLoad) {
+            initObserver()
+            isFirstLoad = true
+        }
         initTimerToSlide()
     }
 
@@ -128,7 +133,7 @@ class HomeFragment : HomeBaseFragment() {
         viewModel.getBannersResult.observe(this, androidx.lifecycle.Observer {
             if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 it.data?.let {
-                    this.listBanners = it
+                    this.listBanners = it.distinctBy { it.comicModel?.id }
                     isLoadBannerAlready = true
                     pagerSlideAdapter.notifyData(this.listBanners)
                     indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
@@ -140,8 +145,8 @@ class HomeFragment : HomeBaseFragment() {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 it.data?.let {
-                    this.listComicLatestUpdate = it
-                    listComicAdapter.notifyData(it)
+                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
+                    listComicAdapter.notifyData(this.listComicLatestUpdate)
                 }
             }
         })
@@ -164,8 +169,13 @@ class HomeFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_SLIDE -> {
-                val comic = data as ComicModel
-                showDialog(comic.title)
+                val comicWithCategoryModel = data as ComicWithCategoryModel
+                showDialog(comicWithCategoryModel.comicModel!!.title)
+            }
+
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicWithCategoryModel = data as ComicWithCategoryModel
+                showDialog(comicWithCategoryModel.comicModel!!.title)
             }
 
             else -> {

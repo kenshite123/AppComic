@@ -57,5 +57,4 @@ class ComicModel : Serializable {
         var authors: List<String> = listOf()
 
         var authorsString: String? = ""
-        var categoriesString: String? = ""
 }

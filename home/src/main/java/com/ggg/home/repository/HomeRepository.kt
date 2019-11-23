@@ -15,6 +15,7 @@ import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.CategoryOfComicModel
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
@@ -36,28 +37,9 @@ class HomeRepository {
         this.db = db
     }
 
-    fun getBanners(): LiveData<Resource<List<ComicModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicModel>> {
-//                val mSectionLive = MediatorLiveData<List<ComicModel>>()
-//                val listBanners = db.comicDao().getListBanners()
-////                listBanners.value?.forEach {
-////                    val listCategoryModel = db.categoryDao().getListCategoriesByComicId(it.id)
-////                    it.categories = listCategoryModel.value!!
-////                }
-//                mSectionLive.addSource(listBanners) {
-//                    it.forEach {
-//                        val listCategoryByComicId = db.categoryDao().getListCategoriesByComicId(it.id)
-//                        val mSectionListCategory = MediatorLiveData<List<CategoryModel>>()
-//                        mSectionListCategory.addSource(listCategoryByComicId) { listCategory ->
-//                            it.categories = listCategory
-//                        }
-//                    }
-//                    mSectionLive.removeSource(listBanners)
-//                    mSectionLive.value = it
-//                }
-//                return mSectionLive
-
+    fun getBanners(): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 return db.comicDao().getListBanners()
             }
 
@@ -70,33 +52,30 @@ class HomeRepository {
                     db.comicDao().updateClearListBanners()
                     item.forEach { comicModel ->
                         run {
-                            val listCategories = arrayListOf<Long>()
                             comicModel.categories.forEach {
-                                listCategories.add(it.id)
-//                                    val categoryOfComicModel = CategoryOfComicModel()
-//                                    categoryOfComicModel.categoryId = it.id
-//                                    categoryOfComicModel.categoryName = it.name
-//                                    categoryOfComicModel.comicId = comicModel.id
-//                                    db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                                val categoryOfComicModel = CategoryOfComicModel()
+                                categoryOfComicModel.categoryId = it.id
+                                categoryOfComicModel.categoryName = it.name
+                                categoryOfComicModel.comicId = comicModel.id
+                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
                             }
                             comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
-                            comicModel.categoriesString = TextUtils.join(", ", listCategories)
                         }
                     }
                     db.comicDao().insertListComic(item)
                 }
             }
 
-            override fun shouldFetch(data: List<ComicModel>?): Boolean {
+            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }
         return callApi.asLiveData()
     }
 
-    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicModel>> {
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 return db.comicDao().getListLatestUpdate(data["limit"]!!, data["offset"]!!)
             }
 
@@ -108,24 +87,21 @@ class HomeRepository {
                 if (item.isNotEmpty()) {
                     item.forEach { comicModel ->
                         run {
-                            val listCategories = arrayListOf<Long>()
                             comicModel.categories.forEach {
-                                listCategories.add(it.id)
-//                                    val categoryOfComicModel = CategoryOfComicModel()
-//                                    categoryOfComicModel.categoryId = it.id
-//                                    categoryOfComicModel.categoryName = it.name
-//                                    categoryOfComicModel.comicId = comicModel.id
-//                                    db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                                val categoryOfComicModel = CategoryOfComicModel()
+                                categoryOfComicModel.categoryId = it.id
+                                categoryOfComicModel.categoryName = it.name
+                                categoryOfComicModel.comicId = comicModel.id
+                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
                             }
                             comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
-                            comicModel.categoriesString = TextUtils.join(", ", listCategories)
                         }
                     }
                     db.comicDao().insertListComic(item)
                 }
             }
 
-            override fun shouldFetch(data: List<ComicModel>?): Boolean {
+            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }
