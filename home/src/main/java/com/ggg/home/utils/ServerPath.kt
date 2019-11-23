@@ -6,5 +6,8 @@ class ServerPath {
         const val LOGIN = "api/auth/login"
         const val REGISTER = "api/auth/register"
         const val BANNERS = "api/homepage/banners"
+        const val LATEST_UPDATE = "api/homepage/latest-update"
+        const val LIST_CATEGORIES = "api/comic/category-filters"
+        const val LIST_COMIC = "api/comic/list"
     }
 }

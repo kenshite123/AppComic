@@ -1,7 +1,6 @@
 package com.ggg.home.data.model
 
 
-import android.text.TextUtils
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
@@ -13,20 +12,16 @@ import java.io.Serializable
 class ComicModel : Serializable {
         @SerializedName("id")
         @Expose
-        var id: Int = 0
-
-        @SerializedName("author")
-        @Expose
-        var author: String = ""
+        var id: Long = 0
 
         @SerializedName("bigImageUrl")
         @Expose
-        var bigImageUrl: String = ""
+        var bigImageUrl: String? = ""
 
         @SerializedName("categories")
         @Expose
         @Ignore
-        var categories: List<Int> = listOf()
+        var categories: List<CategoryModel> = listOf()
 
         @SerializedName("content")
         @Expose
@@ -44,9 +39,9 @@ class ComicModel : Serializable {
         @Expose
         var title: String = ""
 
-        @SerializedName("titleSeo")
+        @SerializedName("latestChapter")
         @Expose
-        var titleSeo: String = ""
+        var latestChapter: String? = ""
 
         @SerializedName("viewed")
         @Expose
@@ -56,9 +51,11 @@ class ComicModel : Serializable {
         @Expose
         var vote: Int = 0
 
-        var categoriesString: String = ""
+        @SerializedName("authors")
+        @Expose
+        @Ignore
+        var authors: List<String> = listOf()
 
-        constructor() {
-                categoriesString = TextUtils.join(",", categories)
-        }
+        var authorsString: String? = ""
+        var categoriesString: String? = ""
 }

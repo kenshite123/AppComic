@@ -3,6 +3,7 @@ package com.ggg.home.data.remote
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
 import com.ggg.common.ws.BaseResponse
+import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
@@ -28,4 +29,20 @@ interface HomeService {
 
     @GET(ServerPath.BANNERS)
     fun getBanners() : LiveData<ApiResponse<List<ComicModel>>>
+
+    @GET(ServerPath.LATEST_UPDATE)
+    fun getLatestUpdate(
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
+
+    @GET(ServerPath.LIST_CATEGORIES)
+    fun getAllListCategories() : LiveData<ApiResponse<List<CategoryModel>>>
+
+    @GET(ServerPath.LIST_COMIC)
+    fun getListComicByCategory(
+            @Query("category") categoryId: Long,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
 }

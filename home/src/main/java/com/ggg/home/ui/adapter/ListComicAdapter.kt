@@ -19,12 +19,17 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listComic: ArrayList<ComicModel>
+    lateinit var listComic: List<ComicModel>
 
-    constructor(weakContext: WeakReference<Context>, listener: OnEventControlListener, listComic: ArrayList<ComicModel>) {
-        this.weakContext = weakContext
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>) {
+        this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
+    }
+
+    fun notifyData(listComic: List<ComicModel>) {
+        this.listComic = listComic
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,10 +50,12 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
                 .into(holder.ivComic)
 
         holder.tvComicTitle.text = comic.title
+        holder.tvChap.text = comic.latestChapter
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {
         var ivComic: ImageView = itemView.findViewById(R.id.ivComic)
         var tvComicTitle: TextView = itemView.findViewById(R.id.tvComicTitle)
+        var tvChap: TextView = itemView.findViewById(R.id.tvChap)
     }
 }
