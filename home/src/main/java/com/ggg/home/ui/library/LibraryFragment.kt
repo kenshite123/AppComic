@@ -14,7 +14,13 @@ import timber.log.Timber
 class LibraryFragment : HomeBaseFragment() {
     private lateinit var viewModel: LibraryViewModel
     lateinit var pagerLibraryAdapter: PagerLibraryAdapter
+    var isFirstLoad = true
 
+    companion object {
+        val TAG = "LibraryFragment"
+        @JvmStatic
+        fun create() = LibraryFragment()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,8 +36,8 @@ class LibraryFragment : HomeBaseFragment() {
         showBottomNavView()
 
         initViews()
-        initObserver()
         initEvent()
+        loadData()
     }
 
     private fun initViews() {
@@ -47,9 +53,15 @@ class LibraryFragment : HomeBaseFragment() {
     override fun initEvent() {
     }
 
-    companion object {
-        val TAG = "LibraryFragment"
-        @JvmStatic
-        fun create() = LibraryFragment()
+    private fun loadData() {
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 }

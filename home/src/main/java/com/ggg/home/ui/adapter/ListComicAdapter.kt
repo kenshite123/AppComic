@@ -32,7 +32,6 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     fun notifyData(listComic: List<ComicWithCategoryModel>) {
         this.listComic = listComic
-        Timber.d("notifyData ListComicAdapter ${listComic.count()}")
         notifyDataSetChanged()
     }
 

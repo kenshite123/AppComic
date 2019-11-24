@@ -3,6 +3,7 @@ package com.ggg.common.ui
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar

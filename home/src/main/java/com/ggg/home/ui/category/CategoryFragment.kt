@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CategoryModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListCategoryAdapter
+import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_category.*
@@ -21,6 +24,14 @@ class CategoryFragment : HomeBaseFragment() {
     private lateinit var viewModel: CategoryViewModel
     lateinit var listCategoryAdapter: ListCategoryAdapter
     lateinit var listCategories: List<CategoryModel>
+    lateinit var listComicAdapter: ListComicAdapter
+    var listComicByCategory: List<ComicWithCategoryModel> = arrayListOf()
+
+    var isFirstLoad = true
+    var page: Long = 0
+    var items: Long = 12
+    var positionOfCategorySelected = 0
+    var isLoadMore = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,7 +47,6 @@ class CategoryFragment : HomeBaseFragment() {
         showBottomNavView()
 
         initViews()
-        initObserver()
         initEvent()
         loadData()
     }
@@ -46,6 +56,11 @@ class CategoryFragment : HomeBaseFragment() {
         rvListCategory.setHasFixedSize(false)
         rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         rvListCategory.adapter = listCategoryAdapter
+
+        listComicAdapter = ListComicAdapter(context!!, this, listOf())
+        rvListComic.setHasFixedSize(true)
+        rvListComic.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComic.adapter = listComicAdapter
     }
 
     override fun initObserver() {
@@ -56,7 +71,24 @@ class CategoryFragment : HomeBaseFragment() {
                     if (it.isNotEmpty()) {
                         it.first().isChoose = true
                         this.listCategories = it
+                        this.page = 0
+                        this.positionOfCategorySelected = 0
                         listCategoryAdapter.notifyData(it)
+                        loadListComicByCategory()
+                    }
+                }
+            }
+        })
+
+        viewModel.getListComicByCategoryResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+                it.data?.let {
+                    isLoadMore = false
+                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+                    listComicAdapter.notifyData(this.listComicByCategory)
+                    if (this.listComicByCategory.count() >= items) {
+                        isLoadMore = true
                     }
                 }
             }
@@ -64,6 +96,15 @@ class CategoryFragment : HomeBaseFragment() {
     }
 
     override fun initEvent() {
+        rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     private fun loadData() {
@@ -74,11 +115,21 @@ class CategoryFragment : HomeBaseFragment() {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_LIST_CATEGORY -> {
                 val position = data as Int
-                for (i in 0 until this.listCategories.count()) {
-                    this.listCategories[i].isChoose = i == position
-                }
+                if (position != positionOfCategorySelected) {
+                    this.positionOfCategorySelected = position
+                    this.page = 0
+                    for (i in 0 until this.listCategories.count()) {
+                        this.listCategories[i].isChoose = i == position
+                    }
 
-                listCategoryAdapter.notifyDataSetChanged()
+                    listCategoryAdapter.notifyDataSetChanged()
+                    loadListComicByCategory()
+                }
+            }
+
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicWithCategoryModel = data as ComicWithCategoryModel
+                navigationController.showComicDetail(comicWithCategoryModel)
             }
 
             else -> {
@@ -87,8 +138,21 @@ class CategoryFragment : HomeBaseFragment() {
         }
     }
 
-    fun loadListComicByCategory(categoryId: Long) {
+    private fun loadListComicByCategory() {
+        val data = hashMapOf(
+                "categoryId" to this.listCategories[positionOfCategorySelected].id,
+                "limit" to items,
+                "offset" to page
+        )
+        viewModel.getListComicByCategory(data)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 
     companion object {

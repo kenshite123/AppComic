@@ -39,7 +39,7 @@ class PagerLibraryAdapter : PagerAdapter {
     }
 
     override fun getCount(): Int {
-        return 3
+        return listTitle.count()
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

@@ -1,11 +1,13 @@
 package com.ggg.home.ui.login
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.ggg.common.utils.SpannableObject
 import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
@@ -15,6 +17,13 @@ import timber.log.Timber
 
 class LoginFragment : HomeBaseFragment() {
     private lateinit var viewModel: LoginViewModel
+    var isFirstLoad = true
+
+    companion object {
+        val TAG = "LoginFragment"
+        @JvmStatic
+        fun create() = LoginFragment()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,12 +36,12 @@ class LoginFragment : HomeBaseFragment() {
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
         initViews()
-        initObserver()
         initEvent()
     }
 
     private fun initViews() {
-        hideActionBar()
+//        hideActionBar()
+        showActionBar()
         hideBottomNavView()
         setTitleActionBar(StringUtil.getString(R.string.TEXT_LOGIN))
     }
@@ -81,9 +90,11 @@ class LoginFragment : HomeBaseFragment() {
         return true
     }
 
-    companion object {
-        val TAG = "LoginFragment"
-        @JvmStatic
-        fun create() = LoginFragment()
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 }

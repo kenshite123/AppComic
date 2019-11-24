@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
 import android.view.Window
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
@@ -32,7 +34,7 @@ import dmax.dialog.SpotsDialog
 import io.vrinda.kotlinpermissions.PermissionsActivity
 import javax.inject.Inject
 
-open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, BaseCellAdapter.ItemCellClickListener, OnEventControlListener {
+open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseCellAdapter.ItemCellClickListener, OnEventControlListener {
     interface PermissionCallBack {
 
         fun permissionGranted() {
@@ -138,16 +140,16 @@ open class BaseActivity : PermissionsActivity(), HasSupportFragmentInjector, Bas
         }
     }
 
-    fun requestPermisson(arrays: Array<String>, callBack: PermissionCallBack) {
-        requestPermissions(arrays, object: io.vrinda.kotlinpermissions.PermissionCallBack{
-            override fun permissionGranted() {
-                callBack.permissionGranted()
-            }
-            override fun permissionDenied() {
-                callBack.permissionDenied()
-            }
-        })
-    }
+//    fun requestPermisson(arrays: Array<String>, callBack: PermissionCallBack) {
+//        requestPermissions(arrays, object: io.vrinda.kotlinpermissions.PermissionCallBack{
+//            override fun permissionGranted() {
+//                callBack.permissionGranted()
+//            }
+//            override fun permissionDenied() {
+//                callBack.permissionDenied()
+//            }
+//        })
+//    }
 
     override fun onPause() {
         super.onPause()

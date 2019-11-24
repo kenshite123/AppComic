@@ -1,6 +1,7 @@
 package com.ggg.home.di
 
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
@@ -25,4 +26,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeLoginFragmentInjector(): LoginFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeComicDetailFragmentInjector(): ComicDetailFragment
 }

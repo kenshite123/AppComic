@@ -45,11 +45,15 @@ class ComicModel : Serializable {
 
         @SerializedName("viewed")
         @Expose
-        var viewed: Int = 0
+        var viewed: Long = 0
 
         @SerializedName("vote")
         @Expose
-        var vote: Int = 0
+        var vote: Long = 0
+
+        @SerializedName("status")
+        @Expose
+        var status: Int = 0
 
         @SerializedName("authors")
         @Expose

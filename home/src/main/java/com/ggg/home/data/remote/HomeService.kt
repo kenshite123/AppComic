@@ -4,15 +4,13 @@ import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
 import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.CategoryModel
+import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.RegisterResponse
 import com.ggg.home.utils.ServerPath
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface HomeService {
     @GET(ServerPath.LOGIN)
@@ -45,4 +43,9 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
+
+    @GET(ServerPath.LIST_CHAPTERS)
+    fun getListChaptersComic(
+            @Path("comicId") comicId: Long
+    ) : LiveData<ApiResponse<List<ChapterModel>>>
 }

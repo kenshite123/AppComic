@@ -9,5 +9,6 @@ class ServerPath {
         const val LATEST_UPDATE = "api/homepage/latest-update"
         const val LIST_CATEGORIES = "api/comic/category-filters"
         const val LIST_COMIC = "api/comic/list"
+        const val LIST_CHAPTERS = "api/comic/{comicId}/chapters"
     }
 }

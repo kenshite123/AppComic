@@ -1,5 +1,6 @@
 package com.ggg.home.ui.home
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.ggg.common.utils.SpannableObject
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
@@ -35,7 +38,7 @@ class HomeFragment : HomeBaseFragment() {
     lateinit var timerTask: TimerTask
     var currentPage = 0
     var isLoadBannerAlready = false
-    var isFirstLoad = false
+    var isFirstLoad = true
 
     companion object {
         val TAG = "HomeFragment"
@@ -122,9 +125,9 @@ class HomeFragment : HomeBaseFragment() {
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
-        if (!isFirstLoad) {
+        if (isFirstLoad) {
             initObserver()
-            isFirstLoad = true
+            isFirstLoad = false
         }
         initTimerToSlide()
     }
@@ -175,7 +178,7 @@ class HomeFragment : HomeBaseFragment() {
 
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val comicWithCategoryModel = data as ComicWithCategoryModel
-                showDialog(comicWithCategoryModel.comicModel!!.title)
+                navigationController.showComicDetail(comicWithCategoryModel)
             }
 
             else -> {

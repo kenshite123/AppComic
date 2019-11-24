@@ -58,16 +58,16 @@ class CategoryRepository {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 return db.comicDao().getListComicByCategory(
                         data["categoryId"] as Long,
-                        data["limit"] as Int,
-                        data["offset"] as Int
+                        (data["limit"] as Long).toInt(),
+                        (data["offset"] as Long).toInt()
                 )
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
                 return api.getListComicByCategory(
                         data["categoryId"] as Long,
-                        data["limit"] as Int,
-                        data["offset"] as Int
+                        (data["limit"] as Long).toInt(),
+                        (data["offset"] as Long).toInt()
                 )
             }
 

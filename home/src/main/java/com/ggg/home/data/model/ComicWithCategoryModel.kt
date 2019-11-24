@@ -2,9 +2,10 @@ package com.ggg.home.data.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import java.io.Serializable
 
 
-class ComicWithCategoryModel {
+class ComicWithCategoryModel : Serializable {
     @Embedded
     var comicModel: ComicModel? = null
 
