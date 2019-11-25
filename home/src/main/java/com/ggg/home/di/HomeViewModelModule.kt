@@ -6,6 +6,7 @@ import com.ggg.home.ui.category.CategoryViewModel
 import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
+import com.ggg.home.ui.register.RegisterViewModel
 import com.ggg.home.ui.user.UserViewModel
 import dagger.Binds
 import dagger.Module
@@ -38,4 +39,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(LoginViewModel::class)
     abstract fun bindLoginViewModel(loginViewModel: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RegisterViewModel::class)
+    abstract fun bindRegisterViewModel(registerViewModel: RegisterViewModel): ViewModel
 }

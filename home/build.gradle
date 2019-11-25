@@ -106,5 +106,7 @@ dependencies {
     implementation rootProject.ext.libs.anko
     testImplementation 'junit:junit:4.12'
     implementation project(path: ':common')
+    //CaptchaImageView
+    implementation 'com.github.jineshfrancs:CaptchaImageView:1.0'
 
 }

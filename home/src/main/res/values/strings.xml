@@ -27,4 +27,18 @@
     <string name="TEXT_ERROR_INPUT_USERNAME_OR_PASSWORD_EMPTY">Username or Email can not be empty</string>
     <string name="TEXT_ERROR_INPUT_PASSWORD_EMPTY">Password can not be empty</string>
     <string name="TEXT_LOGIN_SUCCESS">Login Success</string>
+    <string name="TEXT_REGISTER_SUCCESS">Register Success</string>
+    <string name="TEXT_FULL_NAME">Full Name</string>
+    <string name="TEXT_USER_NAME">User Name</string>
+    <string name="TEXT_EMAIL">Email</string>
+    <string name="TEXT_PASSWORD">Password</string>
+    <string name="TEXT_INPUT_CAPTCHA">Input Captcha</string>
+    <string name="TEXT_FULLNAME_NOT_EMPTY">Fullname is not empty</string>
+    <string name="TEXT_USERNAME_NOT_EMPTY">User Name is not empty</string>
+    <string name="TEXT_EMAIL_NOT_EMPTY">Email is not empty</string>
+    <string name="TEXT_PASSWORD_NOT_EMPTY">Password is not empty</string>
+    <string name="TEXT_PASSWORD_MORE_6_CHAR">Password must be least 6 characters</string>
+    <string name="TEXT_EMAIL_NOT_TRUE">Email is not true</string>
+    <string name="TEXT_CAPTCHA_NOT_EMPTY">Captcha is not empty</string>
+    <string name="TEXT_CAPTCHA_NOT_TRUE">Captcha is not true</string>
 </resources>

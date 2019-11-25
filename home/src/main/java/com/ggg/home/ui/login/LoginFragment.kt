@@ -63,6 +63,11 @@ class LoginFragment : HomeBaseFragment() {
                 viewModel.requestLogin(data)
             }
         }
+
+        btnRegister.setOnClickListener {
+            hideSoftKeyboard()
+            navigationController.showRegister()
+        }
     }
 
     private fun checkValidData(): Boolean {

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <EditText
+        android:id="@+id/edtFullName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp50"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_FULL_NAME"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="text|textEmailAddress"
+        android:lines="1"/>
+
+    <EditText
+        android:id="@+id/edtUserName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        app:layout_constraintTop_toBottomOf="@+id/edtFullName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_USER_NAME"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        app:layout_constraintTop_toBottomOf="@+id/edtUserName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_EMAIL"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="textEmailAddress"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/edtPass"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        app:layout_constraintTop_toBottomOf="@+id/edtEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_PASSWORD"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="textPassword"
+        android:lines="1" />
+
+    <test.jinesh.captchaimageviewlib.CaptchaImageView
+        android:id="@+id/captchaImage"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        android:layout_marginStart="@dimen/font_15"
+        android:layout_marginEnd="@dimen/margin_20"
+        app:layout_constraintEnd_toStartOf="@+id/ivRefresh"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/bg_edit_text_input_login"
+        app:layout_constraintTop_toTopOf="@+id/ivRefresh" />
+
+    <ImageView
+        android:id="@+id/ivRefresh"
+        android:layout_width="@dimen/dp60"
+        android:layout_height="@dimen/dp60"
+        android:foregroundGravity="center"
+        android:padding="@dimen/adapter_contract_rate_padding"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="@drawable/ic_refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtPass" />
+
+    <EditText
+        android:id="@+id/edtCaptcha"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp80"
+        app:layout_constraintTop_toBottomOf="@+id/ivRefresh"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dp45"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:padding="@dimen/dp20"
+        android:hint="@string/TEXT_INPUT_CAPTCHA"
+        android:background="@drawable/bg_edit_text_input_login"
+        android:inputType="number"
+        android:lines="1" />
+
+    <com.rey.material.widget.Button
+        android:id="@+id/btnRegister"
+        style="@style/btn_ripple_normal_0"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp70"
+        android:layout_marginTop="@dimen/dp60"
+        android:background="#fad961"
+        android:gravity="center"
+        android:text="@string/TEXT_REGISTER"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp24"
+        android:lines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toEndOf="@+id/edtCaptcha"
+        app:layout_constraintStart_toStartOf="@+id/edtCaptcha"
+        app:layout_constraintTop_toBottomOf="@+id/edtCaptcha" />
+</androidx.constraintlayout.widget.ConstraintLayout>

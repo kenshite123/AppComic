@@ -6,6 +6,7 @@ import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
+import com.ggg.home.ui.register.RegisterFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ncapdevi.fragnav.FragNavController
 import java.lang.ref.WeakReference
@@ -37,6 +38,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showLogin(){
         val fragment = LoginFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showRegister() {
+        val fragment = RegisterFragment.create()
         fragNavController.pushFragment(fragment)
     }
 

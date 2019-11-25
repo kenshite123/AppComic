@@ -2,7 +2,6 @@ package com.ggg.home.data.remote
 
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
-import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
