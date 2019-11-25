@@ -1,17 +1,22 @@
 package com.ggg.home.ui.home
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.ggg.common.utils.SpannableObject
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -19,20 +24,21 @@ import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HomeFragment : HomeBaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
     lateinit var pagerSlideAdapter: PagerSlideAdapter
+    var listBanners: List<ComicWithCategoryModel> = arrayListOf()
     lateinit var listComicAdapter: ListComicAdapter
-    var listBanners: List<ComicModel> = arrayListOf()
+    var listComicLatestUpdate: List<ComicWithCategoryModel> = arrayListOf()
     val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
     lateinit var timerTask: TimerTask
     var currentPage = 0
     var isLoadBannerAlready = false
+    var isFirstLoad = true
 
     companion object {
         val TAG = "HomeFragment"
@@ -56,7 +62,6 @@ class HomeFragment : HomeBaseFragment() {
         showBottomNavView()
 
         initViews()
-        initObserver()
         initEvent()
         loadData()
     }
@@ -69,6 +74,11 @@ class HomeFragment : HomeBaseFragment() {
         rvSlide.layoutManager = layoutManager
         rvSlide.adapter = pagerSlideAdapter
         pagerSnapHelper.attachToRecyclerView(rvSlide)
+
+        listComicAdapter = ListComicAdapter(context!!, this,  listComicLatestUpdate)
+        rvListComic.setHasFixedSize(true)
+        rvListComic.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComic.adapter = listComicAdapter
     }
 
     private fun initTimerToSlide() {
@@ -97,6 +107,12 @@ class HomeFragment : HomeBaseFragment() {
 
     private fun loadData() {
         viewModel.getBanners()
+
+        val dataLatestUpdate = hashMapOf(
+                "limit" to 21,
+                "offset" to 0
+        )
+        viewModel.getListLatestUpdate(dataLatestUpdate)
     }
 
     override fun onPause() {
@@ -109,18 +125,31 @@ class HomeFragment : HomeBaseFragment() {
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
         initTimerToSlide()
     }
 
     override fun initObserver() {
         viewModel.getBannersResult.observe(this, androidx.lifecycle.Observer {
-            loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 it.data?.let {
-                    this.listBanners = it
+                    this.listBanners = it.distinctBy { it.comicModel?.id }
                     isLoadBannerAlready = true
                     pagerSlideAdapter.notifyData(this.listBanners)
                     indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
+                }
+            }
+        })
+
+        viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+                it.data?.let {
+                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
+                    listComicAdapter.notifyData(this.listComicLatestUpdate)
                 }
             }
         })
@@ -128,7 +157,7 @@ class HomeFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         ivRank.setOnClickListener {
-            showLoading()
+
         }
 
         ivLatestUpdate.setOnClickListener {
@@ -143,8 +172,13 @@ class HomeFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_SLIDE -> {
-                val comic = data as ComicModel
-                showDialog(comic.title)
+                val comicWithCategoryModel = data as ComicWithCategoryModel
+                showDialog(comicWithCategoryModel.comicModel!!.title)
+            }
+
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicWithCategoryModel = data as ComicWithCategoryModel
+                navigationController.showComicDetail(comicWithCategoryModel)
             }
 
             else -> {

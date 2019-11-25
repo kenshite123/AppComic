@@ -18,6 +18,9 @@
     <string name="TEXT_COMIC_LATEST_UPDATE">New comics updated</string>
     <string name="TEXT_ANNOUNCE">Announce</string>
     <string name="TEXT_HISTORY">History</string>
+    <string name="TEXT_LIST_CHAPTERS">List chapters</string>
+    <string name="TEXT_DESCRIPTION">Description</string>
+    <string name="TEXT_LIST_COMMENTS">List comments</string>
     <string name="TEXT_FOLLOW">Follow</string>
     <string name="TEXT_DOWNLOAD">Download</string>
     <string name="TEXT_LOGIN">Login</string>
@@ -41,4 +44,10 @@
     <string name="TEXT_EMAIL_NOT_TRUE">Email is not true</string>
     <string name="TEXT_CAPTCHA_NOT_EMPTY">Captcha is not empty</string>
     <string name="TEXT_CAPTCHA_NOT_TRUE">Captcha is not true</string>
+    <string name="TEXT_AUTHOR_TITLE">Authors:</string>
+    <string name="TEXT_STATUS_TITLE">Status:</string>
+    <string name="TEXT_VIEWS_TITLE">Views:</string>
+    <string name="TEXT_CATEGORY_TITLE">Category:</string>
+    <string name="TEXT_STATUS_COMPLETED">Done</string>
+    <string name="TEXT_STATUS_UNCOMPLETED">Updating</string>
 </resources>

@@ -19,6 +19,7 @@ open class HomeBaseFragment: BaseFragment() {
     open fun initObserver(){
 
     }
+
     open fun initEvent(){
 
     }

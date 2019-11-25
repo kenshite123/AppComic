@@ -12,6 +12,13 @@ import timber.log.Timber
 
 class UserFragment : HomeBaseFragment() {
     private lateinit var viewModel: UserViewModel
+    var isFirstLoad = true
+
+    companion object {
+        val TAG = "UserFragment"
+        @JvmStatic
+        fun create() = UserFragment()
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +35,6 @@ class UserFragment : HomeBaseFragment() {
         showBottomNavView()
 
         initViews()
-        initObserver()
         initEvent()
     }
 
@@ -46,9 +52,11 @@ class UserFragment : HomeBaseFragment() {
         }
     }
 
-    companion object {
-        val TAG = "UserFragment"
-        @JvmStatic
-        fun create() = UserFragment()
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 }

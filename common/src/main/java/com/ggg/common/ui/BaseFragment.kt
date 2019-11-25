@@ -3,6 +3,7 @@ package com.ggg.common.ui
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
@@ -232,6 +233,11 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
 
     open fun addRightButton() {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        messageEvent.clear()
     }
 
 //    fun createButtonTitle(title: String, clickListener: View.OnClickListener): TextView? {

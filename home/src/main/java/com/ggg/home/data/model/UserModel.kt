@@ -24,7 +24,7 @@ class UserModel : Serializable {
 
         @SerializedName("id")
         @Expose
-        var id: Int = 0
+        var id: Long = 0
 
         @SerializedName("imageUrl")
         @Expose

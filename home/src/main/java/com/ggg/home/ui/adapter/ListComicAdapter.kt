@@ -13,18 +13,26 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.utils.Constant
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listComic: ArrayList<ComicModel>
+    lateinit var listComic: List<ComicWithCategoryModel>
 
-    constructor(weakContext: WeakReference<Context>, listener: OnEventControlListener, listComic: ArrayList<ComicModel>) {
-        this.weakContext = weakContext
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicWithCategoryModel>) {
+        this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
+    }
+
+    fun notifyData(listComic: List<ComicWithCategoryModel>) {
+        this.listComic = listComic
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,7 +45,8 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val comic = listComic[position]
+        val comicWithCategoryModel = listComic[position]
+        val comic = comicWithCategoryModel.comicModel!!
         Glide.with(weakContext.get())
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
@@ -45,10 +54,16 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
                 .into(holder.ivComic)
 
         holder.tvComicTitle.text = comic.title
+        holder.tvChap.text = comic.latestChapter
+
+        holder.ivComic.setOnClickListener {
+            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {
         var ivComic: ImageView = itemView.findViewById(R.id.ivComic)
         var tvComicTitle: TextView = itemView.findViewById(R.id.tvComicTitle)
+        var tvChap: TextView = itemView.findViewById(R.id.tvChap)
     }
 }

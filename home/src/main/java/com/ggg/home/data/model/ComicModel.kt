@@ -1,10 +1,10 @@
 package com.ggg.home.data.model
 
 
-import android.text.TextUtils
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
+import com.ggg.home.utils.Constant
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -13,20 +13,16 @@ import java.io.Serializable
 class ComicModel : Serializable {
         @SerializedName("id")
         @Expose
-        var id: Int = 0
-
-        @SerializedName("author")
-        @Expose
-        var author: String = ""
+        var id: Long = 0
 
         @SerializedName("bigImageUrl")
         @Expose
-        var bigImageUrl: String = ""
+        var bigImageUrl: String? = ""
 
         @SerializedName("categories")
         @Expose
         @Ignore
-        var categories: List<Int> = listOf()
+        var categories: List<CategoryModel> = listOf()
 
         @SerializedName("content")
         @Expose
@@ -44,21 +40,27 @@ class ComicModel : Serializable {
         @Expose
         var title: String = ""
 
-        @SerializedName("titleSeo")
+        @SerializedName("latestChapter")
         @Expose
-        var titleSeo: String = ""
+        var latestChapter: String? = ""
 
         @SerializedName("viewed")
         @Expose
-        var viewed: Int = 0
+        var viewed: Long = 0
 
         @SerializedName("vote")
         @Expose
-        var vote: Int = 0
+        var vote: Long = 0
 
-        var categoriesString: String = ""
+        @SerializedName("status")
+        @Expose
+        var status: Int = 0
 
-        constructor() {
-                categoriesString = TextUtils.join(",", categories)
-        }
+        @SerializedName("authors")
+        @Expose
+        @Ignore
+        var authors: List<String> = listOf()
+
+        var authorsString: String? = ""
+        var hadFollow: Int = Constant.IS_UNFOLLOW
 }

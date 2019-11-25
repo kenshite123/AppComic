@@ -21,7 +21,9 @@ class HomeModule {
     @Singleton
     @Provides
     fun provideConnectDb(app: Application): HomeDB {
-        return Room.databaseBuilder(app, HomeDB::class.java!!, "home.db").build()
+        return Room.databaseBuilder(app, HomeDB::class.java, "home.db")
+//                .addMigrations(HomeDB.migration12)
+                .build()
     }
 
 }
