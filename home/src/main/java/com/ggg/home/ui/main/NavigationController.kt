@@ -2,6 +2,8 @@ package com.ggg.home.ui.main
 
 import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
+import com.ggg.home.data.model.ChapterHadRead
+import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
@@ -9,6 +11,7 @@ import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.user.UserFragment
+import com.ggg.home.ui.view_comic.ViewComicFragment
 import com.ncapdevi.fragnav.FragNavController
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -44,6 +47,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showComicDetail(comicWithCategoryModel: ComicWithCategoryModel){
         val fragment = ComicDetailFragment.create(comicWithCategoryModel)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showViewComic(comicWithCategoryModel: ComicWithCategoryModel, listChapterModel: List<ChapterHadRead>, positionChapter: Int) {
+        val fragment = ViewComicFragment.create(comicWithCategoryModel, listChapterModel, positionChapter)
         fragNavController.pushFragment(fragment)
     }
 

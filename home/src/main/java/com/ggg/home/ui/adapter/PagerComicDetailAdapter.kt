@@ -11,6 +11,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
 import com.ggg.home.R
+import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import java.lang.ref.WeakReference
@@ -19,7 +20,7 @@ class PagerComicDetailAdapter : PagerAdapter {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     var comicWithCategoryModel: ComicWithCategoryModel? = null
-    var listChapters: List<ChapterModel> = listOf()
+    var listChapters: List<ChapterHadRead> = listOf()
 
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_LIST_CHAPTERS),
             StringUtil.getString(R.string.TEXT_DESCRIPTION), StringUtil.getString(R.string.TEXT_LIST_COMMENTS))
@@ -45,7 +46,7 @@ class PagerComicDetailAdapter : PagerAdapter {
         return POSITION_NONE
     }
 
-    fun notifyData(listChapters: List<ChapterModel>) {
+    fun notifyData(listChapters: List<ChapterHadRead>) {
         this.listChapters = listChapters
         notifyDataSetChanged()
     }

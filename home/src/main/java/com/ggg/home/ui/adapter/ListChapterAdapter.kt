@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
+import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
@@ -17,15 +18,15 @@ import java.lang.ref.WeakReference
 class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listChapters: List<ChapterModel>
+    lateinit var listChapters: List<ChapterHadRead>
 
-    constructor(context: Context, listener: OnEventControlListener, listChapters: List<ChapterModel>){
+    constructor(context: Context, listener: OnEventControlListener, listChapters: List<ChapterHadRead>){
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listChapters = listChapters
     }
 
-    fun notifyData(listChapters: List<ChapterModel>) {
+    fun notifyData(listChapters: List<ChapterHadRead>) {
         this.listChapters = listChapters
         notifyDataSetChanged()
     }
@@ -40,14 +41,15 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chapterModel = listChapters[position]
+        val chapterHadRead = listChapters[position]
+        val chapterModel = chapterHadRead.chapterModel!!
         holder.tvChapterName.text = "${this.listChapters.count() - position}. ${chapterModel.chapterName}"
         holder.tvUpdateDate.text = chapterModel.dateUpdate
 
-        if (chapterModel.isRead) {
-            holder.tvChapterName.setTextColor(Color.parseColor("#949494"))
-        } else {
+        if (chapterHadRead.ccHadReadModel.isNullOrEmpty()) {
             holder.tvChapterName.setTextColor(Color.parseColor("#161616"))
+        } else {
+            holder.tvChapterName.setTextColor(Color.parseColor("#949494"))
         }
 
         holder.llChapters.setOnClickListener {

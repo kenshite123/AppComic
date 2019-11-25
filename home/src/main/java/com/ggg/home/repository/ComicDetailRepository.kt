@@ -7,10 +7,7 @@ import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
-import com.ggg.home.data.model.CategoryOfComicModel
-import com.ggg.home.data.model.ChapterModel
-import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.*
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import org.jetbrains.anko.doAsync
@@ -31,10 +28,10 @@ class ComicDetailRepository {
         this.db = db
     }
 
-    fun getListChapters(comicId: Long): LiveData<Resource<List<ChapterModel>>> {
-        val callApi = object : NetworkBoundResource<List<ChapterModel>, List<ChapterModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ChapterModel>> {
-                return db.chapterDao().getListChaptersComic(comicId)
+    fun getListChapters(comicId: Long): LiveData<Resource<List<ChapterHadRead>>> {
+        val callApi = object : NetworkBoundResource<List<ChapterHadRead>, List<ChapterModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ChapterHadRead>> {
+                return db.chapterDao().getListChaptersComicHadRead(comicId)
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ChapterModel>>> {
@@ -51,22 +48,16 @@ class ComicDetailRepository {
                 }
             }
 
-            override fun shouldFetch(data: List<ChapterModel>?): Boolean {
+            override fun shouldFetch(data: List<ChapterHadRead>?): Boolean {
                 return true
             }
         }
         return callApi.asLiveData()
     }
 
-    fun updateReadChapterComic(chapterModel: ChapterModel) {
+    fun insertCCHadRead(ccHadReadModel: CCHadReadModel) {
         doAsync {
-            db.chapterDao().updateReadChapterComic(chapterModel)
-        }
-    }
-
-    fun updateReadChapterComic(chapterId: Long, isRead: Boolean) {
-        doAsync {
-            db.chapterDao().updateReadChapterComic(chapterId, isRead)
+            db.ccHadReadDao().insertCCHadRead(ccHadReadModel)
         }
     }
 }

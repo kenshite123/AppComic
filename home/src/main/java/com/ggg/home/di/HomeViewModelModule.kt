@@ -8,6 +8,7 @@ import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
 import com.ggg.home.ui.user.UserViewModel
+import com.ggg.home.ui.view_comic.ViewComicViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -44,4 +45,10 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(ComicDetailViewModel::class)
     abstract fun bindComicDetailViewModel(comicDetailViewModel: ComicDetailViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ViewComicViewModel::class)
+    abstract fun bindViewComicViewModel(viewComicViewModel: ViewComicViewModel): ViewModel
+
 }

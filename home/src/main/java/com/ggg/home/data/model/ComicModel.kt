@@ -4,6 +4,7 @@ package com.ggg.home.data.model
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
+import com.ggg.home.utils.Constant
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -61,4 +62,5 @@ class ComicModel : Serializable {
         var authors: List<String> = listOf()
 
         var authorsString: String? = ""
+        var hadFollow: Int = Constant.IS_UNFOLLOW
 }

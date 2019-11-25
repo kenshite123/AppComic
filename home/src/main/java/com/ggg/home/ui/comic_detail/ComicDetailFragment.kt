@@ -14,6 +14,8 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
+import com.ggg.home.data.model.CCHadReadModel
+import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListCategoryComicDetailAdapter
@@ -31,7 +33,7 @@ class ComicDetailFragment : HomeBaseFragment() {
     lateinit var comicWithCategoryModel: ComicWithCategoryModel
     lateinit var listCategoryComicDetailAdapter: ListCategoryComicDetailAdapter
     lateinit var pagerComicDetailAdapter: PagerComicDetailAdapter
-    lateinit var listChapters: List<ChapterModel>
+    lateinit var listChapters: List<ChapterHadRead>
     var currentPagePosition = 0
 
     companion object {
@@ -147,14 +149,20 @@ class ComicDetailFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_CHAPTER -> {
-                val position = data as Int
-                this.listChapters[position].isRead = true
-                pagerComicDetailAdapter.notifyData(this.listChapters)
-                viewModel.updateReadChapterComic(this.listChapters[position])
+                val positionChapter = data as Int
+                insertCCHadRead(positionChapter)
+                navigationController.showViewComic(comicWithCategoryModel, listChapters, positionChapter)
             }
 
             else -> super.onEvent(eventAction, control, data)
         }
+    }
+
+    private fun insertCCHadRead(positionChapter: Int) {
+        val ccHadReadModel = CCHadReadModel()
+        ccHadReadModel.comicId = comicWithCategoryModel.comicModel!!.id
+        ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
+        viewModel.insertCCHadRead(ccHadReadModel)
     }
 
     override fun onResume() {

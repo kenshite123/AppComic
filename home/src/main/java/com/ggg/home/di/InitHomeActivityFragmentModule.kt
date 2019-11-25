@@ -6,6 +6,7 @@ import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.user.UserFragment
+import com.ggg.home.ui.view_comic.ViewComicFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -29,4 +30,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeComicDetailFragmentInjector(): ComicDetailFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeViewComicFragmentInjector(): ViewComicFragment
 }

@@ -235,6 +235,11 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        messageEvent.clear()
+    }
+
 //    fun createButtonTitle(title: String, clickListener: View.OnClickListener): TextView? {
 //        val context = context
 //        if (context != null) {

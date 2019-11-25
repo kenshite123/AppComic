@@ -11,7 +11,4 @@ class ComicWithCategoryModel : Serializable {
 
     @Relation(parentColumn = "id", entityColumn = "comicId", entity = CategoryOfComicModel::class)
     var categories: List<CategoryOfComicModel>? = null
-
-    var groupCateId: String = ""
-    var groupCateName: String = ""
 }
