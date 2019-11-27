@@ -9,4 +9,5 @@ class CategoryOfComicModel : Serializable {
     var comicId: Long = 0
     var categoryId: Long = 0
     var categoryName: String = ""
+    var lastModified: Long = System.currentTimeMillis()
 }

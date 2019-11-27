@@ -2,15 +2,21 @@ package com.ggg.home.ui.main
 
 import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
+import com.ggg.home.data.model.CategoryOfComicModel
 import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
+import com.ggg.home.ui.latest_update.LatestUpdateFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
+import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
+import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ggg.home.ui.view_comic.ViewComicFragment
 import com.ncapdevi.fragnav.FragNavController
@@ -57,6 +63,31 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showViewComic(comicWithCategoryModel: ComicWithCategoryModel, listChapterModel: List<ChapterHadRead>, positionChapter: Int) {
         val fragment = ViewComicFragment.create(comicWithCategoryModel, listChapterModel, positionChapter)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showCategoryDetail(categoryOfComicModel: CategoryOfComicModel) {
+        val fragment = CategoryDetailFragment.create(categoryOfComicModel)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showLatestUpdate() {
+        val fragment = LatestUpdateFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showSearch() {
+        val fragment = SearchFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showFavorite() {
+        val fragment = FavoriteFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showRank() {
+        val fragment = RankFragment.create()
         fragNavController.pushFragment(fragment)
     }
 

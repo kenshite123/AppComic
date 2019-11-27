@@ -1,11 +1,16 @@
 package com.ggg.home.di
 
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
+import com.ggg.home.ui.latest_update.LatestUpdateFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
+import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
+import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ggg.home.ui.view_comic.ViewComicFragment
 import dagger.Module
@@ -37,4 +42,19 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeViewComicFragmentInjector(): ViewComicFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCategoryDetailFragmentInjector(): CategoryDetailFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSearchFragmentInjector(): SearchFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeLatestUpdateFragmentInjector(): LatestUpdateFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeFavoriteFragmentInjector(): FavoriteFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeRankFragmentInjector(): RankFragment
 }

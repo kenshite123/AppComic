@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ggg.home.R
+import com.ggg.home.data.model.CCHadReadModel
 import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
@@ -66,6 +67,10 @@ class ViewComicFragment : HomeBaseFragment() {
         hideActionBar()
         hideBottomNavView()
 
+        comicWithCategoryModel = arguments!!["comicWithCategoryModel"] as ComicWithCategoryModel
+        listChapterModel = arguments!!["listChapterModel"] as List<ChapterHadRead>
+        positionChapter = arguments!!["positionChapter"] as Int
+
         initViews()
         initEvent()
         loadData()
@@ -94,28 +99,40 @@ class ViewComicFragment : HomeBaseFragment() {
         }
 
         ivNext.setOnClickListener {
-
+            if (positionChapter == 0) {
+                showMsg(R.string.TEXT_FINAL_CHAPTERS_OF_COMIC_TOAST)
+            } else {
+                insertCCHadRead(positionChapter)
+                positionChapter--
+                currentPagePosition = 0
+                loadData()
+            }
         }
 
         ivPrevious.setOnClickListener {
-
+            if (positionChapter == listChapterModel.size - 1) {
+                showMsg(R.string.TEXT_FIRST_CHAPTERS_OF_COMIC_TOAST)
+            } else {
+                insertCCHadRead(positionChapter)
+                positionChapter++
+                currentPagePosition = 0
+                loadData()
+            }
         }
 
         ivChangeScrollDirection.setOnClickListener {
             if (isShowVertical) {
-                ivChangeScrollDirection.setImageResource(R.drawable.icon_read_horizontal)
-                isShowVertical = false
-
+                ivChangeScrollDirection.setImageResource(R.drawable.icon_read_vertical)
                 rvListImageComic.layoutManager = layoutManagerForHorizontal
                 pagerSnapHelper.attachToRecyclerView(rvListImageComic)
                 rvListImageComic.scrollToPosition(currentPagePosition)
+                isShowVertical = false
             } else {
-                ivChangeScrollDirection.setImageResource(R.drawable.icon_read_vertical)
-                isShowVertical = true
-
+                ivChangeScrollDirection.setImageResource(R.drawable.icon_read_horizontal)
                 rvListImageComic.layoutManager = layoutManagerForVertical
                 pagerSnapHelper.attachToRecyclerView(null)
                 rvListImageComic.scrollToPosition(currentPagePosition)
+                isShowVertical = true
             }
         }
 
@@ -139,13 +156,10 @@ class ViewComicFragment : HomeBaseFragment() {
     }
 
     private fun loadData() {
-        comicWithCategoryModel = arguments!!["comicWithCategoryModel"] as ComicWithCategoryModel
-        listChapterModel = arguments!!["listChapterModel"] as List<ChapterHadRead>
-        positionChapter = arguments!!["positionChapter"] as Int
-
         val chapterSelected = listChapterModel[positionChapter]
         val listImageComic: List<String> = chapterSelected.chapterModel!!.listImageUrlString.split(", ")
         listImageComicAdapter.notifyData(listImageComic)
+        rvListImageComic.scrollToPosition(currentPagePosition)
         tvChapter.text = chapterSelected.chapterModel!!.chapterName
     }
 
@@ -165,6 +179,22 @@ class ViewComicFragment : HomeBaseFragment() {
 
             else -> super.onEvent(eventAction, control, data)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.d("onDetach")
+        // code here
+        insertCCHadRead(positionChapter)
+    }
+
+    private fun insertCCHadRead(positionChapter: Int) {
+        val ccHadReadModel = CCHadReadModel()
+        ccHadReadModel.comicId = comicWithCategoryModel.comicModel!!.id
+        ccHadReadModel.chapterId = listChapterModel[positionChapter].chapterModel!!.chapterId
+        ccHadReadModel.positionOfPage = currentPagePosition
+        ccHadReadModel.lastModified = System.currentTimeMillis()
+        viewModel.insertCCHadRead(ccHadReadModel)
     }
 
     override fun onResume() {

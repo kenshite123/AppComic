@@ -50,4 +50,10 @@
     <string name="TEXT_CATEGORY_TITLE">Category:</string>
     <string name="TEXT_STATUS_COMPLETED">Done</string>
     <string name="TEXT_STATUS_UNCOMPLETED">Updating</string>
+    <string name="TEXT_FINAL_CHAPTERS_OF_COMIC_TOAST">This is final chapter of this comic. ^_^</string>
+    <string name="TEXT_FIRST_CHAPTERS_OF_COMIC_TOAST">This is first chapter of this comic. ^_^</string>
+    <string name="TEXT_FAVORITE">Favorite</string>
+    <string name="TEXT_RANK">Rank</string>
+    <string name="TEXT_LATEST_UPDATE">Latest Update</string>
+    <string name="TEXT_SEARCH">Search</string>
 </resources>

@@ -80,6 +80,12 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         }
     }
 
+    fun setTitleActionBar(resId: Int) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).setTitleActionBar(StringUtil.getString(resId))
+        }
+    }
+
     fun setTitleActionBar(title: String) {
         if (activity is BaseActivity) {
             (activity as BaseActivity).setTitleActionBar(title)

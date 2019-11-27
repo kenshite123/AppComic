@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 
@@ -32,7 +33,12 @@ abstract class NetworkBoundResource <ResultType, RequestType>{
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
-        val apiResponse = createCall()
+        var apiResponse: LiveData<ApiResponse<RequestType>>
+        if (CommonUtils.isInternetAvailable()) {
+            apiResponse = createCall()
+        } else {
+            apiResponse = MutableLiveData<ApiResponse<RequestType>>()
+        }
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
         result.addSource(dbSource) { newData -> result.setValue(Resource.loading(newData)) }
         result.addSource<ApiResponse<RequestType>>(apiResponse) { response ->

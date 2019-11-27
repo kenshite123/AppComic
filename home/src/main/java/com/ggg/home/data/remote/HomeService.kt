@@ -6,6 +6,7 @@ import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.RegisterResponse
@@ -48,4 +49,11 @@ interface HomeService {
     fun getListChaptersComic(
             @Path("comicId") comicId: Long
     ) : LiveData<ApiResponse<List<ChapterModel>>>
+
+    @GET(ServerPath.LIST_COMMENT_BY_COMIC)
+    fun getListCommentByComic(
+            @Path("comicId") comicId: Long,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<CommentModel>>>
 }

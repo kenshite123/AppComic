@@ -60,6 +60,7 @@ class HomeRepository {
                                 db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
                             }
                             comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+                            comicModel.lastModified = System.currentTimeMillis()
                         }
                     }
                     db.comicDao().insertListComic(item)
@@ -95,6 +96,7 @@ class HomeRepository {
                                 db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
                             }
                             comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+                            comicModel.lastModified = System.currentTimeMillis()
                         }
                     }
                     db.comicDao().insertListComic(item)

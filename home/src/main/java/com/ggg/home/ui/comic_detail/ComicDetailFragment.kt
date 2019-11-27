@@ -14,10 +14,7 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
-import com.ggg.home.data.model.CCHadReadModel
-import com.ggg.home.data.model.ChapterHadRead
-import com.ggg.home.data.model.ChapterModel
-import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.*
 import com.ggg.home.ui.adapter.ListCategoryComicDetailAdapter
 import com.ggg.home.ui.adapter.PagerComicDetailAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -154,6 +151,11 @@ class ComicDetailFragment : HomeBaseFragment() {
                 navigationController.showViewComic(comicWithCategoryModel, listChapters, positionChapter)
             }
 
+            Constant.ACTION_CLICK_ON_ITEM_CATEGORY_OF_COMIC_DETAIL -> {
+                val categoryOfComicModel = data as CategoryOfComicModel
+                navigationController.showCategoryDetail(categoryOfComicModel)
+            }
+
             else -> super.onEvent(eventAction, control, data)
         }
     }
@@ -162,6 +164,7 @@ class ComicDetailFragment : HomeBaseFragment() {
         val ccHadReadModel = CCHadReadModel()
         ccHadReadModel.comicId = comicWithCategoryModel.comicModel!!.id
         ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
+        ccHadReadModel.lastModified = System.currentTimeMillis()
         viewModel.insertCCHadRead(ccHadReadModel)
     }
 

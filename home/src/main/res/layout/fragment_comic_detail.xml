@@ -168,7 +168,9 @@
         android:layout_height="@dimen/dp70"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="@dimen/dp10"
+        android:paddingEnd="@dimen/dp10">
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

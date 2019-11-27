@@ -12,6 +12,7 @@ import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.utils.PrefsUtil
 import kotlinx.android.synthetic.main.fragment_login.*
 import timber.log.Timber
 
@@ -50,8 +51,12 @@ class LoginFragment : HomeBaseFragment() {
         viewModel.loginResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS) {
-                showDialog(R.string.TEXT_LOGIN_SUCCESS)
-                navigationController.popToBackStack()
+                it.data?.let {
+                    PrefsUtil.instance.setStringValue("LoginResponse", it.convertToGson())
+                    showDialog(R.string.TEXT_LOGIN_SUCCESS)
+                    navigationController.popToBackStack()
+                }
+
             } else if (it.status == Status.ERROR) {
                 showDialog(it.message.toString())
             }

@@ -30,8 +30,8 @@ class CategoryFragment : HomeBaseFragment() {
     var isFirstLoad = true
     var page: Long = 0
     var items: Long = 12
-    var positionOfCategorySelected = 0
     var isLoadMore = true
+    var positionOfCategorySelected = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

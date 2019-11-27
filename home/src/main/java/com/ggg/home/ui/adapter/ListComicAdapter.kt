@@ -12,10 +12,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
-import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.utils.Constant
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {

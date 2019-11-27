@@ -3,11 +3,16 @@ package com.ggg.home.di
 import androidx.lifecycle.ViewModel
 import com.ggg.common.di.ViewModelKey
 import com.ggg.home.ui.category.CategoryViewModel
+import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
+import com.ggg.home.ui.favorite.FavoriteViewModel
 import com.ggg.home.ui.home.HomeViewModel
+import com.ggg.home.ui.latest_update.LatestUpdateViewModel
 import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
+import com.ggg.home.ui.rank.RankViewModel
 import com.ggg.home.ui.register.RegisterViewModel
+import com.ggg.home.ui.search.SearchViewModel
 import com.ggg.home.ui.user.UserViewModel
 import com.ggg.home.ui.view_comic.ViewComicViewModel
 import dagger.Binds
@@ -56,4 +61,29 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(ViewComicViewModel::class)
     abstract fun bindViewComicViewModel(viewComicViewModel: ViewComicViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoryDetailViewModel::class)
+    abstract fun bindCategoryDetailViewModel(categoryDetailViewModel: CategoryDetailViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LatestUpdateViewModel::class)
+    abstract fun bindLatestUpdateViewModel(latestUpdateViewModel: LatestUpdateViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavoriteViewModel::class)
+    abstract fun bindFavoriteViewModel(favoriteViewModel: FavoriteViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RankViewModel::class)
+    abstract fun bindRankViewModel(rankViewModel: RankViewModel): ViewModel
 }

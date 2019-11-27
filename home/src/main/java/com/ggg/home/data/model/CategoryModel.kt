@@ -22,6 +22,8 @@ class CategoryModel : Serializable {
         @Expose
         var status: Int = 0
 
+        var lastModified: Long = System.currentTimeMillis()
+
         @Ignore
         var isChoose: Boolean = false
 }

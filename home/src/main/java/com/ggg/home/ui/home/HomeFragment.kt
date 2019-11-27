@@ -157,15 +157,19 @@ class HomeFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         ivRank.setOnClickListener {
-
+            navigationController.showRank()
         }
 
         ivLatestUpdate.setOnClickListener {
+            navigationController.showLatestUpdate()
+        }
 
+        ivFavorite.setOnClickListener {
+            navigationController.showFavorite()
         }
 
         ivSearch.setOnClickListener {
-
+            navigationController.showSearch()
         }
     }
 

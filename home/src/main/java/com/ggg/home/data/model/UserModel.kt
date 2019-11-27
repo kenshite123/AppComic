@@ -1,6 +1,7 @@
 package com.ggg.home.data.model
 
 
+import com.google.gson.Gson
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -37,4 +38,10 @@ class UserModel : Serializable {
         @SerializedName("username")
         @Expose
         var username: String = ""
+
+        fun convertToGson(): String {
+                val gson = Gson()
+                val json = gson.toJson(this)
+                return json ?: ""
+        }
 }

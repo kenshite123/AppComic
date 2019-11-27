@@ -10,6 +10,7 @@ import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.CategoryOfComicModel
+import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
 
 class ListCategoryComicDetailAdapter : RecyclerView.Adapter<ListCategoryComicDetailAdapter.ViewHolder> {
@@ -41,7 +42,7 @@ class ListCategoryComicDetailAdapter : RecyclerView.Adapter<ListCategoryComicDet
         val categoryOfComicModel = listCategories[position]
         holder.tvCategoryName.text = categoryOfComicModel.categoryName
         holder.tvCategoryName.setOnClickListener {
-
+            listener.onEvent(Constant.ACTION_CLICK_ON_ITEM_CATEGORY_OF_COMIC_DETAIL, it, categoryOfComicModel)
         }
     }
 

@@ -8,7 +8,7 @@ import com.ggg.home.data.local.db.*
 import com.ggg.home.data.model.*
 
 @Database(entities = [ComicModel::class, CategoryModel::class, CategoryOfComicModel::class,
-    ChapterModel::class, CCHadReadModel::class],
+    ChapterModel::class, CCHadReadModel::class, CommentModel::class, ReplyModel::class, UserCommentModel::class],
         version = 1,
         exportSchema = false)
 abstract class HomeDB : RoomDatabase() {

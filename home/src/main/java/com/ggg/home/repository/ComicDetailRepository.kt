@@ -43,6 +43,7 @@ class ComicDetailRepository {
                     item.map {
                         it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
                         it.comicId = comicId
+                        it.lastModified = System.currentTimeMillis()
                     }
                     db.chapterDao().insertListChapter(item)
                 }

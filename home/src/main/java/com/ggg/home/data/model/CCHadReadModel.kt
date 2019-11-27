@@ -10,4 +10,5 @@ class CCHadReadModel : Serializable {
     var comicId: Long = 0
     var chapterId: Long = 0
     var positionOfPage: Int = 0
+    var lastModified: Long = System.currentTimeMillis()
 }
