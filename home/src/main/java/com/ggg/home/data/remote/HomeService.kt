@@ -62,7 +62,7 @@ interface HomeService {
 
     @PUT(ServerPath.CHANGE_PASSWOED)
     fun changePassword(
-            @Path("id") id: Int,
+            @Path("id") id: Long,
             @Body changePasswordBody: ChangePassWordBody
     ): LiveData<ApiResponse<ChangePassWordResponse>>
 }

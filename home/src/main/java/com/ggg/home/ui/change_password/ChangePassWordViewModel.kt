@@ -10,14 +10,18 @@ import com.ggg.home.repository.ChangePassWordRepository
 import javax.inject.Inject
 
 class ChangePassWordViewModel @Inject constructor(private val changePassWordRepository: ChangePassWordRepository): ViewModel() {
-    private val requestGetUserId: MutableLiveData<Int> = MutableLiveData()
-//    var changePassWordResult: LiveData<Resource<ChangePassWordResponse>>
+    private var id: Long = 0
+    private val requestChangePassWord: MutableLiveData<HashMap<String, String>> = MutableLiveData()
+    var changePassWordResult: LiveData<Resource<ChangePassWordResponse>>
 
     init {
-//        changePassWordResult = Transformations.switchMap()
+        changePassWordResult = Transformations.switchMap(requestChangePassWord) {
+            return@switchMap changePassWordRepository.changePassWord(id, param = it)
+        }
     }
 
-    fun getUserId(userId: Int) {
-        requestGetUserId.value = userId
+    fun changePassWord(userId: Long, param: HashMap<String, String>) {
+        id = userId
+        requestChangePassWord.value = param
     }
 }

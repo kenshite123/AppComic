@@ -1,7 +1,13 @@
 package com.ggg.home.repository
 
+import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
+import com.ggg.common.utils.NetworkOnlyResource
+import com.ggg.common.vo.Resource
+import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
+import com.ggg.home.data.model.post_param.ChangePassWordBody
+import com.ggg.home.data.model.response.ChangePassWordResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import javax.inject.Inject
@@ -18,5 +24,22 @@ class ChangePassWordRepository {
         api = retrofit.connectAPI()
         this.retrofit = retrofit
         this.db = db
+    }
+
+    fun changePassWord(id: Long, param: HashMap<String, String>): LiveData<Resource<ChangePassWordResponse>> {
+        val callApi = object : NetworkOnlyResource<ChangePassWordResponse>(appExecutors = executor){
+            override fun saveCallResult(item: ChangePassWordResponse) {
+
+            }
+
+            override fun createCall(): LiveData<ApiResponse<ChangePassWordResponse>> {
+                var changePassWordBody: ChangePassWordBody = ChangePassWordBody()
+                changePassWordBody.oldPassword = param["oldPassword"].toString()
+                changePassWordBody.newPassword = param["newPassword"].toString()
+                changePassWordBody.confirmPassword = param["confirmPassword"].toString()
+                return api.changePassword(id, changePassWordBody)
+            }
+        }
+        return callApi.asLiveData()
     }
 }

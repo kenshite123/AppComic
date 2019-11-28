@@ -32,6 +32,7 @@
     <string name="TEXT_ERROR_INPUT_PASSWORD_EMPTY">Password can not be empty</string>
     <string name="TEXT_LOGIN_SUCCESS">Login Success</string>
     <string name="TEXT_REGISTER_SUCCESS">Register Success</string>
+    <string name="TEXT_CHANGE_PASSWORD_SUCCESS">Change Password Success</string>
     <string name="TEXT_FULL_NAME">Full Name</string>
     <string name="TEXT_USER_NAME">User Name</string>
     <string name="TEXT_EMAIL">Email</string>
