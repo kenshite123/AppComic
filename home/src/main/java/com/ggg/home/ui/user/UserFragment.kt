@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -73,6 +74,7 @@ class UserFragment : HomeBaseFragment() {
             }
 
             btnLogout.visibility = View.VISIBLE
+            btnChangePass.visibility = View.VISIBLE
         }
     }
 
@@ -85,6 +87,14 @@ class UserFragment : HomeBaseFragment() {
             if (loginResponse == null) {
                 navigationController.showLogin()
             }
+        }
+
+        btnChangePass.setOnClickListener {
+            navigationController.showChangePassWord()
+        }
+
+        btnLogout.setOnClickListener {
+            Toast.makeText(context, "Log out Clicked", Toast.LENGTH_LONG).show()
         }
     }
 

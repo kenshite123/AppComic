@@ -7,9 +7,12 @@ import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
+import com.ggg.home.data.model.post_param.ChangePassWordBody
 import com.ggg.home.data.model.post_param.RegisterBody
+import com.ggg.home.data.model.response.ChangePassWordResponse
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.RegisterResponse
+import com.ggg.home.ui.change_password.ChangePassWordViewModel
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
 
@@ -56,4 +59,10 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<CommentModel>>>
+
+    @PUT(ServerPath.CHANGE_PASSWOED)
+    fun changePassword(
+            @Path("id") id: Int,
+            @Body changePasswordBody: ChangePassWordBody
+    ): LiveData<ApiResponse<ChangePassWordResponse>>
 }

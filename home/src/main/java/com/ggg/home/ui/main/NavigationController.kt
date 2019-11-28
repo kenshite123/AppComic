@@ -8,6 +8,7 @@ import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
+import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
@@ -88,6 +89,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showRank() {
         val fragment = RankFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showChangePassWord() {
+        val fragment = ChangePassWordFragment.create()
         fragNavController.pushFragment(fragment)
     }
 
