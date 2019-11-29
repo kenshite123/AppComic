@@ -60,9 +60,13 @@ interface HomeService {
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<CommentModel>>>
 
-    @PUT(ServerPath.CHANGE_PASSWOED)
+    @Headers(
+            "Authorization: {Authorization}"
+    )
+    @PUT(ServerPath.CHANGE_PASSWORD)
     fun changePassword(
-            @Path("id") id: Long,
+            @Header("Authorization") accessToken: String,
+            @Path("id") id: Int,
             @Body changePasswordBody: ChangePassWordBody
     ): LiveData<ApiResponse<ChangePassWordResponse>>
 }

@@ -61,13 +61,16 @@ class ChangePassWordFragment: HomeBaseFragment() {
 
     override fun initEvent() {
         btnChangePass.setOnClickListener {
-            val id: Long? = loginResponse?.user?.id
+            val id: String? = loginResponse?.user?.id.toString()
+            val accessToken: String? = loginResponse?.accessToken
             val param = hashMapOf(
+                    "accessToken" to accessToken!!,
+                    "id" to id!!,
                     "oldPassword" to edtOldPass.text.toString(),
                     "newPassword" to edtNewPass.text.toString(),
                     "confirmPassword" to edtConfirmNewPass.text.toString()
             )
-            viewModel.changePassWord(id!!, param)
+            viewModel.changePassWord(param)
         }
     }
 

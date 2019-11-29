@@ -26,18 +26,20 @@ class ChangePassWordRepository {
         this.db = db
     }
 
-    fun changePassWord(id: Long, param: HashMap<String, String>): LiveData<Resource<ChangePassWordResponse>> {
+    fun changePassWord(param: HashMap<String, String>): LiveData<Resource<ChangePassWordResponse>> {
         val callApi = object : NetworkOnlyResource<ChangePassWordResponse>(appExecutors = executor){
             override fun saveCallResult(item: ChangePassWordResponse) {
 
             }
 
             override fun createCall(): LiveData<ApiResponse<ChangePassWordResponse>> {
+                var id = param["id"]!!.toInt()
+                var accessToken = param["accessToken"].toString()
                 var changePassWordBody: ChangePassWordBody = ChangePassWordBody()
                 changePassWordBody.oldPassword = param["oldPassword"].toString()
                 changePassWordBody.newPassword = param["newPassword"].toString()
                 changePassWordBody.confirmPassword = param["confirmPassword"].toString()
-                return api.changePassword(id, changePassWordBody)
+                return api.changePassword(accessToken, id, changePassWordBody)
             }
         }
         return callApi.asLiveData()
