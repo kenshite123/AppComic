@@ -16,15 +16,15 @@ import java.lang.ref.WeakReference
 class ListCategoryComicDetailAdapter : RecyclerView.Adapter<ListCategoryComicDetailAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listCategories: List<CategoryOfComicModel>
+    var listCategories: List<CategoryOfComicModel>? = null
 
-    constructor(context: Context, listener: OnEventControlListener, listCategories: List<CategoryOfComicModel>) {
+    constructor(context: Context, listener: OnEventControlListener, listCategories: List<CategoryOfComicModel>?) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listCategories = listCategories
     }
 
-    fun notifyData(listCategories: List<CategoryOfComicModel>) {
+    fun notifyData(listCategories: List<CategoryOfComicModel>?) {
         this.listCategories = listCategories
         notifyDataSetChanged()
     }
@@ -35,12 +35,15 @@ class ListCategoryComicDetailAdapter : RecyclerView.Adapter<ListCategoryComicDet
     }
 
     override fun getItemCount(): Int {
-        return listCategories.count()
+        listCategories?.let {
+            return it.count()
+        }
+        return 0
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val categoryOfComicModel = listCategories[position]
-        holder.tvCategoryName.text = categoryOfComicModel.categoryName
+        val categoryOfComicModel = listCategories?.get(position)
+        holder.tvCategoryName.text = categoryOfComicModel?.categoryName
         holder.tvCategoryName.setOnClickListener {
             listener.onEvent(Constant.ACTION_CLICK_ON_ITEM_CATEGORY_OF_COMIC_DETAIL, it, categoryOfComicModel)
         }

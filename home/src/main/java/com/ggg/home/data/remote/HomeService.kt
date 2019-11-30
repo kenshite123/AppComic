@@ -3,10 +3,7 @@ package com.ggg.home.data.remote
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
 import com.ggg.common.ws.BaseResponse
-import com.ggg.home.data.model.CategoryModel
-import com.ggg.home.data.model.ChapterModel
-import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.CommentModel
+import com.ggg.home.data.model.*
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.RegisterResponse
@@ -53,7 +50,14 @@ interface HomeService {
     @GET(ServerPath.LIST_COMMENT_BY_COMIC)
     fun getListCommentByComic(
             @Path("comicId") comicId: Long,
+            @Query("items") limit: Long,
+            @Query("page") offset: Long
+    ) : LiveData<ApiResponse<List<CommentModel>>>
+
+    @GET(ServerPath.LIST_COMIC_RANKING)
+    fun getListComicRanking(
+            @Query("type") type: String,
             @Query("items") limit: Int,
             @Query("page") offset: Int
-    ) : LiveData<ApiResponse<List<CommentModel>>>
+    ) : LiveData<ApiResponse<List<ComicRankModel>>>
 }

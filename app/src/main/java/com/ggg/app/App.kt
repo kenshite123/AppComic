@@ -2,11 +2,15 @@ package com.ggg.app
 
 import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import androidx.multidex.MultiDexApplication
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.facebook.stetho.Stetho
 import com.ggg.app.di.AppInjector
 import com.ggg.common.GGGAppInterface
+import com.ggg.home.utils.PrefsUtil
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -56,19 +60,20 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
 
-//        val token = FirebaseInstanceId.getInstance().token
-//        if (token != null && token.isNotEmpty()){
-//            PrefsUtil.instance.setUserFCMToken(token)
-//        }
-//        FirebaseMessaging.getInstance().subscribeToTopic("news")
-//                .addOnCompleteListener { task ->
-//                    var msg = getString(R.string.msg_subscribed)
-//                    if (!task.isSuccessful) {
-//                        msg = getString(R.string.msg_subscribe_failed)
-//                    }
-//                    Log.d(TAG, msg)
-//                    Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
-//                }
+        val token = FirebaseInstanceId.getInstance().token
+        if (token != null && token.isNotEmpty()){
+            Timber.d(token)
+            PrefsUtil.instance.setUserFCMToken(token)
+        }
+        FirebaseMessaging.getInstance().subscribeToTopic("news")
+                .addOnCompleteListener { task ->
+                    var msg = "subscribed"
+                    if (!task.isSuccessful) {
+                        msg = "subscribe_failed"
+                    }
+                    Timber.d(msg)
+//                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                }
 
     }
 }

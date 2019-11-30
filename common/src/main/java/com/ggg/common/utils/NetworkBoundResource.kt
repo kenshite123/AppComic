@@ -40,7 +40,7 @@ abstract class NetworkBoundResource <ResultType, RequestType>{
             apiResponse = MutableLiveData<ApiResponse<RequestType>>()
         }
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(dbSource) { newData -> result.setValue(Resource.loading(newData)) }
+        result.addSource(dbSource) { newData -> result.setValue(Resource.successDB(newData)) }
         result.addSource<ApiResponse<RequestType>>(apiResponse) { response ->
             result.removeSource<ApiResponse<RequestType>>(apiResponse)
             result.removeSource(dbSource)

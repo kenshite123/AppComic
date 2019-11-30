@@ -10,6 +10,7 @@ import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
+import com.ggg.home.ui.reply.ReplyFragment
 import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ggg.home.ui.view_comic.ViewComicFragment
@@ -57,4 +58,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeRankFragmentInjector(): RankFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeReplyFragmentInjector(): ReplyFragment
 }

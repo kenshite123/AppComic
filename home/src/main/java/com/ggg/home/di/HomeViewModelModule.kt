@@ -12,6 +12,7 @@ import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
 import com.ggg.home.ui.rank.RankViewModel
 import com.ggg.home.ui.register.RegisterViewModel
+import com.ggg.home.ui.reply.ReplyViewModel
 import com.ggg.home.ui.search.SearchViewModel
 import com.ggg.home.ui.user.UserViewModel
 import com.ggg.home.ui.view_comic.ViewComicViewModel
@@ -86,4 +87,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(RankViewModel::class)
     abstract fun bindRankViewModel(rankViewModel: RankViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReplyViewModel::class)
+    abstract fun bindReplyViewModel(replyViewModel: ReplyViewModel): ViewModel
 }

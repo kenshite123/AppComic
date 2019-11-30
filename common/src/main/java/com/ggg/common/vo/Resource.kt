@@ -7,7 +7,9 @@ class Resource <T> constructor(val status: Status?, val data:T?, val message:Str
 
 
     companion object {
-
+        fun <T> successDB(data: T?): Resource<T> {
+            return Resource(Status.SUCCESS_DB, data, null)
+        }
 
         fun <T> success(data: T?): Resource<T> {
             return Resource(Status.SUCCESS, data, null)

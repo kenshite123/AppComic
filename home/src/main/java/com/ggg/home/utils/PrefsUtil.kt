@@ -68,4 +68,8 @@ class PrefsUtil private constructor() {
         editor.remove(TOKEN)
         editor.commit()
     }
+
+    fun setUserFCMToken(token: String) {
+        setStringValue(TOKEN, token)
+    }
 }

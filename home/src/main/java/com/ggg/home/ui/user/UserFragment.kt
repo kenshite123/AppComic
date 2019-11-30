@@ -64,11 +64,7 @@ class UserFragment : HomeBaseFragment() {
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(ivAvatar)
                 } else {
-                    Glide.with(context)
-                            .load(R.drawable.i_avatar)
-                            .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(ivAvatar)
+                    ivAvatar.setImageResource(R.drawable.i_avatar)
                 }
             }
 

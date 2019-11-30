@@ -1,6 +1,5 @@
 package com.ggg.home.ui.home
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -11,17 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.ggg.common.utils.SpannableObject
-import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
-import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.jetbrains.anko.bundleOf
 import timber.log.Timber
 import java.util.*
 
@@ -46,6 +43,17 @@ class HomeFragment : HomeBaseFragment() {
         private val PERIOD_MS: Long = 3000
         @JvmStatic
         fun create() = HomeFragment()
+
+        @JvmStatic
+        fun create(comicId: Long) : HomeFragment {
+            val fragment = HomeFragment()
+            val bundle = bundleOf(
+                    "isMoveToAnotherFragment" to true,
+                    "comicId" to comicId
+            )
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -61,9 +69,15 @@ class HomeFragment : HomeBaseFragment() {
         hideActionBar()
         showBottomNavView()
 
-        initViews()
-        initEvent()
-        loadData()
+//        val isMoveToAnotherFragment = arguments!!["isMoveToAnotherFragment"] as Boolean
+//        if (isMoveToAnotherFragment) {
+//            val comicId = arguments!!["comicId"] as Long
+//            navigationController.showComicDetail(comicId)
+//        } else {
+            initViews()
+            initEvent()
+            loadData()
+//        }
     }
 
     private fun initViews() {
@@ -134,7 +148,7 @@ class HomeFragment : HomeBaseFragment() {
 
     override fun initObserver() {
         viewModel.getBannersResult.observe(this, androidx.lifecycle.Observer {
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS  || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
                 it.data?.let {
                     this.listBanners = it.distinctBy { it.comicModel?.id }
                     isLoadBannerAlready = true
@@ -146,7 +160,11 @@ class HomeFragment : HomeBaseFragment() {
 
         viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR || it.status == Status.SUCCESS_DB) {
+                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
                     listComicAdapter.notifyData(this.listComicLatestUpdate)

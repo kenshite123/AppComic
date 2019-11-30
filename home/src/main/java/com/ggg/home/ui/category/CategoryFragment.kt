@@ -66,7 +66,11 @@ class CategoryFragment : HomeBaseFragment() {
     override fun initObserver() {
         viewModel.getAllListCategoriesResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     if (it.isNotEmpty()) {
                         it.first().isChoose = true
@@ -82,7 +86,11 @@ class CategoryFragment : HomeBaseFragment() {
 
         viewModel.getListComicByCategoryResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     isLoadMore = false
                     this.listComicByCategory = it.distinctBy { it.comicModel?.id }
