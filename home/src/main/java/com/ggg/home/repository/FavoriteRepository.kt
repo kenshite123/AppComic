@@ -28,9 +28,9 @@ class FavoriteRepository {
         this.db = db
     }
 
-    fun getListFavoriteComic(data: HashMap<String, Int>): LiveData<Resource<MutableList<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<MutableList<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<MutableList<ComicWithCategoryModel>> {
+    fun getListFavoriteComic(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 val limit = data["limit"]!!
                 val offset = data["offset"]!! * limit
                 return db.comicDao().getListFavoriteComic(
@@ -62,7 +62,7 @@ class FavoriteRepository {
                 }
             }
 
-            override fun shouldFetch(data: MutableList<ComicWithCategoryModel>?): Boolean {
+            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }

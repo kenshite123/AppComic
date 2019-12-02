@@ -28,9 +28,9 @@ class LatestUpdateRepository {
         this.db = db
     }
 
-    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<MutableList<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<MutableList<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<MutableList<ComicWithCategoryModel>> {
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 return db.comicDao().getListLatestUpdate(data["limit"]!!, data["offset"]!!)
             }
 
@@ -57,7 +57,7 @@ class LatestUpdateRepository {
                 }
             }
 
-            override fun shouldFetch(data: MutableList<ComicWithCategoryModel>?): Boolean {
+            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }

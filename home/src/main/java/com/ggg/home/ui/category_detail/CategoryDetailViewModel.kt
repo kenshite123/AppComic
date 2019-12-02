@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class CategoryDetailViewModel @Inject constructor(private val categoryDetailRepository: CategoryDetailRepository) : ViewModel() {
     private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Long>> = MutableLiveData()
-    var getListComicByCategoryResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
+    var getListComicByCategoryResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
     init {
         getListComicByCategoryResult = Transformations.switchMap(requestGetListComicByCategory) {

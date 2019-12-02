@@ -8,9 +8,12 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.facebook.stetho.Stetho
 import com.ggg.app.di.AppInjector
 import com.ggg.common.GGGAppInterface
+import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.utils.PrefsUtil
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -23,9 +26,9 @@ import javax.inject.Inject
  * Created by TuanNguyen on 12/12/17.
  */
 class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInterface {
-
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
+    var loginResponse: LoginResponse? = null
 
     override fun getCtx(): Context {
         return this
@@ -72,8 +75,20 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
                         msg = "subscribe_failed"
                     }
                     Timber.d(msg)
-//                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
                 }
 
+        val jsonLoginResponse = PrefsUtil.instance.getStringValue("LoginResponse", "")
+        if (!jsonLoginResponse.isNullOrEmpty()) {
+            this.loginResponse = Gson().fromJson<LoginResponse>(
+                    jsonLoginResponse, object : TypeToken<LoginResponse>() {}.type)
+        }
+    }
+
+    override fun getLoginResponse(): Any? {
+        return this.loginResponse
+    }
+
+    override fun setLoginResponse(loginResponse: Any?) {
+        this.loginResponse = loginResponse as LoginResponse
     }
 }

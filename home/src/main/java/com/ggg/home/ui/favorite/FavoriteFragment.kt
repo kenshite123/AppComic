@@ -22,7 +22,7 @@ class FavoriteFragment : HomeBaseFragment() {
     var isFirstLoad = true
 
     lateinit var listComicAdapter: ListComicAdapter
-    var listComic: MutableList<ComicWithCategoryModel> = arrayListOf()
+    var listComic: List<ComicWithCategoryModel> = arrayListOf()
     var isLoadMore = false
     var items = 10
     var offset = 0
@@ -81,8 +81,12 @@ class FavoriteFragment : HomeBaseFragment() {
                             it.data?.let {
                                 if (isLoadMore) {
                                     isLoadMore = false
-                                    this.listComic.addAll(it)
-                                    listComicAdapter.notifyDataSetChanged()
+                                    val list = this.listComic.toMutableList()
+                                    list.addAll(it)
+
+                                    this.listComic = list.toList()
+
+                                    listComicAdapter.notifyData(this.listComic)
                                     isLoadAllData = it.isEmpty()
                                 } else {
                                     this.listComic = it

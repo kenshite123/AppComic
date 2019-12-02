@@ -5,16 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.DateTimeUtil
+import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CommentModel
+import com.ggg.home.data.model.UserCommentModel
+import com.ggg.home.data.model.post_param.WriteCommentBody
+import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListCommentAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.utils.Constant
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_reply.*
@@ -28,6 +35,8 @@ class ReplyFragment : HomeBaseFragment() {
     var isFirstLoad = true
     lateinit var commentModel: CommentModel
     lateinit var listCommentAdapter: ListCommentAdapter
+    private var loginResponse: LoginResponse? = null
+    lateinit var writeCommentBody: WriteCommentBody
 
     companion object {
         val TAG = "ReplyFragment"
@@ -56,6 +65,9 @@ class ReplyFragment : HomeBaseFragment() {
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_COMMENT_DETAILS)
         commentModel = arguments!!["commentModel"] as CommentModel
+        if (GGGAppInterface.gggApp.loginResponse != null) {
+            loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
+        }
 
         initViews()
         initEvent()
@@ -84,7 +96,7 @@ class ReplyFragment : HomeBaseFragment() {
     }
 
     override fun initObserver() {
-        val disposable = RxTextView.textChanges(edContent)
+        val disposable = RxTextView.textChanges(edComment)
                 .skip(1)
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -99,12 +111,65 @@ class ReplyFragment : HomeBaseFragment() {
                     Timber.e(it)
                 })
         messageEvent.add(disposable)
+
+        viewModel.writeCommentResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                val list = this.commentModel.replies.toMutableList()
+                val commentModel = CommentModel()
+                commentModel.comicId = writeCommentBody.comicId
+                commentModel.content = writeCommentBody.content
+                commentModel.createdAt = DateTimeUtil.convertMilisecondToDate(DateTimeUtil.DATE_TIME_MILL, System.currentTimeMillis() / 1000)
+                val userComment = UserCommentModel()
+                userComment.userId = loginResponse?.user?.id!!
+                userComment.nickname = loginResponse?.user?.fullName!!
+                userComment.imageUrl = loginResponse?.user?.imageUrl!!
+                commentModel.userComment = userComment
+                commentModel.replies = listOf()
+
+                list.add(0, commentModel)
+                this.commentModel.replies = list.toList()
+                listCommentAdapter.notifyData(this.commentModel.replies)
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                }
+            }
+        })
     }
 
     override fun initEvent() {
         ivSend.setOnClickListener {
+            if (checkValidSendComment()) {
+                val token = loginResponse!!.tokenType + loginResponse!!.accessToken
+                writeCommentBody = WriteCommentBody()
+                writeCommentBody.topicType = Constant.TOPIC_TYPE_COMMENT
+                writeCommentBody.comicId = this.commentModel.comicId
+                writeCommentBody.parentId = this.commentModel.commentId
+                writeCommentBody.content = edComment.text.toString()
 
+                val data = hashMapOf<String, Any>(
+                        "token" to token,
+                        "writeCommentBody" to writeCommentBody
+                )
+
+                viewModel.writeComment(data)
+            }
         }
+    }
+
+    private fun checkValidSendComment() : Boolean {
+        if (edComment.text.toString().isEmpty()) {
+            showMsg(R.string.TEXT_ERROR_NO_CONTENT_YET)
+            return false
+        }
+
+        if (loginResponse == null) {
+            showDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT)
+            return false
+        }
+
+        return true
     }
 
     override fun onResume() {

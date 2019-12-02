@@ -25,7 +25,7 @@ class CategoryFragment : HomeBaseFragment() {
     lateinit var listCategoryAdapter: ListCategoryAdapter
     lateinit var listCategories: List<CategoryModel>
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicByCategory: MutableList<ComicWithCategoryModel> = arrayListOf()
+    var listComicByCategory: List<ComicWithCategoryModel> = arrayListOf()
 
     var isFirstLoad = true
     var page: Long = 0
@@ -93,8 +93,8 @@ class CategoryFragment : HomeBaseFragment() {
 
                 it.data?.let {
                     isLoadMore = false
-//                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
-                    this.listComicByCategory = it
+                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+//                    this.listComicByCategory = it
                     listComicAdapter.notifyData(this.listComicByCategory)
                     if (this.listComicByCategory.count() >= items) {
                         isLoadMore = true

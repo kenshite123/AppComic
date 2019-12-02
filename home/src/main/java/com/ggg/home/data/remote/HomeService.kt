@@ -5,7 +5,9 @@ import com.ggg.common.ws.ApiResponse
 import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.*
 import com.ggg.home.data.model.post_param.RegisterBody
+import com.ggg.home.data.model.post_param.WriteCommentBody
 import com.ggg.home.data.model.response.LoginResponse
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.model.response.RegisterResponse
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
@@ -67,4 +69,9 @@ interface HomeService {
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
 
+    @POST(ServerPath.WRITE_COMMENT)
+    fun writeComment(
+            @Header("Authorization") authorization: String,
+            @Body writeCommentBody: WriteCommentBody
+    ) : LiveData<ApiResponse<NoneResponse>>
 }

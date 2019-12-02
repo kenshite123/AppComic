@@ -53,9 +53,9 @@ class CategoryRepository {
         return callApi.asLiveData()
     }
 
-    fun getListComicByCategory(data: HashMap<String, Long>): LiveData<Resource<MutableList<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<MutableList<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<MutableList<ComicWithCategoryModel>> {
+    fun getListComicByCategory(data: HashMap<String, Long>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
                 return db.comicDao().getListComicByCategory(
                         data["categoryId"] as Long,
                         (data["limit"] as Long).toInt(),
@@ -90,7 +90,7 @@ class CategoryRepository {
                 }
             }
 
-            override fun shouldFetch(data: MutableList<ComicWithCategoryModel>?): Boolean {
+            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }

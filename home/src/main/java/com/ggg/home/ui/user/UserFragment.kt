@@ -43,11 +43,7 @@ class UserFragment : HomeBaseFragment() {
         hideActionBar()
         showBottomNavView()
 
-        val jsonLoginResponse = PrefsUtil.instance.getStringValue("LoginResponse", "")
-        if (!jsonLoginResponse.isNullOrEmpty()) {
-            this.loginResponse = Gson().fromJson<LoginResponse>(
-                    jsonLoginResponse, object : TypeToken<LoginResponse>() {}.type)
-        }
+        this.loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse?
 
         initViews()
         initEvent()

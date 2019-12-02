@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.ggg.common.vo.Status
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicRankWithCategoryModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.PagerRankingAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
@@ -113,7 +115,37 @@ class RankFragment : HomeBaseFragment() {
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicRankWithCategoryModel = data as ComicRankWithCategoryModel
+                val comicWithCategoryModel = getComicWithCategoryModelFromRank(comicRankWithCategoryModel)
+                navigationController.showComicDetail(comicWithCategoryModel)
+            }
+
             else -> super.onEvent(eventAction, control, data)
         }
+    }
+
+    private fun getComicWithCategoryModelFromRank(comicRankWithCategoryModel: ComicRankWithCategoryModel) : ComicWithCategoryModel {
+        val comicWithCategoryModel = ComicWithCategoryModel()
+        comicWithCategoryModel.categories = comicRankWithCategoryModel.categories
+
+        val comicModel = ComicModel()
+        comicModel.id = comicRankWithCategoryModel.comicRankModel!!.id
+        comicModel.bigImageUrl = comicRankWithCategoryModel.comicRankModel!!.bigImageUrl
+        comicModel.categories = comicRankWithCategoryModel.comicRankModel!!.categories
+        comicModel.content = comicRankWithCategoryModel.comicRankModel!!.content
+        comicModel.imageUrl = comicRankWithCategoryModel.comicRankModel!!.imageUrl
+        comicModel.rate = comicRankWithCategoryModel.comicRankModel!!.rate
+        comicModel.title = comicRankWithCategoryModel.comicRankModel!!.title
+        comicModel.latestChapter = comicRankWithCategoryModel.comicRankModel!!.latestChapter
+        comicModel.viewed = comicRankWithCategoryModel.comicRankModel!!.viewed
+        comicModel.vote = comicRankWithCategoryModel.comicRankModel!!.vote
+        comicModel.status = comicRankWithCategoryModel.comicRankModel!!.status
+        comicModel.authors = comicRankWithCategoryModel.comicRankModel!!.authors
+        comicModel.authorsString = comicRankWithCategoryModel.comicRankModel!!.authorsString
+        comicModel.lastModified = comicRankWithCategoryModel.comicRankModel!!.lastModified
+        comicWithCategoryModel.comicModel = comicModel
+
+        return comicWithCategoryModel
     }
 }

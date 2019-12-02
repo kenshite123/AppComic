@@ -21,15 +21,15 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listComic: MutableList<ComicWithCategoryModel>
+    lateinit var listComic: List<ComicWithCategoryModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listComic: MutableList<ComicWithCategoryModel>) {
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicWithCategoryModel>) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
     }
 
-    fun notifyData(listComic: MutableList<ComicWithCategoryModel>) {
+    fun notifyData(listComic: List<ComicWithCategoryModel>) {
         this.listComic = listComic
         notifyDataSetChanged()
     }

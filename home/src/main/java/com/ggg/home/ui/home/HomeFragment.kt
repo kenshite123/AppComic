@@ -26,9 +26,9 @@ class HomeFragment : HomeBaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
     lateinit var pagerSlideAdapter: PagerSlideAdapter
-    var listBanners: MutableList<ComicWithCategoryModel> = arrayListOf()
+    var listBanners: List<ComicWithCategoryModel> = arrayListOf()
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicLatestUpdate: MutableList<ComicWithCategoryModel> = arrayListOf()
+    var listComicLatestUpdate: List<ComicWithCategoryModel> = arrayListOf()
     val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
@@ -150,8 +150,8 @@ class HomeFragment : HomeBaseFragment() {
         viewModel.getBannersResult.observe(this, androidx.lifecycle.Observer {
             if (it.status == Status.SUCCESS  || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
                 it.data?.let {
-                    this.listBanners = it
-//                    this.listBanners = it.distinctBy { it.comicModel?.id }
+//                    this.listBanners = it
+                    this.listBanners = it.distinctBy { it.comicModel?.id }
                     isLoadBannerAlready = true
                     pagerSlideAdapter.notifyData(this.listBanners)
                     indicator.attachToRecyclerView(rvSlide, pagerSnapHelper)
@@ -167,8 +167,8 @@ class HomeFragment : HomeBaseFragment() {
                 }
 
                 it.data?.let {
-                    this.listComicLatestUpdate = it
-//                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
+//                    this.listComicLatestUpdate = it
+                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
                     listComicAdapter.notifyData(this.listComicLatestUpdate)
                 }
             }

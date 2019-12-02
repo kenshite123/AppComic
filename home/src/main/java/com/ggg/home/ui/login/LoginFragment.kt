@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.SpannableObject
 import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
@@ -53,6 +54,7 @@ class LoginFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 it.data?.let {
                     PrefsUtil.instance.setStringValue("LoginResponse", it.convertToGson())
+                    GGGAppInterface.gggApp.loginResponse = it
                     showDialog(R.string.TEXT_LOGIN_SUCCESS)
                     navigationController.popToBackStack()
                 }

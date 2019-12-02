@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class FavoriteViewModel @Inject constructor(private val favoriteRepository: FavoriteRepository) : ViewModel() {
     private val requestGetListFavoriteComic: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
-    var getListFavoriteComicResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
+    var getListFavoriteComicResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
     init {
         getListFavoriteComicResult = Transformations.switchMap(requestGetListFavoriteComic) {
