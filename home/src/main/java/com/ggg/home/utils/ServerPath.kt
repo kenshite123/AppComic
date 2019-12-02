@@ -14,5 +14,6 @@ class ServerPath {
         const val LIST_COMIC_RANKING = "api/homepage/top-ranking"
         const val LIST_COMIC_FAVORITE = "api/homepage/favorite-comics"
         const val WRITE_COMMENT = "api/comments/create"
+        const val CHANGE_PASSWORD = "api/user/{id}/change-pwd"
     }
 }

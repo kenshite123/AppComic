@@ -2,6 +2,7 @@ package com.ggg.home.di
 
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
+import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
@@ -65,4 +66,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeCommentFragmentInjector(): CommentFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeChangePassWordFragmentInjector(): ChangePassWordFragment
 }

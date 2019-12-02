@@ -5,6 +5,7 @@ import com.ggg.home.R
 import com.ggg.home.data.model.*
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
+import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
@@ -102,6 +103,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showComment(comicId: Long) {
         val fragment = CommentFragment.create(comicId)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showChangePassWord() {
+        val fragment = ChangePassWordFragment.create()
         fragNavController.pushFragment(fragment)
     }
 
