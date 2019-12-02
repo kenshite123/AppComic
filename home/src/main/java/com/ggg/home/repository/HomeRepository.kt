@@ -37,9 +37,9 @@ class HomeRepository {
         this.db = db
     }
 
-    fun getBanners(): LiveData<Resource<List<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
+    fun getBanners(): LiveData<Resource<MutableList<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<MutableList<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<MutableList<ComicWithCategoryModel>> {
                 return db.comicDao().getListBanners()
             }
 
@@ -67,16 +67,16 @@ class HomeRepository {
                 }
             }
 
-            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
+            override fun shouldFetch(data: MutableList<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }
         return callApi.asLiveData()
     }
 
-    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<MutableList<ComicWithCategoryModel>>> {
+        val callApi = object : NetworkBoundResource<MutableList<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<MutableList<ComicWithCategoryModel>> {
                 return db.comicDao().getListLatestUpdate(data["limit"]!!, data["offset"]!!)
             }
 
@@ -103,7 +103,7 @@ class HomeRepository {
                 }
             }
 
-            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
+            override fun shouldFetch(data: MutableList<ComicWithCategoryModel>?): Boolean {
                 return true
             }
         }

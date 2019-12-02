@@ -15,25 +15,26 @@ import com.ggg.home.R
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
+import kotlin.collections.ArrayList
 
 class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listComic: List<ComicWithCategoryModel>
+    lateinit var listComic: MutableList<ComicWithCategoryModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicWithCategoryModel>) {
+    constructor(context: Context, listener: OnEventControlListener, listComic: MutableList<ComicWithCategoryModel>) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
     }
 
-    fun notifyData(listComic: List<ComicWithCategoryModel>) {
+    fun notifyData(listComic: MutableList<ComicWithCategoryModel>) {
         this.listComic = listComic
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListComicAdapter.ViewHolder {
         val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_comic, parent, false)
         return ViewHolder(view)
     }
@@ -42,19 +43,19 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
         return listComic.count()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(itemViewHolder: ViewHolder, position: Int) {
         val comicWithCategoryModel = listComic[position]
         val comic = comicWithCategoryModel.comicModel!!
         Glide.with(weakContext.get())
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(holder.ivComic)
+                .into(itemViewHolder.ivComic)
 
-        holder.tvComicTitle.text = comic.title
-        holder.tvChap.text = comic.latestChapter
+        itemViewHolder.tvComicTitle.text = comic.title
+        itemViewHolder.tvChap.text = comic.latestChapter
 
-        holder.ivComic.setOnClickListener {
+        itemViewHolder.ivComic.setOnClickListener {
             listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
         }
     }

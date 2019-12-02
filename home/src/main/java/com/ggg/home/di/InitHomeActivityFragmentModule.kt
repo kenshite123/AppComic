@@ -3,6 +3,7 @@ package com.ggg.home.di
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
@@ -61,4 +62,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeReplyFragmentInjector(): ReplyFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCommentFragmentInjector(): CommentFragment
 }

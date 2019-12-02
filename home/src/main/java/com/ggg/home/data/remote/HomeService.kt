@@ -60,4 +60,11 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicRankModel>>>
+
+    @GET(ServerPath.LIST_COMIC_FAVORITE)
+    fun getListFavoriteComic(
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
+
 }

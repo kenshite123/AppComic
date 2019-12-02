@@ -56,6 +56,7 @@
     <string name="TEXT_RANK">Rank</string>
     <string name="TEXT_LATEST_UPDATE">Latest Update</string>
     <string name="TEXT_SEARCH">Search</string>
+    <string name="TEXT_COMMENT">Comment</string>
     <string name="TEXT_COMMENT_DETAILS">Comment Details</string>
     <string name="TEXT_REPLIES">Replies</string>
     <string name="TEXT_HINT_WRITE_REPLY">Write your reply ...</string>
@@ -63,4 +64,7 @@
     <string name="TEXT_RANK_WEEK">Top Week</string>
     <string name="TEXT_RANK_MONTH">Top Month</string>
     <string name="TEXT_RANK_ALL">All</string>
+    <string name="TEXT_SEND">Send</string>
+    <string name="TEXT_HINT_EDITTEXT_COMMENT">Share your mind ...</string>
+    <string name="TEXT_ERROR_NO_CONTENT_YET">No content yet</string>
 </resources>

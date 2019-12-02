@@ -16,7 +16,7 @@ class CategoryViewModel @Inject constructor(private val categoryRepository: Cate
     var getAllListCategoriesResult: LiveData<Resource<List<CategoryModel>>>
 
     private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Long>> = MutableLiveData()
-    var getListComicByCategoryResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getListComicByCategoryResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
 
     init {
         getAllListCategoriesResult = Transformations.switchMap(requestGetAllListCategories) {

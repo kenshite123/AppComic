@@ -222,6 +222,16 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         }
     }
 
+    fun <T> loadingWithOutStatusDb(data: Resource<T>){
+        if (activity is BaseActivity){
+            if (data.status == Status.LOADING) {
+                (activity as BaseActivity).showLoading()
+            }else if (data.status == Status.SUCCESS || data.status == Status.ERROR){
+                (activity as BaseActivity).hideLoading()
+            }
+        }
+    }
+
     //endregion
 
     //region support

@@ -25,7 +25,7 @@ class CategoryFragment : HomeBaseFragment() {
     lateinit var listCategoryAdapter: ListCategoryAdapter
     lateinit var listCategories: List<CategoryModel>
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicByCategory: List<ComicWithCategoryModel> = arrayListOf()
+    var listComicByCategory: MutableList<ComicWithCategoryModel> = arrayListOf()
 
     var isFirstLoad = true
     var page: Long = 0
@@ -57,7 +57,7 @@ class CategoryFragment : HomeBaseFragment() {
         rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         rvListCategory.adapter = listCategoryAdapter
 
-        listComicAdapter = ListComicAdapter(context!!, this, listOf())
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComicByCategory)
         rvListComic.setHasFixedSize(true)
         rvListComic.layoutManager = GridLayoutManager(context!!, 3)
         rvListComic.adapter = listComicAdapter
@@ -93,7 +93,8 @@ class CategoryFragment : HomeBaseFragment() {
 
                 it.data?.let {
                     isLoadMore = false
-                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+//                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+                    this.listComicByCategory = it
                     listComicAdapter.notifyData(this.listComicByCategory)
                     if (this.listComicByCategory.count() >= items) {
                         isLoadMore = true

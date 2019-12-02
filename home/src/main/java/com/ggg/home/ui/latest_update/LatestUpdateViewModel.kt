@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class LatestUpdateViewModel @Inject constructor(private val latestUpdateRepository: LatestUpdateRepository) : ViewModel() {
     private val requestGetListLatestUpdate: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
-    var getListLatestUpdateResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getListLatestUpdateResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
 
     init {
         getListLatestUpdateResult = Transformations.switchMap(requestGetListLatestUpdate) {

@@ -13,10 +13,10 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
     private val requestGetBanners: MutableLiveData<Boolean> = MutableLiveData()
-    var getBannersResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getBannersResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
 
     private val requestGetListLatestUpdate: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
-    var getListLatestUpdateResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getListLatestUpdateResult: LiveData<Resource<MutableList<ComicWithCategoryModel>>>
 
     init {
         getBannersResult = Transformations.switchMap(requestGetBanners) {

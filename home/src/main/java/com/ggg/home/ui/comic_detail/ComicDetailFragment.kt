@@ -231,6 +231,10 @@ class ComicDetailFragment : HomeBaseFragment() {
                 navigationController.showReply(commentModel)
             }
 
+            Constant.ACTION_CLICK_ON_BUTTON_COMMENT_IN_COMIC_DETAIL -> {
+                navigationController.showComment(comicWithCategoryModel.comicModel!!.id)
+            }
+
             else -> super.onEvent(eventAction, control, data)
         }
     }

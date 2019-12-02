@@ -6,6 +6,7 @@ import com.ggg.home.data.model.*
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
@@ -96,6 +97,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showReply(commentModel: CommentModel) {
         val fragment = ReplyFragment.create(commentModel)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showComment(comicId: Long) {
+        val fragment = CommentFragment.create(comicId)
         fragNavController.pushFragment(fragment)
     }
 

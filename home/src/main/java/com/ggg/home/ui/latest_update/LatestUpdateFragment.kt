@@ -19,7 +19,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
     private lateinit var viewModel: LatestUpdateViewModel
     var isFirstLoad = true
     lateinit var listComicAdapter: ListComicAdapter
-    lateinit var listComicLatestUpdate: List<ComicWithCategoryModel>
+    var listComicLatestUpdate: MutableList<ComicWithCategoryModel> = arrayListOf()
     var items: Int = 30
     var page: Int = 0
 
@@ -50,7 +50,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
-        listComicAdapter = ListComicAdapter(context!!, this, listOf())
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComicLatestUpdate)
         rvListComic.setHasFixedSize(false)
         rvListComic.layoutManager = GridLayoutManager(context!!, 3)
         rvListComic.adapter = listComicAdapter
@@ -65,7 +65,8 @@ class LatestUpdateFragment : HomeBaseFragment() {
                 }
 
                 it.data?.let {
-                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
+                    this.listComicLatestUpdate = it
+//                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
                     listComicAdapter.notifyData(this.listComicLatestUpdate)
                 }
             }

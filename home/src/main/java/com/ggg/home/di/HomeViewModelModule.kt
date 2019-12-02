@@ -5,6 +5,7 @@ import com.ggg.common.di.ViewModelKey
 import com.ggg.home.ui.category.CategoryViewModel
 import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
+import com.ggg.home.ui.comment.CommentViewModel
 import com.ggg.home.ui.favorite.FavoriteViewModel
 import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.latest_update.LatestUpdateViewModel
@@ -92,4 +93,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(ReplyViewModel::class)
     abstract fun bindReplyViewModel(replyViewModel: ReplyViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CommentViewModel::class)
+    abstract fun bindCommentViewModel(commentViewModel: CommentViewModel): ViewModel
 }

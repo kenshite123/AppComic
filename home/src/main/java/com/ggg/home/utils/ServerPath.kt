@@ -12,5 +12,6 @@ class ServerPath {
         const val LIST_CHAPTERS = "api/comic/{comicId}/chapters"
         const val LIST_COMMENT_BY_COMIC = "api/comments/{comicId}"
         const val LIST_COMIC_RANKING = "api/homepage/top-ranking"
+        const val LIST_COMIC_FAVORITE = "api/homepage/favorite-comics"
     }
 }
