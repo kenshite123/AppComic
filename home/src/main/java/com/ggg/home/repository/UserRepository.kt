@@ -1,6 +1,10 @@
 package com.ggg.home.repository
 
+import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
+import com.ggg.common.utils.NetworkOnlyResource
+import com.ggg.common.vo.Resource
+import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
@@ -18,5 +22,19 @@ class UserRepository {
         api = retrofit.connectAPI()
         this.retrofit = retrofit
         this.db = db
+    }
+
+    fun logOut(param: HashMap<String, String>): LiveData<Resource<Void>> {
+        val callApi = object : NetworkOnlyResource<Void>(appExecutors = executor) {
+            override fun saveCallResult(item: Void) {
+
+            }
+
+            override fun createCall(): LiveData<ApiResponse<Void>> {
+                var token = param["token"].toString()
+                return api.logOut(token)
+            }
+        }
+        return callApi.asLiveData()
     }
 }

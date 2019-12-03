@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.common.vo.Status
@@ -61,17 +62,61 @@ class ChangePassWordFragment: HomeBaseFragment() {
 
     override fun initEvent() {
         btnChangePass.setOnClickListener {
-            val id: String? = loginResponse?.user?.id.toString()
-            val accessToken: String? = loginResponse?.accessToken
-            val param = hashMapOf(
-                    "accessToken" to accessToken!!,
-                    "id" to id!!,
-                    "oldPassword" to edtOldPass.text.toString(),
-                    "newPassword" to edtNewPass.text.toString(),
-                    "confirmPassword" to edtConfirmNewPass.text.toString()
-            )
-            viewModel.changePassWord(param)
+            if (checkValidChangePass()) {
+                val id: String? = loginResponse?.user?.id.toString()
+                var token: String = ""
+                if (loginResponse != null) {
+                    token = loginResponse?.tokenType + loginResponse?.accessToken
+                }
+                val param = hashMapOf(
+                        "token" to token,
+                        "id" to id!!,
+                        "oldPassword" to edtOldPass.text.toString(),
+                        "newPassword" to edtNewPass.text.toString(),
+                        "confirmPassword" to edtConfirmNewPass.text.toString()
+                )
+                viewModel.changePassWord(param)
+            }
         }
+    }
+
+    private fun checkValidChangePass(): Boolean {
+        return when {
+            !checkEmpty(edtOldPass) -> {
+                showDialog(R.string.TEXT_FULLNAME_NOT_EMPTY)
+                false
+            }
+            !checkEmpty(edtNewPass) -> {
+                showDialog(R.string.TEXT_FULLNAME_NOT_EMPTY)
+                false
+            }
+            !checkValidPassword(edtNewPass, edtConfirmNewPass)-> {
+                showDialog(R.string.TEXT_NEWPASS_NOT_MATCH)
+                false
+            }
+            !checkSizePassword(edtNewPass.text.toString()) -> {
+                showDialog(R.string.TEXT_PASSWORD_MORE_6_CHAR)
+                false
+            }
+            else -> true
+
+        }
+    }
+
+    private fun checkEmpty(view: EditText): Boolean {
+        if (view.text.toString().isBlank()) {
+            return false
+        }
+        return true
+    }
+
+    private fun checkSizePassword(password: String?) = password?.length ?: 0 >= 6
+
+    private fun checkValidPassword(edtNewPass: EditText, edtConfirmNewPass: EditText): Boolean {
+        if (edtNewPass.text.toString() != edtConfirmNewPass.text.toString()) {
+            return false
+        }
+        return true
     }
 
     companion object{

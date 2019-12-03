@@ -12,5 +12,6 @@ class ServerPath {
         const val LIST_CHAPTERS = "api/comic/{comicId}/chapters"
         const val LIST_COMMENT_BY_COMIC = "api/comments/{comicId}"
         const val CHANGE_PASSWORD = "api/user/{id}/change-pwd"
+        const val LOG_OUT = "api/auth/logout"
     }
 }
