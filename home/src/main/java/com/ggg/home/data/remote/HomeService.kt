@@ -2,7 +2,6 @@ package com.ggg.home.data.remote
 
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
-import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
@@ -10,9 +9,10 @@ import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.ChangePassWordBody
 import com.ggg.home.data.model.post_param.RegisterBody
 import com.ggg.home.data.model.response.ChangePassWordResponse
+import com.ggg.home.data.model.post_param.WriteCommentBody
 import com.ggg.home.data.model.response.LoginResponse
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.model.response.RegisterResponse
-import com.ggg.home.ui.change_password.ChangePassWordViewModel
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
 
@@ -56,6 +56,13 @@ interface HomeService {
     @GET(ServerPath.LIST_COMMENT_BY_COMIC)
     fun getListCommentByComic(
             @Path("comicId") comicId: Long,
+            @Query("items") limit: Long,
+            @Query("page") offset: Long
+    ) : LiveData<ApiResponse<List<CommentModel>>>
+
+    @GET(ServerPath.LIST_COMIC_RANKING)
+    fun getListComicRanking(
+            @Query("type") type: String,
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<CommentModel>>>
@@ -71,4 +78,16 @@ interface HomeService {
     fun logOut(
             @Header("Authorization") token: String
     ) : LiveData<ApiResponse<Void>>
+
+    @GET(ServerPath.LIST_COMIC_FAVORITE)
+    fun getListFavoriteComic(
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
+
+    @POST(ServerPath.WRITE_COMMENT)
+    fun writeComment(
+            @Header("Authorization") authorization: String,
+            @Body writeCommentBody: WriteCommentBody
+    ) : LiveData<ApiResponse<NoneResponse>>
 }

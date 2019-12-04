@@ -4,6 +4,7 @@ import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
@@ -11,6 +12,7 @@ import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
+import com.ggg.home.ui.reply.ReplyFragment
 import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ggg.home.ui.view_comic.ViewComicFragment
@@ -61,4 +63,10 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeChangePassWordFragmentInjector(): ChangePassWordFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeReplyFragmentInjector(): ReplyFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCommentFragmentInjector(): CommentFragment
 }

@@ -46,11 +46,7 @@ class UserFragment : HomeBaseFragment() {
         hideActionBar()
         showBottomNavView()
 
-        val jsonLoginResponse = PrefsUtil.instance.getStringValue("LoginResponse", "")
-        if (!jsonLoginResponse.isNullOrEmpty()) {
-            this.loginResponse = Gson().fromJson<LoginResponse>(
-                    jsonLoginResponse, object : TypeToken<LoginResponse>() {}.type)
-        }
+        this.loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse?
 
         initViews()
         initEvent()
@@ -67,11 +63,7 @@ class UserFragment : HomeBaseFragment() {
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(ivAvatar)
                 } else {
-                    Glide.with(context)
-                            .load(R.drawable.i_avatar)
-                            .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(ivAvatar)
+                    ivAvatar.setImageResource(R.drawable.i_avatar)
                 }
             }
 

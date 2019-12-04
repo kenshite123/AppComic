@@ -12,8 +12,10 @@ import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
 import com.ggg.home.R
 import com.ggg.home.data.model.ChapterHadRead
-import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.CommentModel
+import com.ggg.home.utils.Constant
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.lang.ref.WeakReference
 
 class PagerComicDetailAdapter : PagerAdapter {
@@ -21,6 +23,7 @@ class PagerComicDetailAdapter : PagerAdapter {
     lateinit var listener: OnEventControlListener
     var comicWithCategoryModel: ComicWithCategoryModel? = null
     var listChapters: List<ChapterHadRead> = listOf()
+    var listComments: List<CommentModel> = listOf()
 
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_LIST_CHAPTERS),
             StringUtil.getString(R.string.TEXT_DESCRIPTION), StringUtil.getString(R.string.TEXT_LIST_COMMENTS))
@@ -44,6 +47,11 @@ class PagerComicDetailAdapter : PagerAdapter {
 
     override fun getItemPosition(`object`: Any): Int {
         return POSITION_NONE
+    }
+
+    fun notifyData(listComments: List<CommentModel>, isComment: Boolean) {
+        this.listComments = listComments
+        notifyDataSetChanged()
     }
 
     fun notifyData(listChapters: List<ChapterHadRead>) {
@@ -71,6 +79,17 @@ class PagerComicDetailAdapter : PagerAdapter {
             tvDescription.text = comicWithCategoryModel?.comicModel?.content
         } else {
             view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_list_comments, container, false)
+            val rvListComments: RecyclerView = view.findViewById(R.id.rvListComments)
+            val fabComment: FloatingActionButton = view.findViewById(R.id.fabComment)
+            fabComment.bringToFront()
+            fabComment.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_BUTTON_COMMENT_IN_COMIC_DETAIL, it, null)
+            }
+
+            val listCommentAdapter = ListCommentAdapter(weakContext.get()!!, listener, listComments, true)
+            rvListComments.setHasFixedSize(false)
+            rvListComments.layoutManager = LinearLayoutManager(weakContext.get()!!, RecyclerView.VERTICAL, false)
+            rvListComments.adapter = listCommentAdapter
         }
         container.addView(view)
         return view

@@ -6,6 +6,7 @@ import com.ggg.home.ui.category.CategoryViewModel
 import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.change_password.ChangePassWordViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
+import com.ggg.home.ui.comment.CommentViewModel
 import com.ggg.home.ui.favorite.FavoriteViewModel
 import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.latest_update.LatestUpdateViewModel
@@ -13,6 +14,7 @@ import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
 import com.ggg.home.ui.rank.RankViewModel
 import com.ggg.home.ui.register.RegisterViewModel
+import com.ggg.home.ui.reply.ReplyViewModel
 import com.ggg.home.ui.search.SearchViewModel
 import com.ggg.home.ui.user.UserViewModel
 import com.ggg.home.ui.view_comic.ViewComicViewModel
@@ -92,4 +94,14 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(ChangePassWordViewModel::class)
     abstract fun bindChangePassWordViewModel(changePassWordViewModel: ChangePassWordViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReplyViewModel::class)
+    abstract fun bindReplyViewModel(replyViewModel: ReplyViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CommentViewModel::class)
+    abstract fun bindCommentViewModel(commentViewModel: CommentViewModel): ViewModel
 }

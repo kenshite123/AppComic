@@ -48,13 +48,21 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val fragments = listOf(
-                HomeFragment.create())
+
+        val fragmentTag = intent.getStringExtra("fragment")
+        val comicIdString = intent.getStringExtra("comicId")
+        val fragments: List<Fragment>
+
+        if (comicIdString.isNullOrEmpty()) {
+            fragments = listOf(HomeFragment.create())
+        } else {
+            fragments = listOf(HomeFragment.create())
+        }
+
 
         fragNavController.rootFragments = fragments
         fragNavController.initialize(0, savedInstanceState)
         initEvents()
-
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

@@ -12,7 +12,7 @@ abstract class ComicDao {
     abstract fun getListBanners() : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
-    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') GROUP BY comic.id ORDER BY id DESC limit :limit offset :offset")
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') GROUP BY comic.id ORDER BY lastModified DESC limit :limit offset :offset")
     abstract fun getListLatestUpdate(limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
@@ -24,4 +24,8 @@ abstract class ComicDao {
 
     @Query("UPDATE ComicModel SET bigImageUrl = '' where 1 = 1 and (bigImageUrl IS NOT NULL AND bigImageUrl <> '')")
     abstract fun updateClearListBanners()
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') GROUP BY comic.id ORDER BY comic.rate, comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListFavoriteComic(limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 }

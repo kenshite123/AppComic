@@ -216,6 +216,16 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         if (activity is BaseActivity){
             if (data.status == Status.LOADING) {
                 (activity as BaseActivity).showLoading()
+            }else if (data.status == Status.SUCCESS || data.status == Status.ERROR || data.status == Status.SUCCESS_DB){
+                (activity as BaseActivity).hideLoading()
+            }
+        }
+    }
+
+    fun <T> loadingWithOutStatusDb(data: Resource<T>){
+        if (activity is BaseActivity){
+            if (data.status == Status.LOADING) {
+                (activity as BaseActivity).showLoading()
             }else if (data.status == Status.SUCCESS || data.status == Status.ERROR){
                 (activity as BaseActivity).hideLoading()
             }

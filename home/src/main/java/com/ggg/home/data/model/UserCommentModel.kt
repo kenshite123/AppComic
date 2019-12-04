@@ -7,11 +7,11 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-@Entity(indices = [Index("id")], primaryKeys = ["id"])
+@Entity(indices = [Index("userId")], primaryKeys = ["userId"])
 class UserCommentModel : Serializable {
-        @SerializedName("id")
+        @SerializedName("userId")
         @Expose
-        var id: Int = 0
+        var userId: Long = 0
 
         @SerializedName("imageUrl")
         @Expose

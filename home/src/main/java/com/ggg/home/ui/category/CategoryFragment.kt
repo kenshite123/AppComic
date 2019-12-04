@@ -57,7 +57,7 @@ class CategoryFragment : HomeBaseFragment() {
         rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         rvListCategory.adapter = listCategoryAdapter
 
-        listComicAdapter = ListComicAdapter(context!!, this, listOf())
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComicByCategory)
         rvListComic.setHasFixedSize(true)
         rvListComic.layoutManager = GridLayoutManager(context!!, 3)
         rvListComic.adapter = listComicAdapter
@@ -66,7 +66,11 @@ class CategoryFragment : HomeBaseFragment() {
     override fun initObserver() {
         viewModel.getAllListCategoriesResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     if (it.isNotEmpty()) {
                         it.first().isChoose = true
@@ -82,10 +86,15 @@ class CategoryFragment : HomeBaseFragment() {
 
         viewModel.getListComicByCategoryResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     isLoadMore = false
                     this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+//                    this.listComicByCategory = it
                     listComicAdapter.notifyData(this.listComicByCategory)
                     if (this.listComicByCategory.count() >= items) {
                         isLoadMore = true

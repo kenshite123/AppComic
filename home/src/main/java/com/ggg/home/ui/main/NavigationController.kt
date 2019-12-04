@@ -2,14 +2,12 @@ package com.ggg.home.ui.main
 
 import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
-import com.ggg.home.data.model.CategoryOfComicModel
-import com.ggg.home.data.model.ChapterHadRead
-import com.ggg.home.data.model.ChapterModel
-import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.*
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
+import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
@@ -17,6 +15,7 @@ import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
 import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
+import com.ggg.home.ui.reply.ReplyFragment
 import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ggg.home.ui.view_comic.ViewComicFragment
@@ -62,6 +61,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
+    fun showComicDetail(comicId: Long){
+        val fragment = ComicDetailFragment.create(comicId)
+        fragNavController.pushFragment(fragment)
+    }
+
     fun showViewComic(comicWithCategoryModel: ComicWithCategoryModel, listChapterModel: List<ChapterHadRead>, positionChapter: Int) {
         val fragment = ViewComicFragment.create(comicWithCategoryModel, listChapterModel, positionChapter)
         fragNavController.pushFragment(fragment)
@@ -94,6 +98,15 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showChangePassWord() {
         val fragment = ChangePassWordFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+    fun showReply(commentModel: CommentModel) {
+        val fragment = ReplyFragment.create(commentModel)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showComment(comicId: Long) {
+        val fragment = CommentFragment.create(comicId)
         fragNavController.pushFragment(fragment)
     }
 

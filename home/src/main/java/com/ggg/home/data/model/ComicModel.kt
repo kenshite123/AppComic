@@ -62,6 +62,5 @@ class ComicModel : Serializable {
         var authors: List<String> = listOf()
 
         var authorsString: String? = ""
-        var hadFollow: Int = Constant.IS_UNFOLLOW
         var lastModified: Long = System.currentTimeMillis()
 }

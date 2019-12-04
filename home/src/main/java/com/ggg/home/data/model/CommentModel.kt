@@ -1,6 +1,7 @@
 package com.ggg.home.data.model
 
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
@@ -8,15 +9,11 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-@Entity(indices = [Index("id")], primaryKeys = ["id"])
+@Entity(indices = [Index("commentId")], primaryKeys = ["commentId"])
 class CommentModel : Serializable {
-        @SerializedName("chapter")
+        @SerializedName("comicId")
         @Expose
-        var chapter: String = ""
-
-        @SerializedName("comicName")
-        @Expose
-        var comicName: String = ""
+        var comicId: Long = 0
 
         @SerializedName("content")
         @Expose
@@ -28,15 +25,17 @@ class CommentModel : Serializable {
 
         @SerializedName("id")
         @Expose
-        var id: Int = 0
+        var commentId: Long = 0
 
-        @SerializedName("replyModels")
+        @SerializedName("replies")
         @Expose
         @Ignore
-        var replyModels: List<ReplyModel> = listOf()
+        var replies: List<CommentModel> = listOf()
 
         @SerializedName("user")
         @Expose
-        @Ignore
+        @Embedded
         var userComment: UserCommentModel = UserCommentModel()
+
+        var commentParentId: Long = 0
 }

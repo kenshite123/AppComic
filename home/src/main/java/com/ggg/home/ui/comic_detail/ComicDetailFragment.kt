@@ -31,7 +31,10 @@ class ComicDetailFragment : HomeBaseFragment() {
     lateinit var listCategoryComicDetailAdapter: ListCategoryComicDetailAdapter
     lateinit var pagerComicDetailAdapter: PagerComicDetailAdapter
     lateinit var listChapters: List<ChapterHadRead>
+    lateinit var listComments: List<CommentModel>
     var currentPagePosition = 0
+    var itemsComment: Long = 50
+    var pageComment: Long = 0
 
     companion object {
         val TAG = "ComicDetailFragment"
@@ -39,6 +42,17 @@ class ComicDetailFragment : HomeBaseFragment() {
         fun create(comicWithCategoryModel: ComicWithCategoryModel) : ComicDetailFragment {
             val bundle = bundleOf(
                     "comicWithCategoryModel" to comicWithCategoryModel
+            )
+            val comicDetailFragment = ComicDetailFragment()
+            comicDetailFragment.arguments = bundle
+            return comicDetailFragment
+        }
+
+        @JvmStatic
+        fun create(comicId: Long) : ComicDetailFragment {
+            val bundle = bundleOf(
+                    "isMoveFromNotify" to true,
+                    "comicId" to comicId
             )
             val comicDetailFragment = ComicDetailFragment()
             comicDetailFragment.arguments = bundle
@@ -59,37 +73,43 @@ class ComicDetailFragment : HomeBaseFragment() {
         showActionBar()
         hideBottomNavView()
 
-        comicWithCategoryModel = arguments?.get("comicWithCategoryModel") as ComicWithCategoryModel
-        initViews()
-        initEvent()
-        loadData()
+//        val isMoveFromNotify = arguments!!["isMoveFromNotify"] as Boolean
+//        if (isMoveFromNotify) {
+//            val comicId = arguments!!["comicId"] as Long
+//            loadComicInfoByComicId(comicId)
+//        } else {
+            comicWithCategoryModel = arguments?.get("comicWithCategoryModel") as ComicWithCategoryModel
+            initViews()
+            initEvent()
+            loadData()
+//        }
     }
 
     private fun initViews() {
-        val comic = comicWithCategoryModel.comicModel!!
-        setTitleActionBar(comic.title)
+        val comic = comicWithCategoryModel.comicModel
+        comic?.title?.let { setTitleActionBar(it) }
 
         Glide.with(context!!)
-                .load(comic.imageUrl)
+                .load(comic?.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(ivComic)
 
-        if (!comic.authorsString.isNullOrEmpty()) {
-            tvAuthor.text = comic.authorsString!!
+        if (!comic?.authorsString.isNullOrEmpty()) {
+            tvAuthor.text = comic?.authorsString!!
         } else {
             tvAuthor.text = StringUtil.getString(R.string.TEXT_STATUS_UNCOMPLETED)
         }
 
-        if (comic.status == Constant.STATUS_COMPLETED) {
+        if (comic?.status == Constant.STATUS_COMPLETED) {
             tvStatus.text = StringUtil.getString(R.string.TEXT_STATUS_COMPLETED)
         } else {
             tvStatus.text = StringUtil.getString(R.string.TEXT_STATUS_UNCOMPLETED)
         }
 
-        tvViews.text = Utils.formatNumber(comic.viewed)
+        tvViews.text = comic?.viewed?.let { Utils.formatNumber(it) }
 
-        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories!!)
+        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories)
         rvListCategory.setHasFixedSize(true)
         rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
         rvListCategory.adapter = listCategoryComicDetailAdapter
@@ -119,6 +139,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                     }
 
                     2 -> { // list comments
+                        pagerComicDetailAdapter.notifyData(listComments, true)
                     }
                 }
             }
@@ -126,18 +147,67 @@ class ComicDetailFragment : HomeBaseFragment() {
     }
 
     private fun loadData() {
-        viewModel.getListChapters(comicWithCategoryModel.comicModel!!.id)
+        comicWithCategoryModel.comicModel?.id?.let {
+            viewModel.getListChapters(it)
+
+            val dataRequestListComment = hashMapOf(
+                    "comicId" to it,
+                    "limit" to itemsComment,
+                    "offset" to pageComment
+            )
+            viewModel.getListComments(dataRequestListComment)
+        }
     }
 
     private fun initObserve() {
         viewModel.getListChaptersResult.observe(this, Observer {
-            loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+            if (currentPagePosition == 0) {
+                loading(it)
+            }
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && currentPagePosition == 0 && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
                 it.data?.let {
                     this.listChapters = it
                     if (currentPagePosition == 0) {
                         pagerComicDetailAdapter.notifyData(this.listChapters)
                     }
+                }
+            }
+        })
+
+        viewModel.getListCommentsResult.observe(this, Observer {
+            if (currentPagePosition == 2) {
+                loading(it)
+            }
+
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && currentPagePosition == 2 && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
+                it.data?.let {
+                    this.listComments = it.filter { it.commentParentId == 0L }
+                    this.listComments.forEach { commentModel ->
+                        commentModel.replies = it.filter { it.commentParentId == commentModel.commentId }
+                    }
+                    if (currentPagePosition == 2) {
+                        pagerComicDetailAdapter.notifyData(this.listComments, true)
+                    }
+                }
+            }
+        })
+
+        viewModel.getGetComicInfoResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                it.data?.let {
+                    this.comicWithCategoryModel = it
+                    initViews()
+                    initEvent()
+                    loadData()
                 }
             }
         })
@@ -156,16 +226,31 @@ class ComicDetailFragment : HomeBaseFragment() {
                 navigationController.showCategoryDetail(categoryOfComicModel)
             }
 
+            Constant.ACTION_CLICK_ON_LIST_REPLIES_COMMENT -> {
+                val commentModel = data as CommentModel
+                navigationController.showReply(commentModel)
+            }
+
+            Constant.ACTION_CLICK_ON_BUTTON_COMMENT_IN_COMIC_DETAIL -> {
+                navigationController.showComment(comicWithCategoryModel.comicModel!!.id)
+            }
+
             else -> super.onEvent(eventAction, control, data)
         }
     }
 
     private fun insertCCHadRead(positionChapter: Int) {
-        val ccHadReadModel = CCHadReadModel()
-        ccHadReadModel.comicId = comicWithCategoryModel.comicModel!!.id
-        ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
-        ccHadReadModel.lastModified = System.currentTimeMillis()
-        viewModel.insertCCHadRead(ccHadReadModel)
+        comicWithCategoryModel.comicModel?.let {
+            val ccHadReadModel = CCHadReadModel()
+            ccHadReadModel.comicId = it.id
+            ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
+            ccHadReadModel.lastModified = System.currentTimeMillis()
+            viewModel.insertCCHadRead(ccHadReadModel)
+        }
+    }
+
+    private fun loadComicInfoByComicId(comicId: Long) {
+        viewModel.getComicInfo(comicId)
     }
 
     override fun onResume() {

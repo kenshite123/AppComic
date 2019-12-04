@@ -12,6 +12,8 @@ public class GGGAppInterface {
     public interface AppInterface {
         public Context getCtx();
         public CircularProgressDrawable getCircularProgressDrawable();
+        public Object getLoginResponse();
+        public void setLoginResponse(Object loginResponse);
     }
     public static AppInterface gggApp = null;
     public static void initInstance(AppInterface appinterface)
