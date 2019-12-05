@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.CommonUtils
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.post_param.WriteCommentBody
@@ -100,6 +101,11 @@ class CommentFragment : HomeBaseFragment() {
     }
 
     private fun checkValidSendComment() : Boolean {
+        if (!CommonUtils.isInternetAvailable()) {
+            showDialog(R.string.TEXT_ERROR_NO_CONNECTION)
+            return false
+        }
+
         if (edComment.text.toString().isEmpty()) {
             showMsg(R.string.TEXT_ERROR_NO_CONTENT_YET)
             return false

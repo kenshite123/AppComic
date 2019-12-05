@@ -23,6 +23,7 @@
     <string name="TEXT_DESCRIPTION">Description</string>
     <string name="TEXT_LIST_COMMENTS">List comments</string>
     <string name="TEXT_FOLLOW">Follow</string>
+    <string name="TEXT_UNFOLLOW">Unfollow</string>
     <string name="TEXT_DOWNLOAD">Download</string>
     <string name="TEXT_LOGIN">Login</string>
     <string name="TEXT_REGISTER">Register</string>
@@ -70,7 +71,9 @@
     <string name="TEXT_HINT_EDITTEXT_COMMENT">Share your mind ...</string>
     <string name="TEXT_ERROR_NO_CONTENT_YET">No content yet</string>
     <string name="TEXT_ERROR_NO_LOGIN_TO_COMMENT">You need login first before write comment</string>
+    <string name="TEXT_ERROR_NO_CONNECTION">Connection has been lost. Please check your connection.</string>
     <string name="TEXT_OLD_PASSWORD">Old password</string>
     <string name="TEXT_NEW_PASSWORD">New password</string>
     <string name="TEXT_CONFIRM_NEW_PASSWORD">Confirm new password</string>
+    <string name="TEXT_READ_NOW">Read Now</string>
 </resources>

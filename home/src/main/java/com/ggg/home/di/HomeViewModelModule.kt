@@ -100,6 +100,8 @@ abstract class HomeViewModelModule {
     @ViewModelKey(CommentViewModel::class)
     abstract fun bindCommentViewModel(commentViewModel: CommentViewModel): ViewModel
 
+    @Binds
+    @IntoMap
     @ViewModelKey(ChangePassWordViewModel::class)
     abstract fun bindChangePassWordViewModel(changePassWordViewModel: ChangePassWordViewModel): ViewModel
 }

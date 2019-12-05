@@ -1,5 +1,6 @@
 package com.ggg.home.ui.comic_detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,12 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.CommonUtils
 import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.*
+import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListCategoryComicDetailAdapter
 import com.ggg.home.ui.adapter.PagerComicDetailAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -31,10 +34,13 @@ class ComicDetailFragment : HomeBaseFragment() {
     lateinit var listCategoryComicDetailAdapter: ListCategoryComicDetailAdapter
     lateinit var pagerComicDetailAdapter: PagerComicDetailAdapter
     lateinit var listChapters: List<ChapterHadRead>
-    lateinit var listComments: List<CommentModel>
+    var listComments: List<CommentModel> = listOf()
     var currentPagePosition = 0
     var itemsComment: Long = 50
     var pageComment: Long = 0
+    var isLoadComicInfo = false
+    var comicId: Long = 0
+    var isFollow = false
 
     companion object {
         val TAG = "ComicDetailFragment"
@@ -51,7 +57,6 @@ class ComicDetailFragment : HomeBaseFragment() {
         @JvmStatic
         fun create(comicId: Long) : ComicDetailFragment {
             val bundle = bundleOf(
-                    "isMoveFromNotify" to true,
                     "comicId" to comicId
             )
             val comicDetailFragment = ComicDetailFragment()
@@ -73,16 +78,18 @@ class ComicDetailFragment : HomeBaseFragment() {
         showActionBar()
         hideBottomNavView()
 
-//        val isMoveFromNotify = arguments!!["isMoveFromNotify"] as Boolean
-//        if (isMoveFromNotify) {
-//            val comicId = arguments!!["comicId"] as Long
-//            loadComicInfoByComicId(comicId)
-//        } else {
+        if (null == arguments?.get("comicWithCategoryModel")) {
+            isLoadComicInfo = true
+            comicId = arguments?.get("comicId") as Long
+            loadComicInfoByComicId(comicId)
+        } else {
+            isLoadComicInfo = false
             comicWithCategoryModel = arguments?.get("comicWithCategoryModel") as ComicWithCategoryModel
             initViews()
             initEvent()
-            loadData()
-//        }
+            loadListChapter()
+            loadListComment()
+        }
     }
 
     private fun initViews() {
@@ -108,6 +115,23 @@ class ComicDetailFragment : HomeBaseFragment() {
         }
 
         tvViews.text = comic?.viewed?.let { Utils.formatNumber(it) }
+
+        val listFollow = GGGAppInterface.gggApp.listFavoriteId
+        if (!listFollow.isEmpty()) {
+            if (listFollow.contains(comicWithCategoryModel.comicModel!!.id.toString())) {
+                isFollow = true
+                btnFollow.setText(R.string.TEXT_UNFOLLOW)
+                btnFollow.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+            } else {
+                isFollow = false
+                btnFollow.setText(R.string.TEXT_FOLLOW)
+                btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
+            }
+        } else {
+            isFollow = false
+            btnFollow.setText(R.string.TEXT_FOLLOW)
+            btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
+        }
 
         listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories)
         rvListCategory.setHasFixedSize(true)
@@ -144,17 +168,39 @@ class ComicDetailFragment : HomeBaseFragment() {
                 }
             }
         })
+
+        btnReadNow.setOnClickListener {
+            insertCCHadRead(0)
+            navigationController.showViewComic(comicWithCategoryModel, listChapters, 0)
+        }
+
+        btnFollow.setOnClickListener {
+            if (isFollow) {
+                isFollow = false
+                btnFollow.setText(R.string.TEXT_FOLLOW)
+                btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
+                unFavoriteComic()
+            } else {
+                isFollow = true
+                btnFollow.setText(R.string.TEXT_UNFOLLOW)
+                btnFollow.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                favoriteComic()
+            }
+        }
     }
 
-    private fun loadData() {
-        comicWithCategoryModel.comicModel?.id?.let {
-            viewModel.getListChapters(it)
+    private fun loadListChapter() {
+        viewModel.getListChapters(comicWithCategoryModel.comicModel!!.id)
+    }
 
-            val dataRequestListComment = hashMapOf(
-                    "comicId" to it,
-                    "limit" to itemsComment,
-                    "offset" to pageComment
-            )
+    private fun loadListComment() {
+        val dataRequestListComment = hashMapOf(
+                "comicId" to comicWithCategoryModel.comicModel!!.id,
+                "limit" to itemsComment,
+                "offset" to pageComment
+        )
+
+        if (CommonUtils.isInternetAvailable()) {
             viewModel.getListComments(dataRequestListComment)
         }
     }
@@ -183,18 +229,19 @@ class ComicDetailFragment : HomeBaseFragment() {
                 loading(it)
             }
 
-            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB && currentPagePosition == 2 && it.data.isNullOrEmpty()) {
-                    showLoading()
-                }
-
+            if (it.status == Status.SUCCESS) {
                 it.data?.let {
-                    this.listComments = it.filter { it.commentParentId == 0L }
-                    this.listComments.forEach { commentModel ->
-                        commentModel.replies = it.filter { it.commentParentId == commentModel.commentId }
-                    }
+                    this.listComments = it
                     if (currentPagePosition == 2) {
                         pagerComicDetailAdapter.notifyData(this.listComments, true)
+                    }
+                }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    if (currentPagePosition == 2) {
+                        showDialog(it)
+                    } else {
+                        showMsg(it)
                     }
                 }
             }
@@ -207,9 +254,18 @@ class ComicDetailFragment : HomeBaseFragment() {
                     this.comicWithCategoryModel = it
                     initViews()
                     initEvent()
-                    loadData()
+                    loadListChapter()
+                    loadListComment()
                 }
             }
+        })
+
+        viewModel.favoriteComicResult.observe(this, Observer {
+//            loading(it)
+        })
+
+        viewModel.unFavoriteComicResult.observe(this, Observer {
+//            loading(it)
         })
     }
 
@@ -251,6 +307,36 @@ class ComicDetailFragment : HomeBaseFragment() {
 
     private fun loadComicInfoByComicId(comicId: Long) {
         viewModel.getComicInfo(comicId)
+    }
+
+    private fun favoriteComic() {
+        if (GGGAppInterface.gggApp.checkIsLogin()) {
+            val loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
+            val token = "${loginResponse.tokenType}${loginResponse.accessToken}"
+            val data = hashMapOf(
+                    "token" to token,
+                    "comicId" to comicWithCategoryModel.comicModel!!.id
+            )
+
+            viewModel.favoriteComic(data)
+        }
+
+        GGGAppInterface.gggApp.addComicToFavorite(comicWithCategoryModel.comicModel!!.id)
+    }
+
+    private fun unFavoriteComic() {
+        if (GGGAppInterface.gggApp.checkIsLogin()) {
+            val loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
+            val token = "${loginResponse.tokenType}${loginResponse.accessToken}"
+            val data = hashMapOf(
+                    "token" to token,
+                    "comicId" to comicWithCategoryModel.comicModel!!.id
+            )
+
+            viewModel.unFavoriteComic(data)
+        }
+
+        GGGAppInterface.gggApp.removeComicToFavorite(comicWithCategoryModel.comicModel!!.id)
     }
 
     override fun onResume() {

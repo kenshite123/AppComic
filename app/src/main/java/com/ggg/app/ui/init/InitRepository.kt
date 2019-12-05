@@ -1,30 +1,88 @@
 package com.ggg.app.ui.init
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
+import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
+import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
+import com.ggg.home.data.model.CategoryOfComicModel
+import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import javax.inject.Inject
 
 class InitRepository {
     private val executor: AppExecutors
-    private var homeApi: HomeService
+    private var api: HomeService
     private var retrofit: HomeRetrofitProvider
     private var db: HomeDB
 
     @Inject
     constructor(appExec: AppExecutors, retrofit: HomeRetrofitProvider, db: HomeDB) {
         this.executor = appExec
-        homeApi = retrofit.connectAPI()
+        api = retrofit.connectAPI()
         this.retrofit = retrofit
         this.db = db
     }
 
-    fun initData(): LiveData<Resource<Boolean>> {
-        val task = FetchResouceTask(homeApi)
-        executor.networkIO().execute(task)
-        return task.liveData
+    fun getBanners(): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                return api.getBanners()
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+                if (item.isNotEmpty()) {
+                    db.comicDao().updateClearListBanners()
+                    item.forEach { comicModel ->
+                        run {
+                            comicModel.categories.forEach {
+                                val categoryOfComicModel = CategoryOfComicModel()
+                                categoryOfComicModel.categoryId = it.id
+                                categoryOfComicModel.categoryName = it.name
+                                categoryOfComicModel.comicId = comicModel.id
+                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                            }
+                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+                            comicModel.lastModified = System.currentTimeMillis()
+                        }
+                    }
+                    db.comicDao().insertListComic(item)
+                }
+            }
+        }
+        return callApi.asLiveData()
+    }
+
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                return api.getLatestUpdate(data["limit"]!!, data["offset"]!!)
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+                if (item.isNotEmpty()) {
+                    item.forEach { comicModel ->
+                        run {
+                            comicModel.categories.forEach {
+                                val categoryOfComicModel = CategoryOfComicModel()
+                                categoryOfComicModel.categoryId = it.id
+                                categoryOfComicModel.categoryName = it.name
+                                categoryOfComicModel.comicId = comicModel.id
+                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                            }
+                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+                            comicModel.lastModified = System.currentTimeMillis()
+                        }
+                    }
+                    db.comicDao().insertListComic(item)
+                }
+            }
+        }
+        return callApi.asLiveData()
     }
 }

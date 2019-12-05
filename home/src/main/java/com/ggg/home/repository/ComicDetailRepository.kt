@@ -4,10 +4,12 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.*
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import org.jetbrains.anko.doAsync
@@ -63,13 +65,9 @@ class ComicDetailRepository {
     }
 
     fun getListComments(data: HashMap<String, Long>): LiveData<Resource<List<CommentModel>>> {
-        val callApi = object : NetworkBoundResource<List<CommentModel>, List<CommentModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<CommentModel>> {
-                return db.commentDao().getListComments(
-                        data["comicId"]!!,
-                        data["limit"]!!,
-                        data["offset"]!!
-                )
+        val callApi = object : NetworkOnlyResource<List<CommentModel>> (appExecutors = executor) {
+            override fun saveCallResult(item: List<CommentModel>) {
+
             }
 
             override fun createCall(): LiveData<ApiResponse<List<CommentModel>>> {
@@ -80,26 +78,108 @@ class ComicDetailRepository {
                 )
             }
 
-            override fun saveCallResult(item: List<CommentModel>) {
-                if (item.isNotEmpty()) {
-                    item.forEach {
-                        it.replies.forEach { reply ->
-                            reply.commentParentId = it.commentId
-                            db.commentDao().insertComment(reply)
-                        }
-                    }
-                    db.commentDao().insertListComments(item)
-                }
+        }
+
+        return callApi.asLiveData()
+//        val callApi = object : NetworkBoundResource<List<CommentModel>, List<CommentModel>>(appExecutors = executor) {
+//            override fun loadFromDb(): LiveData<List<CommentModel>> {
+//                return db.commentDao().getListComments(
+//                        data["comicId"]!!,
+//                        data["limit"]!!,
+//                        data["offset"]!!
+//                )
+//            }
+//
+//            override fun createCall(): LiveData<ApiResponse<List<CommentModel>>> {
+//                return api.getListCommentByComic(
+//                        data["comicId"]!!,
+//                        data["limit"]!!,
+//                        data["offset"]!!
+//                )
+//            }
+//
+//            override fun saveCallResult(item: List<CommentModel>) {
+//                if (item.isNotEmpty()) {
+//                    item.forEach {
+//                        it.replies.forEach { reply ->
+//                            reply.commentParentId = it.commentId
+//                            db.commentDao().insertComment(reply)
+//                        }
+//                    }
+//                    db.commentDao().insertListComments(item)
+//                }
+//            }
+//
+//            override fun shouldFetch(data: List<CommentModel>?): Boolean {
+//                return true
+//            }
+//        }
+//        return callApi.asLiveData()
+    }
+
+    fun getComicInfo(comicId: Long): LiveData<Resource<ComicWithCategoryModel>> {
+        val callApi = object : NetworkBoundResource<ComicWithCategoryModel, ComicModel>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<ComicWithCategoryModel> {
+                return db.comicDao().getComicInfo(comicId)
             }
 
-            override fun shouldFetch(data: List<CommentModel>?): Boolean {
+            override fun createCall(): LiveData<ApiResponse<ComicModel>> {
+                return api.getComicInfo(comicId)
+            }
+
+            override fun saveCallResult(item: ComicModel) {
+                    item.categories.forEach {
+                        val categoryOfComicModel = CategoryOfComicModel()
+                        categoryOfComicModel.categoryId = it.id
+                        categoryOfComicModel.categoryName = it.name
+                        categoryOfComicModel.comicId = item.id
+                        db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                    }
+                    item.authorsString = TextUtils.join(", ", item.authors)
+                    item.lastModified = System.currentTimeMillis()
+                    db.comicDao().insertComic(item)
+            }
+
+            override fun shouldFetch(data: ComicWithCategoryModel?): Boolean {
                 return true
             }
         }
         return callApi.asLiveData()
     }
 
-    fun getComicInfo(comicId: Long): Nothing {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun favoriteComic(data: HashMap<String, Any>): LiveData<Resource<NoneResponse>> {
+        val callApi = object : NetworkOnlyResource<NoneResponse> (appExecutors = executor) {
+            override fun saveCallResult(item: NoneResponse) {
+
+            }
+
+            override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
+                return api.favoriteComic(
+                        data["token"].toString(),
+                        data["comicId"]!! as Long
+                )
+            }
+
+        }
+
+        return callApi.asLiveData()
+    }
+
+    fun unFavoriteComic(data: HashMap<String, Any>): LiveData<Resource<NoneResponse>> {
+        val callApi = object : NetworkOnlyResource<NoneResponse> (appExecutors = executor) {
+            override fun saveCallResult(item: NoneResponse) {
+
+            }
+
+            override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
+                return api.unFavoriteComic(
+                        data["token"].toString(),
+                        data["comicId"]!! as Long
+                )
+            }
+
+        }
+
+        return callApi.asLiveData()
     }
 }

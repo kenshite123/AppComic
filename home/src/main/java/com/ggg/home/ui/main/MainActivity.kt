@@ -102,7 +102,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                 }
             }
             else -> {
-                normalBack()
+//                normalBack()
+                navigationController.showLaunchScreen()
             }
         }
     }

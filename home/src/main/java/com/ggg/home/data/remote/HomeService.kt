@@ -80,13 +80,34 @@ interface HomeService {
             @Body writeCommentBody: WriteCommentBody
     ) : LiveData<ApiResponse<NoneResponse>>
 
-    @Headers(
-            "Authorization: {Authorization}"
-    )
     @PUT(ServerPath.CHANGE_PASSWORD)
     fun changePassword(
             @Header("Authorization") accessToken: String,
             @Path("id") id: Int,
             @Body changePasswordBody: ChangePassWordBody
     ): LiveData<ApiResponse<ChangePassWordResponse>>
+
+    @GET(ServerPath.COMIC_INFO)
+    fun getComicInfo(
+            @Path("comicId") comicId: Long
+    ) : LiveData<ApiResponse<ComicModel>>
+
+    @POST(ServerPath.FAVORITE_COMIC)
+    fun favoriteComic(
+            @Header("Authorization") accessToken: String,
+            @Path("comicId") comicId: Long
+    ) : LiveData<ApiResponse<NoneResponse>>
+
+    @PATCH(ServerPath.UNFAVORITE_COMIC)
+    fun unFavoriteComic(
+            @Header("Authorization") accessToken: String,
+            @Path("comicId") comicId: Long
+    ) : LiveData<ApiResponse<NoneResponse>>
+
+    @GET(ServerPath.LIST_COMIC_FOLLOW)
+    fun getListComicFollow(
+            @Header("Authorization") authorization: String,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
 }

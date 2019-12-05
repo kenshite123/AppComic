@@ -38,7 +38,7 @@ class PrefsUtil private constructor() {
         editor.commit()
     }
 
-    fun getStringValue(key: String, defaulValue: String): String {
+    fun getStringValue(key: String, defaulValue: String): String? {
         return prefs.getString(key, defaulValue)
     }
 

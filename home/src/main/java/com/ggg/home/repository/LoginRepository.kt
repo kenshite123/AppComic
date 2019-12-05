@@ -1,6 +1,8 @@
 package com.ggg.home.repository
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
@@ -29,7 +31,12 @@ class LoginRepository {
     fun login(data: HashMap<String, String>): LiveData<Resource<LoginResponse>> {
         val callApi = object : NetworkOnlyResource<LoginResponse>(appExecutors = executor) {
             override fun saveCallResult(item: LoginResponse) {
-
+                item.user?.let {
+                    GGGAppInterface.gggApp.clearListComicFavorite()
+                    it.mangaFollows.forEach {
+                        GGGAppInterface.gggApp.addComicToFavorite(it)
+                    }
+                }
             }
 
             override fun createCall(): LiveData<ApiResponse<LoginResponse>> {

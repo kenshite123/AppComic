@@ -138,7 +138,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/ctlHeader"
-        app:layout_constraintBottom_toTopOf="@+id/ctlFooter"
+        app:layout_constraintBottom_toTopOf="@+id/llFooter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.material.tabs.TabLayout
@@ -161,16 +161,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="@dimen/dp10"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ctlFooter"
+
+    <LinearLayout
+        android:id="@+id/llFooter"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp70"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingStart="@dimen/dp10"
-        android:paddingEnd="@dimen/dp10">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="horizontal">
+        <com.rey.material.widget.TextView
+            android:id="@+id/btnFollow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/btn_ripple_normal_0"
+            android:textColor="@color/white"
+            android:text="@string/TEXT_FOLLOW"
+            android:gravity="center"
+            android:textSize="@dimen/sp24"
+            android:ellipsize="end"
+            android:lines="1"
+            android:background="#ffab02"/>
+        <com.rey.material.widget.TextView
+            android:id="@+id/btnReadNow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/btn_ripple_normal_0"
+            android:textColor="@color/white"
+            android:text="@string/TEXT_READ_NOW"
+            android:gravity="center"
+            android:textSize="@dimen/sp24"
+            android:ellipsize="end"
+            android:lines="1"
+            android:background="#fc5a43"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

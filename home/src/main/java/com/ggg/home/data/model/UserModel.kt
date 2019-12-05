@@ -31,9 +31,9 @@ class UserModel : Serializable {
         @Expose
         var imageUrl: String = ""
 
-        @SerializedName("mangaFollow")
+        @SerializedName("mangaFollows")
         @Expose
-        var mangaFollow: String = ""
+        var mangaFollows: List<String> = listOf()
 
         @SerializedName("username")
         @Expose

@@ -29,9 +29,13 @@ class CategoryFragment : HomeBaseFragment() {
 
     var isFirstLoad = true
     var page: Long = 0
-    var items: Long = 12
+    var items: Long = 30
     var isLoadMore = true
     var positionOfCategorySelected = 0
+
+    var isFirstLoadDataApi = true
+    var isLoadAllData = false
+    lateinit var gridLayoutManager : GridLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -57,9 +61,10 @@ class CategoryFragment : HomeBaseFragment() {
         rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         rvListCategory.adapter = listCategoryAdapter
 
+        gridLayoutManager = GridLayoutManager(context!!, 3)
         listComicAdapter = ListComicAdapter(context!!, this, this.listComicByCategory)
         rvListComic.setHasFixedSize(true)
-        rvListComic.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComic.layoutManager = gridLayoutManager
         rvListComic.adapter = listComicAdapter
     }
 
@@ -77,6 +82,9 @@ class CategoryFragment : HomeBaseFragment() {
                         this.listCategories = it
                         this.page = 0
                         this.positionOfCategorySelected = 0
+                        isFirstLoadDataApi = true
+                        isLoadAllData = false
+                        isLoadMore = false
                         listCategoryAdapter.notifyData(it)
                         loadListComicByCategory()
                     }
@@ -87,18 +95,39 @@ class CategoryFragment : HomeBaseFragment() {
         viewModel.getListComicByCategoryResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-                    showLoading()
+                if (it.status == Status.SUCCESS_DB) {
+                    if (!isLoadAllData) {
+                        if (it.data.isNullOrEmpty()) {
+                            if (isFirstLoadDataApi) {
+                                showLoading()
+                            }
+                        } else {
+                            isFirstLoadDataApi = false
+                            it.data?.let {
+                                if (isLoadMore) {
+                                    isLoadMore = false
+                                    val list = this.listComicByCategory.toMutableList()
+                                    list.addAll(it)
+
+                                    this.listComicByCategory = list.toList()
+
+                                    listComicAdapter.notifyData(this.listComicByCategory)
+                                    isLoadAllData = it.size < items
+                                } else {
+                                    this.listComicByCategory = it
+                                    listComicAdapter.notifyData(this.listComicByCategory)
+                                }
+                            }
+                        }
+                    }
                 }
 
                 it.data?.let {
-                    isLoadMore = false
-                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
-//                    this.listComicByCategory = it
-                    listComicAdapter.notifyData(this.listComicByCategory)
-                    if (this.listComicByCategory.count() >= items) {
-                        isLoadMore = true
+                    if (isFirstLoadDataApi) {
+                        this.listComicByCategory = it
+                        listComicAdapter.notifyData(this.listComicByCategory)
                     }
+                    isLoadAllData = it.size < items
                 }
             }
         })
@@ -107,7 +136,19 @@ class CategoryFragment : HomeBaseFragment() {
     override fun initEvent() {
         rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    if (!isLoadAllData && !isLoadMore) {
+                        val visibleItemCount = 3
+                        val totalItemCount = gridLayoutManager.itemCount
+                        val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isLoadMore = true
+                            page++
+                            loadListComicByCategory()
+                        }
+                    }
+                }
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -127,11 +168,15 @@ class CategoryFragment : HomeBaseFragment() {
                 if (position != positionOfCategorySelected) {
                     this.positionOfCategorySelected = position
                     this.page = 0
+                    isFirstLoadDataApi = true
+                    isLoadAllData = false
+                    isLoadMore = false
                     for (i in 0 until this.listCategories.count()) {
                         this.listCategories[i].isChoose = i == position
                     }
 
                     listCategoryAdapter.notifyDataSetChanged()
+                    rvListComic.scrollToPosition(0)
                     loadListComicByCategory()
                 }
             }

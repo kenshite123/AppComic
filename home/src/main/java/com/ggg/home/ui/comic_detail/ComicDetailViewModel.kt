@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ggg.common.vo.Resource
 import com.ggg.home.data.model.*
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.repository.ComicDetailRepository
 import javax.inject.Inject
 
@@ -19,6 +20,12 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
     private val requestGetComicInfo: MutableLiveData<Long> = MutableLiveData()
     var getGetComicInfoResult: LiveData<Resource<ComicWithCategoryModel>>
 
+    private val requestFavoriteComic: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
+    var favoriteComicResult: LiveData<Resource<NoneResponse>>
+
+    private val requestUnFavoriteComic: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
+    var unFavoriteComicResult: LiveData<Resource<NoneResponse>>
+
     init {
         getListChaptersResult = Transformations.switchMap(requestGetListChapters) {
             return@switchMap comicDetailRepository.getListChapters(it)
@@ -30,6 +37,14 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
 
         getGetComicInfoResult = Transformations.switchMap(requestGetComicInfo) {
             return@switchMap comicDetailRepository.getComicInfo(it)
+        }
+
+        favoriteComicResult = Transformations.switchMap(requestFavoriteComic) {
+            return@switchMap comicDetailRepository.favoriteComic(it)
+        }
+
+        unFavoriteComicResult = Transformations.switchMap(requestUnFavoriteComic) {
+            return@switchMap comicDetailRepository.unFavoriteComic(it)
         }
     }
 
@@ -47,5 +62,13 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
 
     fun getComicInfo(comicId: Long) {
         requestGetComicInfo.value = comicId
+    }
+
+    fun favoriteComic(data: HashMap<String, Any>) {
+        requestFavoriteComic.value = data
+    }
+
+    fun unFavoriteComic(data: HashMap<String, Any>) {
+        requestUnFavoriteComic.value = data
     }
 }

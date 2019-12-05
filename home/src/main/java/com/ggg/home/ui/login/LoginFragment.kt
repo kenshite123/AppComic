@@ -72,8 +72,7 @@ class LoginFragment : HomeBaseFragment() {
                 val data = hashMapOf(
                         "username" to edUsername.text.toString(),
                         "password" to edPassword.text.toString(),
-//                    "token" to "123456789"
-                        "token" to "123"
+                        "token" to PrefsUtil.instance.getStringValue(PrefsUtil.TOKEN, "").toString()
                 )
 
                 viewModel.requestLogin(data)

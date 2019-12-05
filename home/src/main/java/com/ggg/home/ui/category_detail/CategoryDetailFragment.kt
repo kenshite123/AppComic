@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CategoryModel
@@ -26,8 +27,13 @@ class CategoryDetailFragment : HomeBaseFragment() {
 
     lateinit var listComicAdapter: ListComicAdapter
     var listComicByCategory: List<ComicWithCategoryModel> = arrayListOf()
+    lateinit var gridLayoutManager : GridLayoutManager
+
     var page: Long = 0
-    var items: Long = 12
+    var items: Long = 30
+
+    var isFirstLoadDataApi = true
+    var isLoadAllData = false
     var isLoadMore = true
 
     companion object {
@@ -65,9 +71,10 @@ class CategoryDetailFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        gridLayoutManager = GridLayoutManager(context!!, 3)
         listComicAdapter = ListComicAdapter(context!!, this, this.listComicByCategory)
         rvListComic.setHasFixedSize(true)
-        rvListComic.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComic.layoutManager = gridLayoutManager
         rvListComic.adapter = listComicAdapter
     }
 
@@ -75,25 +82,82 @@ class CategoryDetailFragment : HomeBaseFragment() {
         viewModel.getListComicByCategoryResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-                    showLoading()
+                if (it.status == Status.SUCCESS_DB) {
+                    if (!isLoadAllData) {
+                        if (it.data.isNullOrEmpty()) {
+                            if (isFirstLoadDataApi) {
+                                showLoading()
+                            }
+                        } else {
+                            isFirstLoadDataApi = false
+                            it.data?.let {
+                                if (isLoadMore) {
+                                    isLoadMore = false
+                                    val list = this.listComicByCategory.toMutableList()
+                                    list.addAll(it)
+
+                                    this.listComicByCategory = list.toList()
+
+                                    listComicAdapter.notifyData(this.listComicByCategory)
+                                    isLoadAllData = it.size < items
+                                } else {
+                                    this.listComicByCategory = it
+                                    listComicAdapter.notifyData(this.listComicByCategory)
+                                }
+                            }
+                        }
+                    }
                 }
 
-                it.data?.let {
-                    isLoadMore = false
-                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
-//                    this.listComicByCategory = it
-                    listComicAdapter.notifyData(this.listComicByCategory)
-                    if (this.listComicByCategory.count() >= items) {
-                        isLoadMore = true
+                if (isFirstLoadDataApi) {
+                    it.data?.let {
+                        this.listComicByCategory = it
+                        listComicAdapter.notifyData(this.listComicByCategory)
                     }
                 }
             }
+//            loading(it)
+//            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+//                    showLoading()
+//                }
+//
+//                it.data?.let {
+//                    isLoadMore = false
+//                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
+////                    this.listComicByCategory = it
+//                    listComicAdapter.notifyData(this.listComicByCategory)
+//                    if (this.listComicByCategory.count() >= items) {
+//                        isLoadMore = true
+//                    }
+//                }
+//            }
         })
     }
 
     override fun initEvent() {
+        rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    if (!isLoadAllData && !isLoadMore) {
+                        val visibleItemCount = 3
+                        val totalItemCount = gridLayoutManager.itemCount
+                        val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
 
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isLoadMore = true
+                            page++
+                            loadData()
+                        }
+                    }
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     private fun loadData() {

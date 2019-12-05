@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.CommonUtils
 import com.ggg.common.utils.DateTimeUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
@@ -22,6 +23,7 @@ import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListCommentAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
+import com.ggg.home.utils.Utils
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_reply.*
@@ -117,9 +119,8 @@ class ReplyFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 val list = this.commentModel.replies.toMutableList()
                 val commentModel = CommentModel()
-                commentModel.comicId = writeCommentBody.comicId
                 commentModel.content = writeCommentBody.content
-                commentModel.createdAt = DateTimeUtil.convertMilisecondToDate(DateTimeUtil.DATE_TIME_MILL, System.currentTimeMillis() / 1000)
+                commentModel.createdAt = DateTimeUtil.convertMilisecondToDate(DateTimeUtil.DATE_TIME_MILL, System.currentTimeMillis())
                 val userComment = UserCommentModel()
                 userComment.userId = loginResponse?.user?.id!!
                 userComment.nickname = loginResponse?.user?.fullName!!
@@ -129,6 +130,7 @@ class ReplyFragment : HomeBaseFragment() {
 
                 list.add(0, commentModel)
                 this.commentModel.replies = list.toList()
+                edComment.text.clear()
                 listCommentAdapter.notifyData(this.commentModel.replies)
             } else if (it.status == Status.ERROR) {
                 it.message?.let {
@@ -143,8 +145,8 @@ class ReplyFragment : HomeBaseFragment() {
             if (checkValidSendComment()) {
                 val token = loginResponse!!.tokenType + loginResponse!!.accessToken
                 writeCommentBody = WriteCommentBody()
-                writeCommentBody.topicType = Constant.TOPIC_TYPE_COMMENT
-                writeCommentBody.comicId = this.commentModel.comicId
+                writeCommentBody.topicType = Constant.TOPIC_TYPE_REPLY
+                writeCommentBody.comicId = this.commentModel.comicModel.id
                 writeCommentBody.parentId = this.commentModel.commentId
                 writeCommentBody.content = edComment.text.toString()
 
@@ -153,12 +155,19 @@ class ReplyFragment : HomeBaseFragment() {
                         "writeCommentBody" to writeCommentBody
                 )
 
+                hideSoftKeyboard()
+
                 viewModel.writeComment(data)
             }
         }
     }
 
     private fun checkValidSendComment() : Boolean {
+        if (!CommonUtils.isInternetAvailable()) {
+            showDialog(R.string.TEXT_ERROR_NO_CONNECTION)
+            return false
+        }
+
         if (edComment.text.toString().isEmpty()) {
             showMsg(R.string.TEXT_ERROR_NO_CONTENT_YET)
             return false

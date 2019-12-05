@@ -41,9 +41,9 @@ class ChangePassWordFragment: HomeBaseFragment() {
     }
 
     private fun initViews() {
-        hideActionBar()
+        showActionBar()
         hideBottomNavView()
-
+        setTitleActionBar(R.string.TEXT_CHANGE_PASSWORD)
     }
 
     override fun initObserver() {

@@ -1,5 +1,6 @@
 package com.ggg.home.ui.main
 
+import android.content.Intent
 import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
 import com.ggg.home.data.model.*
@@ -109,6 +110,13 @@ class NavigationController @Inject constructor(activity: MainActivity) {
     fun showChangePassWord() {
         val fragment = ChangePassWordFragment.create()
         fragNavController.pushFragment(fragment)
+    }
+
+    fun showLaunchScreen() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        weakActivity.get()!!.startActivity(intent)
     }
 
     //endregion

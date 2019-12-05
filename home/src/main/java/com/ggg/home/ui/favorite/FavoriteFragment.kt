@@ -87,7 +87,7 @@ class FavoriteFragment : HomeBaseFragment() {
                                     this.listComic = list.toList()
 
                                     listComicAdapter.notifyData(this.listComic)
-                                    isLoadAllData = it.isEmpty()
+                                    isLoadAllData = it.size < items
                                 } else {
                                     this.listComic = it
                                     listComicAdapter.notifyData(this.listComic)
@@ -97,11 +97,12 @@ class FavoriteFragment : HomeBaseFragment() {
                     }
                 }
 
-                if (isFirstLoadDataApi) {
-                    it.data?.let {
+                it.data?.let {
+                    if (isFirstLoadDataApi) {
                         this.listComic = it
                         listComicAdapter.notifyData(this.listComic)
                     }
+                    isLoadAllData = it.size < items
                 }
             }
         })

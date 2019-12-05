@@ -52,6 +52,8 @@
         app:layout_constraintEnd_toEndOf="@+id/ivComic"
         android:layout_marginTop="@dimen/dp5"
         android:lines="2"
+        android:paddingStart="@dimen/dp3"
+        android:paddingEnd="@dimen/dp3"
         android:ellipsize="end"
         android:textColor="@color/black"
         android:textSize="@dimen/sp20"

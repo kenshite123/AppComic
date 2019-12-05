@@ -2,6 +2,7 @@ package com.ggg.app
 
 import android.app.Activity
 import android.content.Context
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.multidex.MultiDexApplication
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -29,6 +30,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
     var loginResponse: LoginResponse? = null
+    private var listFavoriteId: List<String> = listOf()
 
     override fun getCtx(): Context {
         return this
@@ -63,11 +65,12 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
 
-        val token = FirebaseInstanceId.getInstance().token
+        var token = FirebaseInstanceId.getInstance().token
         if (token != null && token.isNotEmpty()){
-            Timber.d(token)
+            Timber.d("FCM_TOKEN: $token")
             PrefsUtil.instance.setUserFCMToken(token)
         }
+
         FirebaseMessaging.getInstance().subscribeToTopic("news")
                 .addOnCompleteListener { task ->
                     var msg = "subscribed"
@@ -82,6 +85,11 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
             this.loginResponse = Gson().fromJson<LoginResponse>(
                     jsonLoginResponse, object : TypeToken<LoginResponse>() {}.type)
         }
+
+        val favorites = PrefsUtil.instance.getStringValue("favorites", "")
+        if (!favorites.isNullOrEmpty()) {
+            listFavoriteId = favorites.split(",")
+        }
     }
 
     override fun getLoginResponse(): Any? {
@@ -90,5 +98,45 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun setLoginResponse(loginResponse: Any?) {
         this.loginResponse = loginResponse as LoginResponse
+    }
+
+    override fun checkIsLogin(): Boolean {
+        return this.loginResponse != null
+    }
+
+    override fun addComicToFavorite(comicId: Long) {
+        addComicToFavorite(comicId.toString())
+    }
+
+    override fun addComicToFavorite(comicId: String) {
+        if (!listFavoriteId.contains(comicId)) {
+            val s = listFavoriteId.toMutableList()
+            s.add(comicId)
+
+            listFavoriteId = s.toList()
+            PrefsUtil.instance.setStringValue("favorites", TextUtils.join(",", listFavoriteId))
+        }
+    }
+
+    override fun removeComicToFavorite(comicId: Long) {
+        removeComicToFavorite(comicId.toString())
+    }
+
+    override fun removeComicToFavorite(comicId: String) {
+        val s = listFavoriteId.toMutableList()
+        s.remove(comicId)
+
+        listFavoriteId = s.toList()
+        PrefsUtil.instance.setStringValue("favorites", TextUtils.join(",", listFavoriteId))
+    }
+
+    override fun clearListComicFavorite() {
+        val s = listFavoriteId.toMutableList()
+        s.clear()
+        listFavoriteId = s.toList()
+    }
+
+    override fun getListFavoriteId(): List<String> {
+        return this.listFavoriteId
     }
 }
