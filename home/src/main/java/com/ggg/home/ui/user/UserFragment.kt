@@ -1,15 +1,17 @@
 package com.ggg.home.ui.user
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
-import com.ggg.common.ws.BaseResponse
+import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.main.HomeBaseFragment
@@ -71,7 +73,29 @@ class UserFragment : HomeBaseFragment() {
     }
 
     override fun initObserver() {
+        viewModel.logOutResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                Log.d("LogOut", "Success")
+                showDialog(R.string.TEXT_LOG_OUT_SUCCESS)
+                updateUI()
+            } else if (it.status == Status.ERROR) {
+                showDialog(it.message.toString())
+            }
 
+        })
+    }
+
+    private fun updateUI() {
+        PrefsUtil.instance.clear()
+        btnChangePass.visibility = View.GONE
+        btnLogout.visibility = View.GONE
+        tvNameUser.text = R.string.TEXT_LOGIN.toString()
+        Glide.with(context)
+                .load(R.drawable.i_avatar)
+                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(ivAvatar)
     }
 
     override fun initEvent() {
@@ -86,7 +110,14 @@ class UserFragment : HomeBaseFragment() {
         }
 
         btnLogout.setOnClickListener {
-            Toast.makeText(context, "Log out Clicked", Toast.LENGTH_LONG).show()
+            var token: String = ""
+            if (loginResponse != null) {
+                token = loginResponse?.tokenType + loginResponse?.accessToken
+            }
+            val param = hashMapOf(
+                    "token" to token
+            )
+            viewModel.logOut(param)
         }
     }
 

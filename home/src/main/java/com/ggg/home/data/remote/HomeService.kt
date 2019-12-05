@@ -11,6 +11,7 @@ import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.ChangePassWordBody
 import com.ggg.home.data.model.response.ChangePassWordResponse
+import com.ggg.home.data.model.post_param.WriteCommentBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.model.response.RegisterResponse
@@ -67,6 +68,18 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicRankModel>>>
+
+    @PUT(ServerPath.CHANGE_PASSWORD)
+    fun changePassword(
+            @Header("Authorization") accessToken: String,
+            @Path("id") id: Int,
+            @Body changePasswordBody: ChangePassWordBody
+    ): LiveData<ApiResponse<ChangePassWordResponse>>
+
+    @POST(ServerPath.LOG_OUT)
+    fun logOut(
+            @Header("Authorization") token: String
+    ) : LiveData<ApiResponse<NoneResponse>>
 
     @GET(ServerPath.LIST_COMIC_FAVORITE)
     fun getListFavoriteComic(

@@ -92,6 +92,11 @@ abstract class HomeViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(ChangePassWordViewModel::class)
+    abstract fun bindChangePassWordViewModel(changePassWordViewModel: ChangePassWordViewModel): ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(ReplyViewModel::class)
     abstract fun bindReplyViewModel(replyViewModel: ReplyViewModel): ViewModel
 
@@ -99,9 +104,4 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(CommentViewModel::class)
     abstract fun bindCommentViewModel(commentViewModel: CommentViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ChangePassWordViewModel::class)
-    abstract fun bindChangePassWordViewModel(changePassWordViewModel: ChangePassWordViewModel): ViewModel
 }

@@ -62,11 +62,11 @@ abstract class InitHomeActivityFragmentModule {
     abstract fun contributeRankFragmentInjector(): RankFragment
 
     @ContributesAndroidInjector
+    abstract fun contributeChangePassWordFragmentInjector(): ChangePassWordFragment
+
+    @ContributesAndroidInjector
     abstract fun contributeReplyFragmentInjector(): ReplyFragment
 
     @ContributesAndroidInjector
     abstract fun contributeCommentFragmentInjector(): CommentFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeChangePassWordFragmentInjector(): ChangePassWordFragment
 }

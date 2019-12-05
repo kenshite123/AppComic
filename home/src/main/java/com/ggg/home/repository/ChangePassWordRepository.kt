@@ -34,12 +34,12 @@ class ChangePassWordRepository {
 
             override fun createCall(): LiveData<ApiResponse<ChangePassWordResponse>> {
                 var id = param["id"]!!.toInt()
-                var accessToken = param["accessToken"].toString()
+                var token = param["token"].toString()
                 var changePassWordBody: ChangePassWordBody = ChangePassWordBody()
                 changePassWordBody.oldPassword = param["oldPassword"].toString()
                 changePassWordBody.newPassword = param["newPassword"].toString()
                 changePassWordBody.confirmPassword = param["confirmPassword"].toString()
-                return api.changePassword(accessToken, id, changePassWordBody)
+                return api.changePassword(token, id, changePassWordBody)
             }
         }
         return callApi.asLiveData()

@@ -19,5 +19,6 @@ class ServerPath {
         const val FAVORITE_COMIC = "api/comic/{comicId}/favorite"
         const val UNFAVORITE_COMIC = "api/comic/{comicId}/unfavorite"
         const val LIST_COMIC_FOLLOW = "api/comic/watchlist"
+        const val LOG_OUT = "api/auth/logout"
     }
 }

@@ -97,6 +97,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
+    fun showChangePassWord() {
+        val fragment = ChangePassWordFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
     fun showReply(commentModel: CommentModel) {
         val fragment = ReplyFragment.create(commentModel)
         fragNavController.pushFragment(fragment)
@@ -104,11 +109,6 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showComment(comicId: Long) {
         val fragment = CommentFragment.create(comicId)
-        fragNavController.pushFragment(fragment)
-    }
-
-    fun showChangePassWord() {
-        val fragment = ChangePassWordFragment.create()
         fragNavController.pushFragment(fragment)
     }
 
