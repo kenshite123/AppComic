@@ -12,6 +12,7 @@ import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.latest_update.LatestUpdateViewModel
 import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
+import com.ggg.home.ui.my_comment.MyCommentViewModel
 import com.ggg.home.ui.rank.RankViewModel
 import com.ggg.home.ui.register.RegisterViewModel
 import com.ggg.home.ui.reply.ReplyViewModel
@@ -104,4 +105,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(CommentViewModel::class)
     abstract fun bindCommentViewModel(commentViewModel: CommentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MyCommentViewModel::class)
+    abstract fun bindMyCommentViewModel(myCommentViewModel: MyCommentViewModel): ViewModel
 }

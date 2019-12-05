@@ -57,20 +57,6 @@
                     android:textSize="@dimen/sp20"
                     android:ellipsize="end"
                     android:lines="1" />
-
-                <TextView
-                    android:id="@+id/tvNameUser"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:shadowColor="@color/cText"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="4"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp20"
-                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -141,7 +127,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llComment"
+                android:id="@+id/btnMyComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"

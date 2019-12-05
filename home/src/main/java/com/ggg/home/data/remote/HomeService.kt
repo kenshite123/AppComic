@@ -11,7 +11,6 @@ import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.ChangePassWordBody
 import com.ggg.home.data.model.response.ChangePassWordResponse
-import com.ggg.home.data.model.post_param.WriteCommentBody
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.model.response.RegisterResponse
@@ -92,13 +91,6 @@ interface HomeService {
             @Header("Authorization") authorization: String,
             @Body writeCommentBody: WriteCommentBody
     ) : LiveData<ApiResponse<NoneResponse>>
-
-    @PUT(ServerPath.CHANGE_PASSWORD)
-    fun changePassword(
-            @Header("Authorization") accessToken: String,
-            @Path("id") id: Int,
-            @Body changePasswordBody: ChangePassWordBody
-    ): LiveData<ApiResponse<ChangePassWordResponse>>
 
     @GET(ServerPath.COMIC_INFO)
     fun getComicInfo(

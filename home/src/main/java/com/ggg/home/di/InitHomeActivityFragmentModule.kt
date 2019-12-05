@@ -10,6 +10,7 @@ import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
+import com.ggg.home.ui.my_comment.MyCommentFragment
 import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
 import com.ggg.home.ui.reply.ReplyFragment
@@ -69,4 +70,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeCommentFragmentInjector(): CommentFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeMyCommentFragmentInjector(): MyCommentFragment
 }

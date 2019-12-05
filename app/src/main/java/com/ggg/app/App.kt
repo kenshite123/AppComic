@@ -97,11 +97,17 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     }
 
     override fun setLoginResponse(loginResponse: Any?) {
-        this.loginResponse = loginResponse as LoginResponse
+        if (loginResponse == null) {
+            this.loginResponse = null
+            PrefsUtil.instance.setStringValue("LoginResponse", "")
+        } else {
+            this.loginResponse = loginResponse as LoginResponse
+            PrefsUtil.instance.setStringValue("LoginResponse", this.loginResponse!!.convertToGson())
+        }
     }
 
     override fun checkIsLogin(): Boolean {
-        return this.loginResponse != null
+        return this.loginResponse != null && this.loginResponse!!.accessToken.isNotEmpty()
     }
 
     override fun addComicToFavorite(comicId: Long) {

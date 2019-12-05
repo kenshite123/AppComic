@@ -78,4 +78,5 @@
     <string name="TEXT_ERROR_NO_LOGIN_TO_COMMENT">You need login first before write comment</string>
     <string name="TEXT_ERROR_NO_CONNECTION">Connection has been lost. Please check your connection.</string>
     <string name="TEXT_READ_NOW">Read Now</string>
+    <string name="TEXT_MY_COMMENT">My comment</string>
 </resources>

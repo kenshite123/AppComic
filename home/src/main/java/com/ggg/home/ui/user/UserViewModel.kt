@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ggg.common.vo.Resource
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.repository.UserRepository
 import javax.inject.Inject
 
 class UserViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
     private val requestLogOut: MutableLiveData<HashMap<String, String>> = MutableLiveData()
-    var logOutResult: LiveData<Resource<Void>>
+    var logOutResult: LiveData<Resource<NoneResponse>>
 
     init {
         logOutResult = Transformations.switchMap(requestLogOut) {

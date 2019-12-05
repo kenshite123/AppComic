@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.response.LoginResponse
@@ -53,22 +54,29 @@ class UserFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
-        loginResponse?.let {
-            it.user?.let {
-                tvUsername.text = it.fullName
-                if (!it.imageUrl.isEmpty()) {
-                    Glide.with(context)
-                            .load(it.imageUrl)
-                            .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(ivAvatar)
-                } else {
-                    ivAvatar.setImageResource(R.drawable.i_avatar)
+        if (GGGAppInterface.gggApp.checkIsLogin()) {
+            loginResponse?.let {
+                it.user?.let {
+                    tvUsername.text = it.fullName
+                    if (!it.imageUrl.isEmpty()) {
+                        Glide.with(context)
+                                .load(it.imageUrl)
+                                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .into(ivAvatar)
+                    } else {
+                        ivAvatar.setImageResource(R.drawable.i_avatar)
+                    }
                 }
-            }
 
-            btnLogout.visibility = View.VISIBLE
-            btnChangePass.visibility = View.VISIBLE
+                btnLogout.visibility = View.VISIBLE
+                btnMyComment.visibility = View.VISIBLE
+                btnChangePass.visibility = View.VISIBLE
+            }
+        } else {
+            btnLogout.visibility = View.GONE
+            btnMyComment.visibility = View.GONE
+            btnChangePass.visibility = View.GONE
         }
     }
 
@@ -78,6 +86,8 @@ class UserFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 Log.d("LogOut", "Success")
                 showDialog(R.string.TEXT_LOG_OUT_SUCCESS)
+                this.loginResponse = null
+                GGGAppInterface.gggApp.loginResponse = null
                 updateUI()
             } else if (it.status == Status.ERROR) {
                 showDialog(it.message.toString())
@@ -88,14 +98,11 @@ class UserFragment : HomeBaseFragment() {
 
     private fun updateUI() {
         PrefsUtil.instance.clear()
+        btnMyComment.visibility = View.GONE
         btnChangePass.visibility = View.GONE
         btnLogout.visibility = View.GONE
-        tvNameUser.text = R.string.TEXT_LOGIN.toString()
-        Glide.with(context)
-                .load(R.drawable.i_avatar)
-                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(ivAvatar)
+        tvUsername.text = StringUtil.getString(R.string.TEXT_LOGIN)
+        ivAvatar.setImageResource(R.drawable.i_avatar)
     }
 
     override fun initEvent() {
