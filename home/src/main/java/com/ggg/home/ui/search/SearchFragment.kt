@@ -4,15 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import com.ggg.common.vo.Status
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.ui.adapter.ListComicAdapter
+import com.ggg.home.ui.category.CategoryViewModel
 import com.ggg.home.ui.main.HomeBaseFragment
-import com.ggg.home.ui.user.UserViewModel
+import com.ggg.home.utils.Constant
+import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
 
 class SearchFragment : HomeBaseFragment() {
-    private lateinit var viewModel: UserViewModel
+    private lateinit var viewModel: CategoryViewModel
+    var page: Long = 0
+    var items: Long = 12
     var isFirstLoad = true
+    var isLoadMore = true
+    lateinit var listComicAdapter: ListComicAdapter
+    var listComicByKeyWords: List<ComicModel> = arrayListOf()
 
     companion object {
         val TAG = "SearchFragment"
@@ -30,7 +43,7 @@ class SearchFragment : HomeBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryViewModel::class.java)
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_SEARCH)
@@ -40,14 +53,52 @@ class SearchFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComicByKeyWords, true)
+        rvListComicSearch.setHasFixedSize(true)
+        rvListComicSearch.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComicSearch.adapter = listComicAdapter
 
     }
 
+    override fun onEvent(eventAction: Int, control: View?, data: Any?) {
+        when (eventAction) {
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicId = data as Long
+                navigationController.showComicDetail(comicId)
+            }
+            else -> {
+
+            }
+        }
+    }
+
     override fun initObserver() {
+        viewModel.getListComicByKeyWordsResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS ) {
+                it.data?.let {
+                    isLoadMore = false
+//                    this.listComicByKeyWords = it.distinctBy { it.comicModel?.id }
+                    this.listComicByKeyWords = it
+                    listComicAdapter.notifyDataSearch(listComicByKeyWords)
+                    if (this.listComicByKeyWords.count() >= items) {
+                        isLoadMore = true
+                    }
+                }
+            }
+        })
 
     }
 
     override fun initEvent() {
+        ivSearch.setOnClickListener {
+            val data = hashMapOf(
+                    "keywords" to edtSearch.text.toString(),
+                    "limit" to items,
+                    "offset" to page
+            )
+            viewModel.getListComicByKeyWords(data)
+        }
 
     }
 

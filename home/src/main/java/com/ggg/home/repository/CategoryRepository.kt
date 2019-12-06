@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
@@ -96,6 +97,26 @@ class CategoryRepository {
             override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
+        }
+        return callApi.asLiveData()
+    }
+
+    fun getListComicByKeyWords(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+
+
+            override fun createCall():  LiveData<ApiResponse<List<ComicModel>>> {
+                return api.getListComicByKeyWords(
+                        data["keywords"] as String,
+                        (data["limit"] as Long).toInt(),
+                        (data["offset"] as Long).toInt()
+                )
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+
+            }
+
         }
         return callApi.asLiveData()
     }

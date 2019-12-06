@@ -2,7 +2,7 @@ package com.ggg.home.utils
 
 class ServerPath {
     companion object {
-        var baseUri = "http://3.134.88.15:8080/heaven-manga/"
+        var baseUri = "http://54.173.150.98:8080/heaven-manga/"
         const val LOGIN = "api/auth/login"
         const val REGISTER = "api/auth/register"
         const val BANNERS = "api/homepage/banners"

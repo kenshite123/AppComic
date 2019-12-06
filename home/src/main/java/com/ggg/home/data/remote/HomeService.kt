@@ -49,6 +49,13 @@ interface HomeService {
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
 
+    @GET(ServerPath.LIST_COMIC)
+    fun getListComicByKeyWords(
+            @Query("keywords") keywords: String,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
+
     @GET(ServerPath.LIST_CHAPTERS)
     fun getListChaptersComic(
             @Path("comicId") comicId: Long

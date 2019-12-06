@@ -46,7 +46,7 @@
     <TextView
         android:id="@+id/tvComicTitle"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp55"
+        android:layout_height="@dimen/dp60"
         app:layout_constraintTop_toBottomOf="@+id/ivComic"
         app:layout_constraintStart_toStartOf="@+id/ivComic"
         app:layout_constraintEnd_toEndOf="@+id/ivComic"
@@ -56,6 +56,8 @@
         android:paddingEnd="@dimen/dp3"
         android:ellipsize="end"
         android:textColor="@color/black"
+        android:layout_marginStart="@dimen/dp8"
+        android:layout_marginEnd="@dimen/dp8"
         android:textSize="@dimen/sp20"
         android:text="Naruto"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

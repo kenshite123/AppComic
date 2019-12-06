@@ -198,6 +198,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_10"
+                    android:textColor="@color/cText"
                     android:text="@string/TEXT_CHANGE_PASSWORD"
                     android:textSize="@dimen/sp20" />
             </LinearLayout>

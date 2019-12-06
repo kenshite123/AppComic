@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
@@ -22,6 +23,8 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     lateinit var listComic: List<ComicWithCategoryModel>
+    lateinit var listComicSearch: List<ComicModel>
+    private var isFromSearch: Boolean = false
 
     constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicWithCategoryModel>) {
         this.weakContext = WeakReference(context)
@@ -29,8 +32,20 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
         this.listComic = listComic
     }
 
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>,isFromSearch: Boolean) {
+        this.weakContext = WeakReference(context)
+        this.listener = listener
+        this.listComicSearch = listComic
+        this.isFromSearch = isFromSearch
+    }
+
     fun notifyData(listComic: List<ComicWithCategoryModel>) {
         this.listComic = listComic
+        notifyDataSetChanged()
+    }
+
+    fun notifyDataSearch(listComicSearch: List<ComicModel>) {
+        this.listComicSearch = listComicSearch
         notifyDataSetChanged()
     }
 
@@ -40,24 +55,45 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     }
 
     override fun getItemCount(): Int {
-        return listComic.count()
+        if (isFromSearch) {
+            return listComicSearch.count()
+        } else {
+            return listComic.count()
+        }
     }
 
     override fun onBindViewHolder(itemViewHolder: ViewHolder, position: Int) {
-        val comicWithCategoryModel = listComic[position]
-        val comic = comicWithCategoryModel.comicModel!!
-        Glide.with(weakContext.get())
-                .load(comic.imageUrl)
-                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(itemViewHolder.ivComic)
+        if (isFromSearch) {
+            val comic = listComicSearch[position]
+            Glide.with(weakContext.get())
+                    .load(comic.imageUrl)
+                    .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(itemViewHolder.ivComic)
 
-        itemViewHolder.tvComicTitle.text = comic.title
-        itemViewHolder.tvChap.text = comic.latestChapter
+            itemViewHolder.tvComicTitle.text = comic.title
+            itemViewHolder.tvChap.text = comic.latestChapter
 
-        itemViewHolder.ivComic.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+            itemViewHolder.ivComic.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comic.id)
+            }
+        } else {
+            val comicWithCategoryModel = listComic[position]
+            val comic = comicWithCategoryModel.comicModel!!
+            Glide.with(weakContext.get())
+                    .load(comic.imageUrl)
+                    .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(itemViewHolder.ivComic)
+
+            itemViewHolder.tvComicTitle.text = comic.title
+            itemViewHolder.tvChap.text = comic.latestChapter
+
+            itemViewHolder.ivComic.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+            }
         }
+
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {

@@ -2,7 +2,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">34.221.223.172</domain>
-        <domain includeSubdomains="true">3.134.88.15</domain>
+        <domain includeSubdomains="true">54.173.150.98</domain>
         <domain includeSubdomains="true">heavenmanga.org</domain>
         <trust-anchors>
             <certificates src="system"/>
