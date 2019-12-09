@@ -89,12 +89,6 @@ class SearchFragment : HomeBaseFragment() {
         viewModel.getListComicByKeyWordsResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS ) {
-                it.data?.let {
-                    isLoadMore = false
-                    this.listComicByKeyWords = it
-                    listComicAdapter.notifyDataSearch(listComicByKeyWords)
-                    if (this.listComicByKeyWords.count() >= items) {
-                        isLoadMore = true
                 if (!isLoadAllData) {
                     hideSoftKeyboard()
                     it.data?.let {
@@ -108,7 +102,6 @@ class SearchFragment : HomeBaseFragment() {
                 }
             }
         })
-
     }
 
     override fun initEvent() {
