@@ -1,12 +1,17 @@
 package com.ggg.home.ui.search
 
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
@@ -17,6 +22,10 @@ import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
+import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.view.inputmethod.EditorInfo
+
 
 class SearchFragment : HomeBaseFragment() {
     private lateinit var viewModel: CategoryViewModel
@@ -26,6 +35,8 @@ class SearchFragment : HomeBaseFragment() {
     var isLoadMore = true
     lateinit var listComicAdapter: ListComicAdapter
     var listComicByKeyWords: List<ComicModel> = arrayListOf()
+    var isLoadAllData = false
+    lateinit var gridLayoutManager : GridLayoutManager
 
     companion object {
         val TAG = "SearchFragment"
@@ -53,9 +64,10 @@ class SearchFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        gridLayoutManager = GridLayoutManager(context!!, 3)
         listComicAdapter = ListComicAdapter(context!!, this, this.listComicByKeyWords, true)
         rvListComicSearch.setHasFixedSize(true)
-        rvListComicSearch.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComicSearch.layoutManager = gridLayoutManager
         rvListComicSearch.adapter = listComicAdapter
 
     }
@@ -76,13 +88,15 @@ class SearchFragment : HomeBaseFragment() {
         viewModel.getListComicByKeyWordsResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS ) {
-                it.data?.let {
-                    isLoadMore = false
-//                    this.listComicByKeyWords = it.distinctBy { it.comicModel?.id }
-                    this.listComicByKeyWords = it
-                    listComicAdapter.notifyDataSearch(listComicByKeyWords)
-                    if (this.listComicByKeyWords.count() >= items) {
-                        isLoadMore = true
+                if (!isLoadAllData) {
+                    hideSoftKeyboard()
+                    it.data?.let {
+                        isLoadMore = false
+                        val list = this.listComicByKeyWords.toMutableList()
+                        list.addAll(it)
+                        this.listComicByKeyWords = list.toList()
+                        listComicAdapter.notifyDataSearch(listComicByKeyWords)
+                        isLoadAllData = it.size < items
                     }
                 }
             }
@@ -92,14 +106,43 @@ class SearchFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         ivSearch.setOnClickListener {
-            val data = hashMapOf(
-                    "keywords" to edtSearch.text.toString(),
-                    "limit" to items,
-                    "offset" to page
-            )
-            viewModel.getListComicByKeyWords(data)
+            getListComicByKeyWords()
         }
 
+        edtSearch.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                getListComicByKeyWords()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+        rvListComicSearch.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!isLoadMore) {
+                    val visibleItemCount = 3
+                    val totalItemCount = gridLayoutManager.itemCount
+                    val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        isLoadMore = true
+                        page++
+                        getListComicByKeyWords()
+                    }
+                }
+            }
+        })
+
+    }
+
+    private fun getListComicByKeyWords() {
+        Log.d("page", page.toString())
+        val data = hashMapOf(
+                "keywords" to edtSearch.text.toString(),
+                "limit" to items,
+                "offset" to page
+        )
+        viewModel.getListComicByKeyWords(data)
     }
 
     override fun onResume() {

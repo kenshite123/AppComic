@@ -13,7 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cltSearch"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp100"
+            android:layout_height="@dimen/dp90"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -21,24 +21,28 @@
             <EditText
                 android:id="@+id/edtSearch"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dp80"
-                android:layout_marginStart="@dimen/margin_20"
-                android:layout_marginTop="@dimen/margin_20"
-                android:layout_marginEnd="@dimen/margin_5"
+                android:layout_height="@dimen/dp60"
+                android:layout_marginStart="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_15"
+                android:paddingStart="@dimen/dp55"
+                android:layout_marginEnd="@dimen/margin_15"
+                android:background="@drawable/bg_edt_search"
                 android:hint="@string/TEXT_SEARCH"
-                app:layout_constraintEnd_toStartOf="@id/ivSearch"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/cltSearch"
                 app:layout_constraintTop_toTopOf="@id/cltSearch" />
 
             <ImageView
                 android:id="@+id/ivSearch"
-                android:layout_width="@dimen/dp80"
-                android:layout_height="@dimen/dp80"
-                android:layout_marginEnd="@dimen/margin_10"
-                android:padding="@dimen/margin_20"
+                android:layout_width="@dimen/dp60"
+                android:layout_height="@dimen/dp60"
+                android:padding="@dimen/dp15"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_search"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/icon_search_image"
+                app:layout_constraintStart_toStartOf="@id/edtSearch"
                 app:layout_constraintTop_toTopOf="@+id/edtSearch" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
