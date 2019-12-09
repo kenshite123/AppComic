@@ -20,5 +20,9 @@ class ServerPath {
         const val UNFAVORITE_COMIC = "api/comic/{comicId}/unfavorite"
         const val LIST_COMIC_FOLLOW = "api/comic/watchlist"
         const val LOG_OUT = "api/auth/logout"
+        const val GET_LIST_MY_COMMENT = "api/comments/mine"
+        const val DELETE_COMMENT = "api/comments/{commentId}/remove"
+        const val GET_COMMENT_DETAIL = "api/comments/{commentId}/detail"
+        const val GET_LIST_COMMENT_OF_CHAP = "api/comments/{comicId}/chapter/{chapterId}"
     }
 }

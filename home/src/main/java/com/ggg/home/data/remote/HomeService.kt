@@ -10,10 +10,7 @@ import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.ChangePassWordBody
-import com.ggg.home.data.model.response.ChangePassWordResponse
-import com.ggg.home.data.model.response.LoginResponse
-import com.ggg.home.data.model.response.NoneResponse
-import com.ggg.home.data.model.response.RegisterResponse
+import com.ggg.home.data.model.response.*
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
 
@@ -97,7 +94,7 @@ interface HomeService {
     fun writeComment(
             @Header("Authorization") authorization: String,
             @Body writeCommentBody: WriteCommentBody
-    ) : LiveData<ApiResponse<NoneResponse>>
+    ) : LiveData<ApiResponse<CommentResponse>>
 
     @GET(ServerPath.COMIC_INFO)
     fun getComicInfo(
@@ -122,4 +119,30 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
+
+    @GET(ServerPath.GET_LIST_MY_COMMENT)
+    fun getListMyComment(
+            @Header("Authorization") authorization: String,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<CommentModel>>>
+
+    @PATCH(ServerPath.DELETE_COMMENT)
+    fun deleteComment(
+            @Header("Authorization") authorization: String,
+            @Path("commentId") commentId: Long
+    ) : LiveData<ApiResponse<List<NoneResponse>>>
+
+    @POST(ServerPath.GET_COMMENT_DETAIL)
+    fun getCommentDetail(
+            @Path("commentId") commentId: Long
+    ) : LiveData<ApiResponse<CommentModel>>
+
+    @GET(ServerPath.GET_LIST_COMMENT_OF_CHAP)
+    fun getListCommentOfChap(
+            @Path("comicId") comicId: Long,
+            @Path("chapterId") chapterId: Long,
+            @Query("items") items: Long,
+            @Query("page") page: Long
+    ) : LiveData<ApiResponse<List<CommentModel>>>
 }

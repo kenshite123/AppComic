@@ -7,6 +7,7 @@ import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.change_password.ChangePassWordViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
 import com.ggg.home.ui.comment.CommentViewModel
+import com.ggg.home.ui.comment_of_chap.CommentOfChapViewModel
 import com.ggg.home.ui.favorite.FavoriteViewModel
 import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.latest_update.LatestUpdateViewModel
@@ -110,4 +111,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(MyCommentViewModel::class)
     abstract fun bindMyCommentViewModel(myCommentViewModel: MyCommentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CommentOfChapViewModel::class)
+    abstract fun bindCommentOfChapViewModel(commentOfChapViewModel: CommentOfChapViewModel): ViewModel
 }

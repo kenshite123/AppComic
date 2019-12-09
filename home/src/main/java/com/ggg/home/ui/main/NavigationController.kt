@@ -9,11 +9,13 @@ import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.comment.CommentFragment
+import com.ggg.home.ui.comment_of_chap.CommentOfChapFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.login.LoginFragment
+import com.ggg.home.ui.my_comment.MyCommentFragment
 import com.ggg.home.ui.rank.RankFragment
 import com.ggg.home.ui.register.RegisterFragment
 import com.ggg.home.ui.reply.ReplyFragment
@@ -107,8 +109,23 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
+    fun showReply(commentId: Long) {
+        val fragment = ReplyFragment.create(commentId)
+        fragNavController.pushFragment(fragment)
+    }
+
     fun showComment(comicId: Long) {
         val fragment = CommentFragment.create(comicId)
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showMyComment() {
+        val fragment = MyCommentFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showCommentOfChap(comicWithCategoryModel: ComicWithCategoryModel, chapterModel: ChapterModel) {
+        val fragment = CommentOfChapFragment.create(comicWithCategoryModel, chapterModel)
         fragNavController.pushFragment(fragment)
     }
 

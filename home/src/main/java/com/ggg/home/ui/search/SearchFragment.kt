@@ -21,7 +21,7 @@ import timber.log.Timber
 class SearchFragment : HomeBaseFragment() {
     private lateinit var viewModel: CategoryViewModel
     var page: Long = 0
-    var items: Long = 12
+    var items: Long = 60
     var isFirstLoad = true
     var isLoadMore = true
     lateinit var listComicAdapter: ListComicAdapter
@@ -44,6 +44,7 @@ class SearchFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_SEARCH)
@@ -78,7 +79,6 @@ class SearchFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS ) {
                 it.data?.let {
                     isLoadMore = false
-//                    this.listComicByKeyWords = it.distinctBy { it.comicModel?.id }
                     this.listComicByKeyWords = it
                     listComicAdapter.notifyDataSearch(listComicByKeyWords)
                     if (this.listComicByKeyWords.count() >= items) {

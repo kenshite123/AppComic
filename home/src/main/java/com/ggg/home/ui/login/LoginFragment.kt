@@ -37,6 +37,7 @@ class LoginFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
+        isFirstLoad = true
         initViews()
         initEvent()
     }

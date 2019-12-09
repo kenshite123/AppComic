@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -36,11 +38,15 @@ class ComicDetailFragment : HomeBaseFragment() {
     lateinit var listChapters: List<ChapterHadRead>
     var listComments: List<CommentModel> = listOf()
     var currentPagePosition = 0
+
     var itemsComment: Long = 50
     var pageComment: Long = 0
+
     var isLoadComicInfo = false
     var comicId: Long = 0
     var isFollow = false
+    var isLoadMoreComment: Boolean = true
+    var isLoadLatest = true
 
     companion object {
         val TAG = "ComicDetailFragment"
@@ -75,6 +81,7 @@ class ComicDetailFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ComicDetailViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
 
@@ -93,13 +100,15 @@ class ComicDetailFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        listComments = listOf()
+        currentPagePosition = 0
         val comic = comicWithCategoryModel.comicModel
         comic?.title?.let { setTitleActionBar(it) }
 
         Glide.with(context!!)
                 .load(comic?.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivComic)
 
         if (!comic?.authorsString.isNullOrEmpty()) {
@@ -133,9 +142,10 @@ class ComicDetailFragment : HomeBaseFragment() {
             btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
         }
 
-        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories)
+        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories, false)
         rvListCategory.setHasFixedSize(true)
-        rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
+//        rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
+        rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         rvListCategory.adapter = listCategoryComicDetailAdapter
 
         pagerComicDetailAdapter = PagerComicDetailAdapter(context!!, this)
@@ -155,7 +165,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                 currentPagePosition = position
                 when (position) {
                     0 -> { // list chapters
-                        pagerComicDetailAdapter.notifyData(listChapters)
+                        pagerComicDetailAdapter.notifyData(listChapters, isLoadLatest, !isLoadLatest)
                     }
 
                     1 -> { // description
@@ -163,7 +173,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                     }
 
                     2 -> { // list comments
-                        pagerComicDetailAdapter.notifyData(listComments, true)
+                        pagerComicDetailAdapter.notifyData(listComments, isLoadMoreComment)
                     }
                 }
             }
@@ -218,7 +228,8 @@ class ComicDetailFragment : HomeBaseFragment() {
                 it.data?.let {
                     this.listChapters = it
                     if (currentPagePosition == 0) {
-                        pagerComicDetailAdapter.notifyData(this.listChapters)
+                        isLoadLatest = true
+                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
                     }
                 }
             }
@@ -231,10 +242,14 @@ class ComicDetailFragment : HomeBaseFragment() {
 
             if (it.status == Status.SUCCESS) {
                 it.data?.let {
-                    this.listComments = it
+                    val list = this.listComments.toMutableList()
+                    list.addAll(it)
+                    this.listComments = list.toList()
+                    isLoadMoreComment = it.count() >= itemsComment
                     if (currentPagePosition == 2) {
-                        pagerComicDetailAdapter.notifyData(this.listComments, true)
+                        pagerComicDetailAdapter.notifyData(this.listComments, isLoadMoreComment)
                     }
+
                 }
             } else if (it.status == Status.ERROR) {
                 it.message?.let {
@@ -289,6 +304,28 @@ class ComicDetailFragment : HomeBaseFragment() {
 
             Constant.ACTION_CLICK_ON_BUTTON_COMMENT_IN_COMIC_DETAIL -> {
                 navigationController.showComment(comicWithCategoryModel.comicModel!!.id)
+            }
+
+            Constant.ACTION_LOAD_MORE_COMMENT_OF_COMIC_DETAIL -> {
+                isLoadMoreComment = true
+                pageComment++
+                loadListComment()
+            }
+
+            Constant.ACTION_CLICK_ON_BUTTON_LOAD_LATEST_CHAPTER -> {
+                if (!isLoadLatest) {
+                    isLoadLatest = true
+                    this.listChapters = this.listChapters.reversed()
+                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                }
+            }
+
+            Constant.ACTION_CLICK_ON_BUTTON_LOAD_OLDEST_CHAPTER -> {
+                if (isLoadLatest) {
+                    isLoadLatest = false
+                    this.listChapters = this.listChapters.reversed()
+                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                }
             }
 
             else -> super.onEvent(eventAction, control, data)

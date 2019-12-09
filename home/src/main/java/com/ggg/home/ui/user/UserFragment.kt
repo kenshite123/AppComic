@@ -44,6 +44,7 @@ class UserFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
+        isFirstLoad = true
         hideActionBar()
         showBottomNavView()
 
@@ -62,21 +63,21 @@ class UserFragment : HomeBaseFragment() {
                         Glide.with(context)
                                 .load(it.imageUrl)
                                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(ivAvatar)
                     } else {
                         ivAvatar.setImageResource(R.drawable.i_avatar)
                     }
                 }
 
-                btnLogout.visibility = View.VISIBLE
-                btnMyComment.visibility = View.VISIBLE
-                btnChangePass.visibility = View.VISIBLE
+                llLogout.visibility = View.VISIBLE
+                llMyComment.visibility = View.VISIBLE
+                llChangePass.visibility = View.VISIBLE
             }
         } else {
-            btnLogout.visibility = View.GONE
-            btnMyComment.visibility = View.GONE
-            btnChangePass.visibility = View.GONE
+            llLogout.visibility = View.GONE
+            llMyComment.visibility = View.GONE
+            llChangePass.visibility = View.GONE
         }
     }
 
@@ -98,9 +99,9 @@ class UserFragment : HomeBaseFragment() {
 
     private fun updateUI() {
         PrefsUtil.instance.clear()
-        btnMyComment.visibility = View.GONE
-        btnChangePass.visibility = View.GONE
-        btnLogout.visibility = View.GONE
+        llMyComment.visibility = View.GONE
+        llChangePass.visibility = View.GONE
+        llLogout.visibility = View.GONE
         tvUsername.text = StringUtil.getString(R.string.TEXT_LOGIN)
         ivAvatar.setImageResource(R.drawable.i_avatar)
     }
@@ -112,12 +113,16 @@ class UserFragment : HomeBaseFragment() {
             }
         }
 
-        btnChangePass.setOnClickListener {
+        llMyComment.setOnClickListener {
+            navigationController.showMyComment()
+        }
+
+        llChangePass.setOnClickListener {
             navigationController.showChangePassWord()
         }
 
-        btnLogout.setOnClickListener {
-            var token: String = ""
+        llLogout.setOnClickListener {
+            var token = ""
             if (loginResponse != null) {
                 token = loginResponse?.tokenType + loginResponse?.accessToken
             }

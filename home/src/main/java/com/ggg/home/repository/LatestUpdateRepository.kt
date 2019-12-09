@@ -31,7 +31,9 @@ class LatestUpdateRepository {
     fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                return db.comicDao().getListLatestUpdate(data["limit"]!!, data["offset"]!!)
+                val limit = data["limit"]!!
+                val offset = data["offset"]!! * limit
+                return db.comicDao().getListLatestUpdate(limit, offset)
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {

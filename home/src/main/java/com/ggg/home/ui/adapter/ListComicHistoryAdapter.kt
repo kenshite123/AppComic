@@ -48,7 +48,7 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
         Glide.with(weakContext.get())
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivComic)
 
         holder.tvComicTitle.text = comic.title

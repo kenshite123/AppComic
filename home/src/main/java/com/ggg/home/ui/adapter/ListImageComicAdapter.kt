@@ -45,7 +45,7 @@ class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHol
         Glide.with(weakContext.get())
                 .load(imageURL)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivComic)
 
         holder.ivComic.setOnClickListener {

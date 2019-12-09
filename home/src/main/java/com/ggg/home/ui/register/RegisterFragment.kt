@@ -23,16 +23,17 @@ class RegisterFragment: HomeBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
-
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RegisterViewModel::class.java)
+        showActionBar()
+        hideBottomNavView()
 
-        initViews()
+        setTitleActionBar(R.string.TEXT_REGISTER)
+
         initObserver()
         initEvent()
     }
@@ -128,7 +129,7 @@ class RegisterFragment: HomeBaseFragment() {
         if (view.text.toString().trim().equals(captchaImage.captchaCode)) {
             return true
         }
-        return  false
+        return false
     }
 
     private fun checkValidEmail(emai: String): Boolean {

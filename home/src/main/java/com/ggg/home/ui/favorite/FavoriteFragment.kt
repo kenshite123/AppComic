@@ -49,6 +49,11 @@ class FavoriteFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FavoriteViewModel::class.java)
+        isFirstLoad = true
+        isLoadMore = true
+        isFirstLoadDataApi = true
+        isLoadAllData = false
+
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_FAVORITE)
@@ -59,6 +64,7 @@ class FavoriteFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        listComic = listOf()
         gridLayoutManager = GridLayoutManager(context!!, 3)
         listComicAdapter = ListComicAdapter(context!!, this, listComic)
         rvListComic.setHasFixedSize(false)
@@ -113,17 +119,17 @@ class FavoriteFragment : HomeBaseFragment() {
         rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    if (!isLoadAllData && !isLoadMore) {
+                if (!isLoadAllData && !isLoadMore) {
+                    if (dy > 0) {
                         val visibleItemCount = 3
                         val totalItemCount = gridLayoutManager.itemCount
-                        val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+                        val pastVisibleItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
 
                         Timber.d("visibleItemCount: ${visibleItemCount} " +
                                 "- totalItemCount: ${totalItemCount} " +
-                                "- pastVisiblesItems: ${pastVisiblesItems}")
+                                "- pastVisibleItems: ${pastVisibleItems}")
 
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             isLoadMore = true
                             offset++
                             loadData()

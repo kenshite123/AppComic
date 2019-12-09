@@ -44,6 +44,7 @@ class RankFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RankViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_RANK)
@@ -62,9 +63,9 @@ class RankFragment : HomeBaseFragment() {
     override fun initObserver() {
         viewModel.getListRankComicResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-                showLoading()
-            }
+//            if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+//                showLoading()
+//            }
 
             it.data?.let {
                 this.listComic = it
@@ -117,8 +118,8 @@ class RankFragment : HomeBaseFragment() {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val comicRankWithCategoryModel = data as ComicRankWithCategoryModel
-                val comicWithCategoryModel = getComicWithCategoryModelFromRank(comicRankWithCategoryModel)
-                navigationController.showComicDetail(comicWithCategoryModel)
+//                val comicWithCategoryModel = getComicWithCategoryModelFromRank(comicRankWithCategoryModel)
+                navigationController.showComicDetail(comicRankWithCategoryModel.comicRankModel!!.id)
             }
 
             else -> super.onEvent(eventAction, control, data)

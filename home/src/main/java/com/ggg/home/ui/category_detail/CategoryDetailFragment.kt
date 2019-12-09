@@ -60,6 +60,7 @@ class CategoryDetailFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryDetailViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         categoryModel = arguments!!["categoryOfComicModel"] as CategoryOfComicModel
@@ -71,6 +72,7 @@ class CategoryDetailFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        listComicByCategory = listOf()
         gridLayoutManager = GridLayoutManager(context!!, 3)
         listComicAdapter = ListComicAdapter(context!!, this, this.listComicByCategory)
         rvListComic.setHasFixedSize(true)
@@ -116,22 +118,6 @@ class CategoryDetailFragment : HomeBaseFragment() {
                     }
                 }
             }
-//            loading(it)
-//            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-//                    showLoading()
-//                }
-//
-//                it.data?.let {
-//                    isLoadMore = false
-//                    this.listComicByCategory = it.distinctBy { it.comicModel?.id }
-////                    this.listComicByCategory = it
-//                    listComicAdapter.notifyData(this.listComicByCategory)
-//                    if (this.listComicByCategory.count() >= items) {
-//                        isLoadMore = true
-//                    }
-//                }
-//            }
         })
     }
 
@@ -143,9 +129,9 @@ class CategoryDetailFragment : HomeBaseFragment() {
                     if (!isLoadAllData && !isLoadMore) {
                         val visibleItemCount = 3
                         val totalItemCount = gridLayoutManager.itemCount
-                        val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+                        val pastVisibleItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
 
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             isLoadMore = true
                             page++
                             loadData()

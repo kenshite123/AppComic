@@ -5,6 +5,7 @@ import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.comment.CommentFragment
+import com.ggg.home.ui.comment_of_chap.CommentOfChapFragment
 import com.ggg.home.ui.favorite.FavoriteFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.latest_update.LatestUpdateFragment
@@ -73,4 +74,7 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeMyCommentFragmentInjector(): MyCommentFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCommentOfChapFragmentInjector(): CommentOfChapFragment
 }

@@ -99,7 +99,14 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
     fun showConfirmDialog(message: String,
                           leftBtn: String, leftClick: DialogInterface.OnClickListener,
                           rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
+        return showConfirmDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), message, leftBtn, leftClick, rightBtn, rightClick)
+    }
+
+    fun showConfirmDialog(title: String, message: String,
+                          leftBtn: String, leftClick: DialogInterface.OnClickListener,
+                          rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
         val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(rightBtn, rightClick)
         builder.setNegativeButton(leftBtn, leftClick)

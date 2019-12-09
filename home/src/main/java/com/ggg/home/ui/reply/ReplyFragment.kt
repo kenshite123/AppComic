@@ -1,5 +1,6 @@
 package com.ggg.home.ui.reply
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.CommonUtils
 import com.ggg.common.utils.DateTimeUtil
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CommentModel
@@ -39,6 +41,7 @@ class ReplyFragment : HomeBaseFragment() {
     lateinit var listCommentAdapter: ListCommentAdapter
     private var loginResponse: LoginResponse? = null
     lateinit var writeCommentBody: WriteCommentBody
+    var commentId = 0L
 
     companion object {
         val TAG = "ReplyFragment"
@@ -46,7 +49,19 @@ class ReplyFragment : HomeBaseFragment() {
         fun create(commentModel: CommentModel): ReplyFragment {
             val fragment = ReplyFragment()
             val bundle = bundleOf(
+                    "isUseCommentId" to false,
                     "commentModel" to commentModel
+            )
+            fragment.arguments = bundle
+            return fragment
+        }
+
+        @JvmStatic
+        fun create(commentId: Long): ReplyFragment {
+            val fragment = ReplyFragment()
+            val bundle = bundleOf(
+                    "isUseCommentId" to true,
+                    "commentId" to commentId
             )
             fragment.arguments = bundle
             return fragment
@@ -63,15 +78,24 @@ class ReplyFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReplyViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_COMMENT_DETAILS)
-        commentModel = arguments!!["commentModel"] as CommentModel
+
+        val isUseCommentId = arguments!!["isUseCommentId"] as Boolean
+        if (!isUseCommentId) {
+            commentModel = arguments!!["commentModel"] as CommentModel
+            initViews()
+        } else {
+            commentId = arguments!!["commentId"] as Long
+            viewModel.getCommentDetail(commentId)
+        }
+
         if (GGGAppInterface.gggApp.loginResponse != null) {
             loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
         }
 
-        initViews()
         initEvent()
     }
 
@@ -81,7 +105,7 @@ class ReplyFragment : HomeBaseFragment() {
             Glide.with(context)
                     .load(commentModel.userComment.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivAvatar)
         } else {
             ivAvatar.setImageResource(R.drawable.i_avatar)
@@ -117,21 +141,38 @@ class ReplyFragment : HomeBaseFragment() {
         viewModel.writeCommentResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS) {
-                val list = this.commentModel.replies.toMutableList()
-                val commentModel = CommentModel()
-                commentModel.content = writeCommentBody.content
-                commentModel.createdAt = DateTimeUtil.convertMilisecondToDate(DateTimeUtil.DATE_TIME_MILL, System.currentTimeMillis())
-                val userComment = UserCommentModel()
-                userComment.userId = loginResponse?.user?.id!!
-                userComment.nickname = loginResponse?.user?.fullName!!
-                userComment.imageUrl = loginResponse?.user?.imageUrl!!
-                commentModel.userComment = userComment
-                commentModel.replies = listOf()
+                it.data?.let {
+                    val list = this.commentModel.replies.toMutableList()
+                    val commentModel = CommentModel()
+                    commentModel.commentId = it.commentId
+                    commentModel.content = writeCommentBody.content
+                    commentModel.createdAt = DateTimeUtil.getCurrentDateTime()
+                    val userComment = UserCommentModel()
+                    userComment.userId = loginResponse?.user?.id!!
+                    userComment.nickname = loginResponse?.user?.fullName!!
+                    userComment.imageUrl = loginResponse?.user?.imageUrl!!
+                    commentModel.userComment = userComment
+                    commentModel.replies = listOf()
 
-                list.add(0, commentModel)
-                this.commentModel.replies = list.toList()
-                edComment.text.clear()
-                listCommentAdapter.notifyData(this.commentModel.replies)
+                    list.add(0, commentModel)
+                    this.commentModel.replies = list.toList()
+                    edComment.text.clear()
+                    listCommentAdapter.notifyData(this.commentModel.replies)
+                }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                }
+            }
+        })
+
+        viewModel.getCommentDetailResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    this.commentModel = it
+                    initViews()
+                }
             } else if (it.status == Status.ERROR) {
                 it.message?.let {
                     showDialog(it)
@@ -142,6 +183,7 @@ class ReplyFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         ivSend.setOnClickListener {
+            hideSoftKeyboard()
             if (checkValidSendComment()) {
                 val token = loginResponse!!.tokenType + loginResponse!!.accessToken
                 writeCommentBody = WriteCommentBody()
@@ -154,8 +196,6 @@ class ReplyFragment : HomeBaseFragment() {
                         "token" to token,
                         "writeCommentBody" to writeCommentBody
                 )
-
-                hideSoftKeyboard()
 
                 viewModel.writeComment(data)
             }
@@ -174,7 +214,13 @@ class ReplyFragment : HomeBaseFragment() {
         }
 
         if (loginResponse == null) {
-            showDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT)
+            showConfirmDialog(StringUtil.getString(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT),
+                    StringUtil.getString(R.string.TEXT_REGISTER), DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                navigationController.showRegister()
+            }, "OK", DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            })
             return false
         }
 

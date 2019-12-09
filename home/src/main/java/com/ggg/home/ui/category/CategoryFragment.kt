@@ -25,7 +25,7 @@ class CategoryFragment : HomeBaseFragment() {
     lateinit var listCategoryAdapter: ListCategoryAdapter
     lateinit var listCategories: List<CategoryModel>
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicByCategory: List<ComicWithCategoryModel> = arrayListOf()
+    var listComicByCategory: List<ComicWithCategoryModel> = listOf()
 
     var isFirstLoad = true
     var page: Long = 0
@@ -47,6 +47,7 @@ class CategoryFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryViewModel::class.java)
+        isFirstLoad = true
         hideActionBar()
         showBottomNavView()
 
@@ -56,6 +57,7 @@ class CategoryFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        listComicByCategory = listOf()
         listCategoryAdapter = ListCategoryAdapter(context!!, this, listOf())
         rvListCategory.setHasFixedSize(false)
         rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
@@ -140,9 +142,9 @@ class CategoryFragment : HomeBaseFragment() {
                     if (!isLoadAllData && !isLoadMore) {
                         val visibleItemCount = 3
                         val totalItemCount = gridLayoutManager.itemCount
-                        val pastVisiblesItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+                        val pastVisibleItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
 
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             isLoadMore = true
                             page++
                             loadListComicByCategory()

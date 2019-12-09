@@ -43,7 +43,7 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chapterHadRead = listChapters[position]
         val chapterModel = chapterHadRead.chapterModel!!
-        holder.tvChapterName.text = "${this.listChapters.count() - position}. ${chapterModel.chapterName}"
+        holder.tvChapterName.text = chapterModel.chapterName
         holder.tvUpdateDate.text = chapterModel.dateUpdate
 
         if (chapterHadRead.ccHadReadModel.isNullOrEmpty()) {

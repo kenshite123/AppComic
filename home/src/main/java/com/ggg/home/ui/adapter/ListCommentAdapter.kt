@@ -54,7 +54,8 @@ class ListCommentAdapter : RecyclerView.Adapter<ListCommentAdapter.ViewHolder> {
             Glide.with(weakContext.get())
                     .load(commentModel.userComment.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.drawable.i_avatar)
                     .into(holder.ivAvatar)
         } else {
             holder.ivAvatar.setImageResource(R.drawable.i_avatar)

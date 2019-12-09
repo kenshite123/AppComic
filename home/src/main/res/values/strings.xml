@@ -79,4 +79,8 @@
     <string name="TEXT_ERROR_NO_CONNECTION">Connection has been lost. Please check your connection.</string>
     <string name="TEXT_READ_NOW">Read Now</string>
     <string name="TEXT_MY_COMMENT">My comment</string>
+    <string name="TEXT_CONFIRM_DELETE_COMMENT">Do you want to delete this comment ?</string>
+    <string name="TEXT_COMMENT_OF_CHAP">Comment of %s</string>
+    <string name="TEXT_OLDEST">Oldest</string>
+    <string name="TEXT_LATEST">Latest</string>
 </resources>

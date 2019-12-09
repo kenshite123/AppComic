@@ -1,6 +1,7 @@
 package com.ggg.home.ui.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,8 @@ class PagerComicDetailAdapter : PagerAdapter {
     var comicWithCategoryModel: ComicWithCategoryModel? = null
     var listChapters: List<ChapterHadRead> = listOf()
     var listComments: List<CommentModel> = listOf()
+    var isLoadMoreComment: Boolean = true
+    var isLoadLatest: Boolean = true
 
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_LIST_CHAPTERS),
             StringUtil.getString(R.string.TEXT_DESCRIPTION), StringUtil.getString(R.string.TEXT_LIST_COMMENTS))
@@ -49,13 +52,15 @@ class PagerComicDetailAdapter : PagerAdapter {
         return POSITION_NONE
     }
 
-    fun notifyData(listComments: List<CommentModel>, isComment: Boolean) {
+    fun notifyData(listComments: List<CommentModel>, isLoadMoreComment: Boolean) {
         this.listComments = listComments
+        this.isLoadMoreComment = isLoadMoreComment
         notifyDataSetChanged()
     }
 
-    fun notifyData(listChapters: List<ChapterHadRead>) {
+    fun notifyData(listChapters: List<ChapterHadRead>, isLoadLatest: Boolean, isLoadOldest: Boolean) {
         this.listChapters = listChapters
+        this.isLoadLatest = isLoadLatest
         notifyDataSetChanged()
     }
 
@@ -69,10 +74,30 @@ class PagerComicDetailAdapter : PagerAdapter {
         if (position == 0) {
             view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_list_chapters, container, false)
             val rvListChapter: RecyclerView = view.findViewById(R.id.rvListChapter)
+            val tvLatest: TextView = view.findViewById(R.id.tvLatest)
+            val tvOldest: TextView = view.findViewById(R.id.tvOldest)
+
+            if (isLoadLatest) {
+                tvLatest.setTextColor(Color.parseColor("#d75c3b"))
+                tvOldest.setTextColor(Color.parseColor("#969696"))
+            } else {
+                tvLatest.setTextColor(Color.parseColor("#969696"))
+                tvOldest.setTextColor(Color.parseColor("#d75c3b"))
+            }
+
             val listChapterAdapter = ListChapterAdapter(weakContext.get()!!, listener, listChapters)
             rvListChapter.setHasFixedSize(false)
             rvListChapter.layoutManager = LinearLayoutManager(weakContext.get()!!, RecyclerView.VERTICAL, false)
             rvListChapter.adapter = listChapterAdapter
+
+            tvLatest.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_BUTTON_LOAD_LATEST_CHAPTER, null, null)
+            }
+
+            tvOldest.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_BUTTON_LOAD_OLDEST_CHAPTER, null, null)
+            }
+
         } else if (position == 1) {
             view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_description, container, false)
             val tvDescription: TextView = view.findViewById(R.id.tvDescription)
@@ -86,10 +111,28 @@ class PagerComicDetailAdapter : PagerAdapter {
                 listener.onEvent(Constant.ACTION_CLICK_ON_BUTTON_COMMENT_IN_COMIC_DETAIL, it, null)
             }
 
+            val llManager = LinearLayoutManager(weakContext.get()!!, RecyclerView.VERTICAL, false)
             val listCommentAdapter = ListCommentAdapter(weakContext.get()!!, listener, listComments, true)
             rvListComments.setHasFixedSize(false)
-            rvListComments.layoutManager = LinearLayoutManager(weakContext.get()!!, RecyclerView.VERTICAL, false)
+            rvListComments.layoutManager = llManager
             rvListComments.adapter = listCommentAdapter
+
+            rvListComments.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (isLoadMoreComment) {
+                        if (dy > 0) {
+                            val visibleItemCount = 1
+                            val totalItemCount = llManager.itemCount
+                            val pastVisibleItems = llManager.findLastCompletelyVisibleItemPosition()
+
+                            if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                                listener.onEvent(Constant.ACTION_LOAD_MORE_COMMENT_OF_COMIC_DETAIL, null, null)
+                            }
+                        }
+                    }
+                }
+            })
         }
         container.addView(view)
         return view

@@ -17,20 +17,27 @@ class ListCategoryComicDetailAdapter : RecyclerView.Adapter<ListCategoryComicDet
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     var listCategories: List<CategoryOfComicModel>? = null
+    var isRanking: Boolean = false
 
-    constructor(context: Context, listener: OnEventControlListener, listCategories: List<CategoryOfComicModel>?) {
+    constructor(context: Context, listener: OnEventControlListener, listCategories: List<CategoryOfComicModel>?, isRanking: Boolean) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listCategories = listCategories
+        this.isRanking = isRanking
     }
 
-    fun notifyData(listCategories: List<CategoryOfComicModel>?) {
+    fun notifyData(listCategories: List<CategoryOfComicModel>?, isRanking: Boolean) {
         this.listCategories = listCategories
+        this.isRanking = isRanking
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_category_comic_detail, parent, false)
+        val view: View = if (isRanking) {
+            LayoutInflater.from(weakContext.get()).inflate(R.layout.item_category_for_rank, parent, false)
+        } else {
+            LayoutInflater.from(weakContext.get()).inflate(R.layout.item_category_comic_detail, parent, false)
+        }
         return ViewHolder(view)
     }
 

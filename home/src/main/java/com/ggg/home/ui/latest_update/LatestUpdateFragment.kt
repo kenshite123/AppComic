@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicWithCategoryModel
@@ -19,9 +20,13 @@ class LatestUpdateFragment : HomeBaseFragment() {
     private lateinit var viewModel: LatestUpdateViewModel
     var isFirstLoad = true
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicLatestUpdate: List<ComicWithCategoryModel> = arrayListOf()
+    lateinit var gridLayoutManager : GridLayoutManager
+    var listComic: List<ComicWithCategoryModel> = listOf()
     var items: Int = 30
     var page: Int = 0
+    var isLoadMore = true
+    var isFirstLoadDataApi = true
+    var isLoadAllData = false
 
     companion object {
         val TAG = "LatestUpdateFragment"
@@ -40,6 +45,11 @@ class LatestUpdateFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LatestUpdateViewModel::class.java)
+        isFirstLoad = true
+        isLoadMore = true
+        isFirstLoadDataApi = true
+        isLoadAllData = false
+
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_COMIC_LATEST_UPDATE)
@@ -50,9 +60,11 @@ class LatestUpdateFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
-        listComicAdapter = ListComicAdapter(context!!, this, this.listComicLatestUpdate)
+        listComic = listOf()
+        gridLayoutManager = GridLayoutManager(context!!, 3)
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComic)
         rvListComic.setHasFixedSize(false)
-        rvListComic.layoutManager = GridLayoutManager(context!!, 3)
+        rvListComic.layoutManager = gridLayoutManager
         rvListComic.adapter = listComicAdapter
     }
 
@@ -60,21 +72,78 @@ class LatestUpdateFragment : HomeBaseFragment() {
         viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-                    showLoading()
+                if (it.status == Status.SUCCESS_DB) {
+                    if (!isLoadAllData) {
+                        if (it.data.isNullOrEmpty()) {
+                            if (isFirstLoadDataApi) {
+                                showLoading()
+                            }
+                        } else {
+                            isFirstLoadDataApi = false
+                            it.data?.let {
+                                if (isLoadMore) {
+                                    isLoadMore = false
+                                    val list = this.listComic.toMutableList()
+                                    list.addAll(it)
+
+                                    this.listComic = list.toList()
+
+                                    listComicAdapter.notifyData(this.listComic)
+                                    isLoadAllData = it.size < items
+                                } else {
+                                    this.listComic = it
+                                    listComicAdapter.notifyData(this.listComic)
+                                }
+                            }
+                        }
+                    }
                 }
 
                 it.data?.let {
-//                    this.listComicLatestUpdate = it
-                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
-                    listComicAdapter.notifyData(this.listComicLatestUpdate)
+                    if (isFirstLoadDataApi) {
+                        this.listComic = it
+                        listComicAdapter.notifyData(this.listComic)
+                    }
+                    isLoadAllData = it.size < items
                 }
             }
+//            loading(it)
+//            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+//                    showLoading()
+//                }
+//
+//                it.data?.let {
+//                    this.listComicLatestUpdate = it
+//                    listComicAdapter.notifyData(this.listComicLatestUpdate)
+//                }
+//            }
         })
     }
 
     override fun initEvent() {
+        rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!isLoadAllData && !isLoadMore) {
+                    if (dy > 0) {
+                        val visibleItemCount = 3
+                        val totalItemCount = gridLayoutManager.itemCount
+                        val pastVisibleItems = gridLayoutManager.findLastCompletelyVisibleItemPosition()
 
+                        Timber.d("visibleItemCount: ${visibleItemCount} " +
+                                "- totalItemCount: ${totalItemCount} " +
+                                "- pastVisibleItems: ${pastVisibleItems}")
+
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            isLoadMore = true
+                            page++
+                            loadData()
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun loadData() {

@@ -47,7 +47,7 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
         Glide.with(weakContext.get())
                 .load(banner.bigImageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivSlide)
 
         holder.ivSlide.setOnClickListener {

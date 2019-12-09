@@ -11,17 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ggg.home.R
 import com.ggg.home.data.model.CCHadReadModel
 import com.ggg.home.data.model.ChapterHadRead
-import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListImageComicAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_view_comic.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class ViewComicFragment : HomeBaseFragment() {
     private lateinit var viewModel: ViewComicViewModel
@@ -64,6 +60,7 @@ class ViewComicFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewComicViewModel::class.java)
+        isFirstLoad = true
         hideActionBar()
         hideBottomNavView()
 
@@ -134,6 +131,11 @@ class ViewComicFragment : HomeBaseFragment() {
                 rvListImageComic.scrollToPosition(currentPagePosition)
                 isShowVertical = true
             }
+        }
+
+        ivComment.setOnClickListener {
+            val chapterModel = listChapterModel[positionChapter].chapterModel!!
+            navigationController.showCommentOfChap(comicWithCategoryModel, chapterModel)
         }
 
         rvListImageComic.addOnScrollListener(object : RecyclerView.OnScrollListener() {

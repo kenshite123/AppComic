@@ -52,7 +52,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvListCategory"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dp60"
+                android:layout_height="@dimen/dp40"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                 app:layout_constraintStart_toStartOf="@+id/tvTitle"
                 app:layout_constraintEnd_toEndOf="@+id/tvTitle"
@@ -77,26 +77,48 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/dp10"
                 android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/tvRate"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp20"
                     android:layout_weight="1"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:paddingEnd="@dimen/dp10"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tvView"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp20"
+                        android:src="@drawable/icon_rate"/>
+                    <TextView
+                        android:id="@+id/tvRate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp20"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:paddingEnd="@dimen/dp5"
+                        android:paddingStart="@dimen/dp5"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp20"
-                    android:layout_weight="1.7"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:paddingStart="@dimen/dp10"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="1.6"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp20"
+                        android:src="@drawable/icon_views"/>
+                    <TextView
+                        android:id="@+id/tvView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp20"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:paddingStart="@dimen/dp5"
+                        android:paddingEnd="@dimen/dp5"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

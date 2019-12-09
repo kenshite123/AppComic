@@ -37,7 +37,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textColor="@color/black"
-                android:text="Chinh Bui"
                 android:lines="1"
                 android:ellipsize="end"
                 android:textStyle="bold"
@@ -51,7 +50,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:lines="1"
-                android:text="2019-11-27 20:00:00"
                 android:textSize="@dimen/sp16"
                 android:textColor="#a8a8a8"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -64,7 +62,6 @@
             app:layout_constraintEnd_toEndOf="@+id/ctlInfo"
             android:textSize="@dimen/sp20"
             android:textColor="@color/black"
-            android:text="dasdjasdjsajdasjdjasdasda"
             android:layout_marginTop="@dimen/dp20"/>
 
         <com.rey.material.widget.TextView
@@ -78,7 +75,8 @@
             style="@style/btn_ripple_normal_0"
             android:padding="@dimen/dp15"
             android:background="#f8f8f8"
-            android:textSize="@dimen/sp18" />
+            android:textSize="@dimen/sp18"
+            android:visibility="gone"/>
         <View
             android:id="@+id/v1"
             android:layout_width="0dp"

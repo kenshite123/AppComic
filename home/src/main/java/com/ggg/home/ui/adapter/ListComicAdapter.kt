@@ -68,7 +68,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
             Glide.with(weakContext.get())
                     .load(comic.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(itemViewHolder.ivComic)
 
             itemViewHolder.tvComicTitle.text = comic.title
@@ -83,7 +83,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
             Glide.with(weakContext.get())
                     .load(comic.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(itemViewHolder.ivComic)
 
             itemViewHolder.tvComicTitle.text = comic.title

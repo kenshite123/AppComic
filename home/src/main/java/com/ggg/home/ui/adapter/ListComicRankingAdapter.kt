@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -57,7 +58,7 @@ class ListComicRankingAdapter : RecyclerView.Adapter<ListComicRankingAdapter.Vie
         Glide.with(weakContext.get())
                 .load(comicRankModel?.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivComic)
 
         when (position) {
@@ -76,24 +77,26 @@ class ListComicRankingAdapter : RecyclerView.Adapter<ListComicRankingAdapter.Vie
         holder.tvLatestChapter.text = spanLastChap.span
 
 
-        holder.tvRate.text = "Rate: ${comicRankModel?.rate}"
-        holder.tvView.text = "Views: ${comicRankModel?.viewed?.let { Utils.formatNumber(it) }}"
+        holder.tvRate.text = "${comicRankModel?.rate}"
+        holder.tvView.text = "${comicRankModel?.viewed?.let { Utils.formatNumber(it) }}"
 
         if (comicRankWithCategoryModel.categories.isNullOrEmpty()) {
             holder.rvListCategory.visibility = View.GONE
         } else {
             holder.rvListCategory.visibility = View.VISIBLE
-            val categories: ArrayList<CategoryOfComicModel> = arrayListOf()
-            if (comicRankWithCategoryModel.categories!!.count() > 2) {
-                categories.add(comicRankWithCategoryModel.categories!![0])
-                categories.add(comicRankWithCategoryModel.categories!![1])
-            } else {
-                categories.addAll(comicRankWithCategoryModel.categories!!)
-            }
+//            val categories: ArrayList<CategoryOfComicModel> = arrayListOf()
+//            if (comicRankWithCategoryModel.categories!!.count() > 2) {
+//                categories.add(comicRankWithCategoryModel.categories!![0])
+//                categories.add(comicRankWithCategoryModel.categories!![1])
+//            } else {
+//                categories.addAll(comicRankWithCategoryModel.categories!!)
+//            }
 
-            val listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(weakContext.get()!!, listener, categories)
+            val listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(weakContext.get()!!,
+                    listener, comicRankWithCategoryModel.categories, true)
             holder.rvListCategory.setHasFixedSize(true)
-            holder.rvListCategory.layoutManager = GridLayoutManager(weakContext.get(), 2)
+//            holder.rvListCategory.layoutManager = GridLayoutManager(weakContext.get(), 2)
+            holder.rvListCategory.layoutManager = LinearLayoutManager(weakContext.get(), RecyclerView.HORIZONTAL, false)
             holder.rvListCategory.adapter = listCategoryComicDetailAdapter
         }
 

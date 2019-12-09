@@ -1,5 +1,6 @@
 package com.ggg.home.ui.comment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.CommonUtils
+import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.post_param.WriteCommentBody
@@ -49,6 +51,7 @@ class CommentFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CommentViewModel::class.java)
+        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_COMMENT)
@@ -83,6 +86,7 @@ class CommentFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         fabSend.setOnClickListener {
+            hideSoftKeyboard()
             if (checkValidSendComment()) {
                 val token = loginResponse!!.tokenType + loginResponse!!.accessToken
                 var writeCommentBody = WriteCommentBody()
@@ -112,7 +116,13 @@ class CommentFragment : HomeBaseFragment() {
         }
 
         if (loginResponse == null) {
-            showDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT)
+            showConfirmDialog(StringUtil.getString(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT),
+                    StringUtil.getString(R.string.TEXT_REGISTER), DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                navigationController.showRegister()
+            }, "OK", DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            })
             return false
         }
 
