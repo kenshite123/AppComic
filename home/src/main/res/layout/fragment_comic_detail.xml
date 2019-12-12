@@ -41,6 +41,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:orientation="horizontal">
                 <TextView
+                    style="@style/normal_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/TEXT_AUTHOR_TITLE"
@@ -48,6 +49,7 @@
                     android:textSize="@dimen/sp20"/>
                 <TextView
                     android:id="@+id/tvAuthor"
+                    style="@style/normal_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#df5838"
@@ -67,6 +69,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/dp10">
                 <TextView
+                    style="@style/normal_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/TEXT_STATUS_TITLE"
@@ -74,6 +77,7 @@
                     android:textSize="@dimen/sp20"/>
                 <TextView
                     android:id="@+id/tvStatus"
+                    style="@style/normal_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#61a164"
@@ -93,12 +97,14 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/dp10">
                 <TextView
+                    style="@style/normal_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/TEXT_VIEWS_TITLE"
                     android:textColor="#262626"
                     android:textSize="@dimen/sp20"/>
                 <TextView
+                    style="@style/normal_text"
                     android:id="@+id/tvViews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -119,12 +125,14 @@
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/dp10">
                 <TextView
+                    style="@style/normal_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/TEXT_CATEGORY_TITLE"
                     android:textColor="#262626"
                     android:textSize="@dimen/sp20"/>
                 <androidx.recyclerview.widget.RecyclerView
+                    style="@style/normal_text"
                     android:id="@+id/rvListCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,6 +150,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.material.tabs.TabLayout
+            style="@style/normal_text"
             android:id="@+id/tabLayout"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp60"

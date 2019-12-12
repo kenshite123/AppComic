@@ -92,12 +92,18 @@ class SearchFragment : HomeBaseFragment() {
                 if (!isLoadAllData) {
                     hideSoftKeyboard()
                     it.data?.let {
-                        isLoadMore = false
-                        val list = this.listComicByKeyWords.toMutableList()
-                        list.addAll(it)
-                        this.listComicByKeyWords = list.toList()
-                        listComicAdapter.notifyDataSearch(listComicByKeyWords)
-                        isLoadAllData = it.size < items
+                        if (isLoadMore) {
+                            isLoadMore = false
+                            val list = this.listComicByKeyWords.toMutableList()
+                            list.addAll(it)
+                            this.listComicByKeyWords = list.toList()
+                            listComicAdapter.notifyDataSearch(listComicByKeyWords)
+                            isLoadAllData = it.size < items
+                        } else {
+                            this.listComicByKeyWords = it
+                            listComicAdapter.notifyDataSearch(listComicByKeyWords)
+                        }
+
                     }
                 }
             }
@@ -106,11 +112,15 @@ class SearchFragment : HomeBaseFragment() {
 
     override fun initEvent() {
         ivSearch.setOnClickListener {
+            isLoadAllData = false
+            isLoadMore = false
             getListComicByKeyWords()
         }
 
         edtSearch.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                isLoadAllData = false
+                isLoadMore = false
                 getListComicByKeyWords()
                 return@OnEditorActionListener true
             }
@@ -137,6 +147,9 @@ class SearchFragment : HomeBaseFragment() {
 
     private fun getListComicByKeyWords() {
         Log.d("page", page.toString())
+        if (!isLoadMore) {
+            page = 0
+        }
         val data = hashMapOf(
                 "keywords" to edtSearch.text.toString(),
                 "limit" to items,

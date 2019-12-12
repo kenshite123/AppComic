@@ -20,6 +20,7 @@
             android:textAllCaps="true"
             android:layout_marginStart="@dimen/dp20"
             android:layout_marginTop="@dimen/dp10"
+            style="@style/normal_text"
             android:textSize="@dimen/sp30"/>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/dp10"
+            style="@style/normal_text"
             android:layout_marginStart="@dimen/dp10"/>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -42,6 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="@dimen/dp5"
             android:layout_marginEnd="@dimen/dp5"
+            style="@style/normal_text"
             android:layout_marginTop="@dimen/dp5"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

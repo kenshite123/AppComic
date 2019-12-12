@@ -13,6 +13,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tvComment"
+            style="@style/normal_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +32,7 @@
             android:layout_marginTop="@dimen/dp15">
             <TextView
                 android:id="@+id/tvCommentParent"
+                style="@style/normal_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -54,6 +56,7 @@
                 android:padding="1dp">
                 <ImageView
                     android:id="@+id/ivComic"
+                    style="@style/normal_text"
                     android:layout_width="@dimen/dp80"
                     android:layout_height="@dimen/dp100"
                     app:layout_constraintTop_toTopOf="parent"
@@ -61,6 +64,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"/>
                 <TextView
                     android:id="@+id/tvComicTitle"
+                    style="@style/normal_text"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintTop_toTopOf="@+id/ivComic"
@@ -76,6 +80,7 @@
 
         <TextView
             android:id="@+id/tvCreateAt"
+            style="@style/normal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"

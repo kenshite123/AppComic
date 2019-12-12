@@ -6,6 +6,7 @@
     android:layout_marginEnd="@dimen/dp10">
     <TextView
         android:id="@+id/tvCategoryName"
+        style="@style/normal_text"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp30"
         android:background="@drawable/bg_item_category_comic_detail"

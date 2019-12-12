@@ -12,6 +12,7 @@
 
         <TextView
             android:id="@+id/tvLatest"
+            style="@style/normal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/TEXT_LATEST"
@@ -29,6 +30,7 @@
 
         <TextView
             android:id="@+id/tvOldest"
+            style="@style/normal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/TEXT_OLDEST"
@@ -37,6 +39,7 @@
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvListChapter"
+        style="@style/normal_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

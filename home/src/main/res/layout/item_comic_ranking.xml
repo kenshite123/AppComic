@@ -26,6 +26,7 @@
             android:paddingStart="@dimen/dp20">
             <TextView
                 android:id="@+id/tvRank"
+                style="@style/normal_text"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp40"
                 app:layout_constraintTop_toTopOf="parent"
@@ -37,6 +38,7 @@
                 android:gravity="center"/>
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/normal_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,6 +53,7 @@
                 android:gravity="left|center_vertical"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvListCategory"
+                style="@style/normal_text"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp40"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
@@ -59,6 +62,7 @@
                 android:layout_marginTop="@dimen/dp10"/>
             <TextView
                 android:id="@+id/tvLatestChapter"
+                style="@style/normal_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/rvListCategory"
@@ -89,6 +93,7 @@
                         android:src="@drawable/icon_rate"/>
                     <TextView
                         android:id="@+id/tvRate"
+                        style="@style/normal_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/sp20"
@@ -110,6 +115,7 @@
                         android:src="@drawable/icon_views"/>
                     <TextView
                         android:id="@+id/tvView"
+                        style="@style/normal_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/sp20"

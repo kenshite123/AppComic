@@ -9,6 +9,7 @@
 
     <TextView
         android:id="@+id/tvChapterName"
+        style="@style/normal_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp50"
         android:gravity="center_vertical"
@@ -19,6 +20,7 @@
 
     <TextView
         android:id="@+id/tvUpdateDate"
+        style="@style/normal_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp35"
         android:gravity="right|center_vertical"
