@@ -44,7 +44,6 @@ class RankFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RankViewModel::class.java)
-        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_RANK)

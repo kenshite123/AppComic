@@ -49,7 +49,6 @@ class FavoriteFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FavoriteViewModel::class.java)
-        isFirstLoad = true
         isLoadMore = true
         isFirstLoadDataApi = true
         isLoadAllData = false

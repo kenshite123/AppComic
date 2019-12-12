@@ -20,6 +20,7 @@ import timber.log.Timber
 class RegisterFragment: HomeBaseFragment() {
     private lateinit var viewModel: RegisterViewModel
     private var isFirst: Boolean = true
+    var isFirstLoad = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
@@ -33,8 +34,6 @@ class RegisterFragment: HomeBaseFragment() {
         hideBottomNavView()
 
         setTitleActionBar(R.string.TEXT_REGISTER)
-
-        initObserver()
         initEvent()
     }
 
@@ -149,5 +148,13 @@ class RegisterFragment: HomeBaseFragment() {
         val TAG = "RegisterFragment"
         @JvmStatic
         fun create() = RegisterFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.ggg.app.R
 import com.ggg.common.di.Injectable
 import com.ggg.common.utils.combineLatest
 import com.ggg.common.vo.Status
+import org.jetbrains.anko.bundleOf
 import javax.inject.Inject
 
 /**
@@ -28,6 +29,8 @@ class SplashFragment : Fragment(),Injectable{
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel:InitViewModel
     var isFirstLoad = true
+    var isShowComicDetail: Boolean = false
+    var comicId = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -39,6 +42,14 @@ class SplashFragment : Fragment(),Injectable{
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(InitViewModel::class.java)
 
+        if (arguments == null) {
+
+        } else {
+            if (arguments!!["isShowComicDetail"] != null) {
+                isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
+                comicId = arguments!!["comicId"] as Long
+            }
+        }
         loadData()
     }
 
@@ -55,7 +66,11 @@ class SplashFragment : Fragment(),Injectable{
     private fun initObserve() {
         viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).observe(this, Observer {
             if (it.second.status == Status.SUCCESS || it.second.status == Status.ERROR) {
-                (activity as InitialActivity).navigationController.showHomeModule()
+                if (isShowComicDetail) {
+                    (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
+                } else {
+                    (activity as InitialActivity).navigationController.showHomeModule()
+                }
                 (activity as InitialActivity).finish()
             }
         })
@@ -80,6 +95,17 @@ class SplashFragment : Fragment(),Injectable{
         val TAG = "SplashFragment"
         @JvmStatic
         fun create() = SplashFragment()
+
+        @JvmStatic
+        fun create(isShowComicDetail: Boolean, comicId: Long): SplashFragment {
+            val fragment = SplashFragment()
+            val bundle = bundleOf(
+                    "isShowComicDetail" to isShowComicDetail,
+                    "comicId" to comicId
+            )
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
 }

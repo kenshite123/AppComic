@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
 
-
     private val registry = LifecycleRegistry(this)
     override fun getLifecycle(): LifecycleRegistry {
         return registry
@@ -49,12 +48,12 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fragmentTag = intent.getStringExtra("fragment")
-        val comicIdString = intent.getStringExtra("comicId")
+        val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
+        val comicId = intent.getLongExtra("comicId", 0)
         val fragments: List<Fragment>
 
-        if (comicIdString.isNullOrEmpty()) {
-            fragments = listOf(HomeFragment.create())
+        if (isShowComicDetail) {
+            fragments = listOf(HomeFragment.create(comicId))
         } else {
             fragments = listOf(HomeFragment.create())
         }

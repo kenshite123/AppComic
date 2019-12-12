@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ggg.common.vo.Resource
-import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.repository.LoginRepository
 import javax.inject.Inject

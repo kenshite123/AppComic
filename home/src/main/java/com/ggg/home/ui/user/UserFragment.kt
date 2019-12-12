@@ -44,7 +44,6 @@ class UserFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-        isFirstLoad = true
         hideActionBar()
         showBottomNavView()
 
@@ -85,7 +84,6 @@ class UserFragment : HomeBaseFragment() {
         viewModel.logOutResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS) {
-                Log.d("LogOut", "Success")
                 showDialog(R.string.TEXT_LOG_OUT_SUCCESS)
                 this.loginResponse = null
                 GGGAppInterface.gggApp.loginResponse = null
@@ -93,12 +91,10 @@ class UserFragment : HomeBaseFragment() {
             } else if (it.status == Status.ERROR) {
                 showDialog(it.message.toString())
             }
-
         })
     }
 
     private fun updateUI() {
-        PrefsUtil.instance.clear()
         llMyComment.visibility = View.GONE
         llChangePass.visibility = View.GONE
         llLogout.visibility = View.GONE
@@ -139,5 +135,15 @@ class UserFragment : HomeBaseFragment() {
             initObserver()
             isFirstLoad = false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
     }
 }

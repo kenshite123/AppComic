@@ -33,8 +33,10 @@ class LoginRepository {
             override fun saveCallResult(item: LoginResponse) {
                 item.user?.let {
                     GGGAppInterface.gggApp.clearListComicFavorite()
-                    it.mangaFollows.forEach {
-                        GGGAppInterface.gggApp.addComicToFavorite(it)
+                    if (!it.mangaFollows.isNullOrEmpty()) {
+                        it.mangaFollows.forEach {
+                            GGGAppInterface.gggApp.addComicToFavorite(it)
+                        }
                     }
                 }
             }

@@ -7,6 +7,8 @@ object Constant {
     val IS_FOLLOW = 1
     val IS_UNFOLLOW = 0
 
+    val TYPE_SHOW_COMIC_DETAIL = "SHOW_COMIC_DETAIL"
+
     val TOPIC_TYPE_COMMENT = "comment"
     val TOPIC_TYPE_REPLY = "reply"
 

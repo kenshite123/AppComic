@@ -28,6 +28,13 @@ class InitialActivity : AppCompatActivity() , HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial)
         supportActionBar?.hide()
-        navigationController.showSplash()
+
+        val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
+        val comicId = intent.getLongExtra("comicId", 0L)
+        if (isShowComicDetail) {
+            navigationController.showSplash(isShowComicDetail, comicId)
+        } else {
+            navigationController.showSplash()
+        }
     }
 }

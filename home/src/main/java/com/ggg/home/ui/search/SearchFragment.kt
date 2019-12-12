@@ -55,7 +55,6 @@ class SearchFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CategoryViewModel::class.java)
-        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_SEARCH)

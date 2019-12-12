@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.common.GGGAppInterface
@@ -19,7 +21,6 @@ import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_comment.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
-import kotlin.math.log
 
 class CommentFragment : HomeBaseFragment() {
     private lateinit var viewModel: CommentViewModel
@@ -51,7 +52,6 @@ class CommentFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CommentViewModel::class.java)
-        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_COMMENT)
@@ -102,6 +102,28 @@ class CommentFragment : HomeBaseFragment() {
                 viewModel.writeComment(data)
             }
         }
+
+        edComment.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideSoftKeyboard()
+                if (checkValidSendComment()) {
+                    val token = loginResponse!!.tokenType + loginResponse!!.accessToken
+                    var writeCommentBody = WriteCommentBody()
+                    writeCommentBody.topicType = Constant.TOPIC_TYPE_COMMENT
+                    writeCommentBody.comicId = this.comicId
+                    writeCommentBody.content = edComment.text.toString()
+
+                    val data = hashMapOf<String, Any>(
+                            "token" to token,
+                            "writeCommentBody" to writeCommentBody
+                    )
+
+                    viewModel.writeComment(data)
+                }
+                return@OnEditorActionListener true
+            }
+            false
+        })
     }
 
     private fun checkValidSendComment() : Boolean {

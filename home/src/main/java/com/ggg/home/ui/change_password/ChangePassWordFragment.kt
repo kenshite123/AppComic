@@ -20,6 +20,7 @@ import timber.log.Timber
 class ChangePassWordFragment: HomeBaseFragment() {
     private lateinit var viewModel: ChangePassWordViewModel
     var loginResponse: LoginResponse? = null
+    var isFirstLoad = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_change_password, container, false)
@@ -37,7 +38,6 @@ class ChangePassWordFragment: HomeBaseFragment() {
         }
 
         initViews()
-        initObserver()
         initEvent()
     }
 
@@ -123,6 +123,14 @@ class ChangePassWordFragment: HomeBaseFragment() {
         val TAG = "ChangePassWordFragment"
         @JvmStatic
         fun create() = ChangePassWordFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
     }
 
 }
