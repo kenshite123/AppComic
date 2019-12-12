@@ -18,7 +18,7 @@ class LoginResponse : Serializable {
 
         @SerializedName("user")
         @Expose
-        var user: UserModel? = null
+        var user: UserModel = UserModel()
 
         fun convertToGson(): String {
                 val gson = Gson()

@@ -44,7 +44,7 @@ class FcmService : FirebaseMessagingService() {
 //        intent.putExtra("comicId", comicId)
 
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.journaldev.com/"))
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(this, 15, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 //        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
 //            // Add the intent, which inflates the back stack
 //            addParentStack(InitialActivity::class.java)

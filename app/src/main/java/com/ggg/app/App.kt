@@ -68,6 +68,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         var token = FirebaseInstanceId.getInstance().token
         if (token != null && token.isNotEmpty()){
             Timber.d("FCM_TOKEN: $token")
+
             PrefsUtil.instance.setUserFCMToken(token)
         }
 
@@ -137,9 +138,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     }
 
     override fun clearListComicFavorite() {
-        val s = listFavoriteId.toMutableList()
-        s.clear()
-        listFavoriteId = s.toList()
+        listFavoriteId = listOf()
     }
 
     override fun getListFavoriteId(): List<String> {
