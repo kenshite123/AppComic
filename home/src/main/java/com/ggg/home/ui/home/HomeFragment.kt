@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicWithCategoryModel
@@ -42,13 +43,20 @@ class HomeFragment : HomeBaseFragment() {
         private val DELAY_MS: Long = 500
         private val PERIOD_MS: Long = 3000
         @JvmStatic
-        fun create() = HomeFragment()
+        fun create() : HomeFragment {
+            val fragment = HomeFragment()
+            val bundle = bundleOf(
+                    "isShowComicDetail" to false
+            )
+            fragment.arguments = bundle
+            return fragment
+        }
 
         @JvmStatic
         fun create(comicId: Long) : HomeFragment {
             val fragment = HomeFragment()
             val bundle = bundleOf(
-                    "isMoveToAnotherFragment" to true,
+                    "isShowComicDetail" to true,
                     "comicId" to comicId
             )
             fragment.arguments = bundle
@@ -66,19 +74,18 @@ class HomeFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-        isFirstLoad = true
         hideActionBar()
         showBottomNavView()
 
-//        val isMoveToAnotherFragment = arguments!!["isMoveToAnotherFragment"] as Boolean
-//        if (isMoveToAnotherFragment) {
-//            val comicId = arguments!!["comicId"] as Long
-//            navigationController.showComicDetail(comicId)
-//        } else {
+        val isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
+        if (isShowComicDetail) {
+            val comicId = arguments!!["comicId"] as Long
+            navigationController.showComicDetail(comicId)
+        } else {
             initViews()
             initEvent()
             loadData()
-//        }
+        }
     }
 
     private fun initViews() {

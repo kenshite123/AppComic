@@ -71,7 +71,6 @@ class CommentOfChapFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CommentOfChapViewModel::class.java)
-        isFirstLoad = true
         showActionBar()
         hideBottomNavView()
 

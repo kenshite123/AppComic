@@ -1,6 +1,9 @@
 package com.ggg.app.ui.init
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
@@ -28,6 +31,19 @@ class InitialActivity : AppCompatActivity() , HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial)
         supportActionBar?.hide()
-        navigationController.showSplash()
+
+        val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
+        val comicId = intent.getLongExtra("comicId", 0L)
+        if (isShowComicDetail) {
+            navigationController.showSplash(isShowComicDetail, comicId)
+        } else {
+            navigationController.showSplash()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 15 && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Hello World", Toast.LENGTH_SHORT).show()
+        }
     }
 }

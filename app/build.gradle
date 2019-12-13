@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
@@ -42,6 +43,7 @@ dependencies {
     implementation rootProject.ext.libs.rxBinding
     implementation 'com.android.support:multidex:1.0.2'
     implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
     implementation rootProject.ext.libs.kotlinstdlib
     // android
     implementation rootProject.ext.libs.design

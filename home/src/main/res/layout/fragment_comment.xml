@@ -18,7 +18,9 @@
         android:hint="@string/TEXT_HINT_EDITTEXT_COMMENT"
         android:background="@drawable/bg_edt_comment"
         android:gravity="left"
-        android:padding="@dimen/dp10"/>
+        android:inputType="text"
+        android:padding="@dimen/dp10"
+        android:imeOptions="actionDone"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSend"
         android:layout_width="wrap_content"
@@ -30,5 +32,6 @@
         app:fabSize="normal"
         android:src="@drawable/icon_send"
         android:tint="@color/white"
-        android:backgroundTint="@color/colorPrimary"/>
+        android:backgroundTint="@color/colorPrimary"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

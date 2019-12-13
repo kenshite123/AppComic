@@ -31,10 +31,16 @@ class LoginRepository {
     fun login(data: HashMap<String, String>): LiveData<Resource<LoginResponse>> {
         val callApi = object : NetworkOnlyResource<LoginResponse>(appExecutors = executor) {
             override fun saveCallResult(item: LoginResponse) {
-                item.user?.let {
-                    GGGAppInterface.gggApp.clearListComicFavorite()
-                    it.mangaFollows.forEach {
-                        GGGAppInterface.gggApp.addComicToFavorite(it)
+                if (item != null) {
+                    if (item.user != null) {
+                        item.user?.let {
+                            GGGAppInterface.gggApp.clearListComicFavorite()
+                            if (!it.mangaFollows.isNullOrEmpty()) {
+                                it.mangaFollows.forEach {
+                                    GGGAppInterface.gggApp.addComicToFavorite(it)
+                                }
+                            }
+                        }
                     }
                 }
             }

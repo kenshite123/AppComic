@@ -60,7 +60,6 @@ class ViewComicFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewComicViewModel::class.java)
-        isFirstLoad = true
         hideActionBar()
         hideBottomNavView()
 

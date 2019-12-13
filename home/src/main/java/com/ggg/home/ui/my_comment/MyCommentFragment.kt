@@ -54,7 +54,6 @@ class MyCommentFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MyCommentViewModel::class.java)
-        isFirstLoad = true
         isLoadMore = true
         showActionBar()
         hideBottomNavView()

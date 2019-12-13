@@ -24,10 +24,27 @@ class NavigationController @Inject constructor(activity: InitialActivity) {
                 .commitAllowingStateLoss()
     }
 
+    fun showSplash(isShowComicDetail: Boolean, comicId: Long){
+        val fragment = SplashFragment.create(isShowComicDetail, comicId)
+        fragmentManager.beginTransaction()
+                .replace(containerId, fragment)
+                .commitAllowingStateLoss()
+    }
+
     fun showHomeModule(){
         if (weakActivity.get() != null){
             var activity = weakActivity.get()
             val intent = Intent(activity, MainActivity::class.java)
+            activity!!.startActivity(intent)
+        }
+    }
+
+    fun showHomeModule(isShowComicDetail: Boolean, comicId: Long){
+        if (weakActivity.get() != null){
+            var activity = weakActivity.get()
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.putExtra("isShowComicDetail", isShowComicDetail)
+            intent.putExtra("comicId", comicId)
             activity!!.startActivity(intent)
         }
     }

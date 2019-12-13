@@ -37,13 +37,11 @@ class LoginFragment : HomeBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
-        isFirstLoad = true
         initViews()
         initEvent()
     }
 
     private fun initViews() {
-//        hideActionBar()
         showActionBar()
         hideBottomNavView()
         setTitleActionBar(StringUtil.getString(R.string.TEXT_LOGIN))
@@ -87,13 +85,13 @@ class LoginFragment : HomeBaseFragment() {
     }
 
     private fun checkValidData(): Boolean {
-        if (edUsername.text.toString().isNullOrEmpty()) {
+        if (edUsername.text.isNullOrEmpty()) {
             showMsg(R.string.TEXT_ERROR_INPUT_USERNAME_OR_PASSWORD_EMPTY)
             edUsername.requestFocus()
             return false
         }
 
-        if (edPassword.text.toString().isNullOrEmpty()) {
+        if (edPassword.text.isNullOrEmpty()) {
             showMsg(R.string.TEXT_ERROR_INPUT_PASSWORD_EMPTY)
             edPassword.requestFocus()
             return false
