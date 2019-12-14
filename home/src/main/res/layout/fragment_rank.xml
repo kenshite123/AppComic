@@ -8,6 +8,7 @@
     tools:context=".ui.rank.RankFragment">
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        app:tabTextAppearance="@style/tab_layout"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp60"
         app:layout_constraintTop_toTopOf="parent"

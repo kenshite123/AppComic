@@ -150,7 +150,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.material.tabs.TabLayout
-            style="@style/normal_text"
+            app:tabTextAppearance="@style/tab_layout"
             android:id="@+id/tabLayout"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp60"

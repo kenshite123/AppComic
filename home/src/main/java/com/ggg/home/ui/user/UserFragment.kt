@@ -1,5 +1,6 @@
 package com.ggg.home.ui.user
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -118,14 +119,21 @@ class UserFragment : HomeBaseFragment() {
         }
 
         llLogout.setOnClickListener {
-            var token = ""
-            if (loginResponse != null) {
-                token = loginResponse?.tokenType + loginResponse?.accessToken
-            }
-            val param = hashMapOf(
-                    "token" to token
+            showConfirmDialog(
+                    StringUtil.getString(R.string.TEXT_CONFIRM_LOGOUT),
+                    "Cancel", DialogInterface.OnClickListener{dialogInterface, _-> dialogInterface.dismiss() },
+                    "Yes", DialogInterface.OnClickListener{dialogInterface, _-> run{
+                dialogInterface.dismiss()
+                var token = ""
+                if (loginResponse != null) {
+                    token = loginResponse?.tokenType + loginResponse?.accessToken
+                }
+                val param = hashMapOf(
+                        "token" to token
+                )
+                viewModel.logOut(param)
+            }}
             )
-            viewModel.logOut(param)
         }
     }
 

@@ -25,4 +25,9 @@
     <style name="normal_text">
         <item name="android:fontFamily">@font/quicksand_regular</item>
     </style>
+    <style name="tab_layout" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/sp18</item>
+    </style>
 </resources>
