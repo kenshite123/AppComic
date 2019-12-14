@@ -154,6 +154,14 @@ class ViewComicFragment : HomeBaseFragment() {
                 }
             }
         })
+
+        rvListImageComic.setOnClickListener {
+            showHideNavigation()
+        }
+
+        ctlImageComic.setOnClickListener {
+            showHideNavigation()
+        }
     }
 
     private fun loadData() {
@@ -167,18 +175,22 @@ class ViewComicFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_IMAGE_COMIC_TO_SHOW_NAVIGATION -> {
-                if (isShowNavigation) {
-                    ctlHeader.visibility = View.GONE
-                    llFooter.visibility = View.GONE
-                    isShowNavigation = false
-                } else {
-                    ctlHeader.visibility = View.VISIBLE
-                    llFooter.visibility = View.VISIBLE
-                    isShowNavigation = true
-                }
+                showHideNavigation()
             }
 
             else -> super.onEvent(eventAction, control, data)
+        }
+    }
+
+    private fun showHideNavigation() {
+        if (isShowNavigation) {
+            ctlHeader.visibility = View.GONE
+            llFooter.visibility = View.GONE
+            isShowNavigation = false
+        } else {
+            ctlHeader.visibility = View.VISIBLE
+            llFooter.visibility = View.VISIBLE
+            isShowNavigation = true
         }
     }
 

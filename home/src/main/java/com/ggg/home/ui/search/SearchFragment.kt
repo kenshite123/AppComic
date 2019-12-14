@@ -30,7 +30,7 @@ import android.view.inputmethod.EditorInfo
 class SearchFragment : HomeBaseFragment() {
     private lateinit var viewModel: CategoryViewModel
     var page: Long = 0
-    var items: Long = 60
+    var items: Long = 30
     var isFirstLoad = true
     var isLoadMore = true
     lateinit var listComicAdapter: ListComicAdapter

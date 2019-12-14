@@ -104,7 +104,7 @@ class CommentFragment : HomeBaseFragment() {
         }
 
         edComment.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
                 hideSoftKeyboard()
                 if (checkValidSendComment()) {
                     val token = loginResponse!!.tokenType + loginResponse!!.accessToken

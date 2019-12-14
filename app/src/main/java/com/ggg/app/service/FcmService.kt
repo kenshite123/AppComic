@@ -6,6 +6,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Intent
 import com.ggg.home.ui.main.MainActivity
 import androidx.core.app.NotificationManagerCompat
@@ -18,6 +19,8 @@ import androidx.core.app.TaskStackBuilder
 import com.ggg.app.ui.init.InitialActivity
 import com.ggg.home.utils.Constant
 import android.net.Uri
+
+
 
 
 class FcmService : FirebaseMessagingService() {
@@ -40,18 +43,20 @@ class FcmService : FirebaseMessagingService() {
 //        val intent = Intent(applicationContext, MainActivity::class.java).apply {
 //            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 //        }
-//        intent.putExtra("isShowComicDetail", isShowComicDetail)
-//        intent.putExtra("comicId", comicId)
+//        val intent = Intent()
+//        intent.component = ComponentName("com.ggg.app", "com.ggg.home.ui.main.MainActivity")
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("isShowComicDetail", isShowComicDetail)
+        intent.putExtra("comicId", comicId)
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.journaldev.com/"))
-        val pendingIntent = PendingIntent.getActivity(this, 15, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
-//            // Add the intent, which inflates the back stack
-//            addParentStack(InitialActivity::class.java)
-//            addNextIntent(intent)
-//            // Get the PendingIntent containing the entire back stack
-//            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+//        val notifyIntent = Intent(this, ResultActivity::class.java).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 //        }
+        val notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        this.startActivity(intent)
 
         val mBuilder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon_launcher)
@@ -60,7 +65,7 @@ class FcmService : FirebaseMessagingService() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setContentIntent(pendingIntent)
+//                .setContentIntent(notifyPendingIntent)
 
 //        beep(100)
 
