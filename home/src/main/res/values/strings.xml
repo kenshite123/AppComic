@@ -83,4 +83,5 @@
     <string name="TEXT_COMMENT_OF_CHAP">Comment of %s</string>
     <string name="TEXT_OLDEST">Oldest</string>
     <string name="TEXT_LATEST">Latest</string>
+    <string name="TEXT_CONFIRM_LOGOUT">Do you want to logout?</string>
 </resources>
