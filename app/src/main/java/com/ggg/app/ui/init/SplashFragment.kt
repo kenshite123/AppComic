@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.ggg.app.R
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.di.Injectable
 import com.ggg.common.utils.combineLatest
 import com.ggg.common.vo.Status
@@ -30,7 +31,7 @@ class SplashFragment : Fragment(),Injectable{
     private lateinit var viewModel:InitViewModel
     var isFirstLoad = true
     var isShowComicDetail: Boolean = false
-    var comicId = 0L
+    var comicId = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -43,14 +44,16 @@ class SplashFragment : Fragment(),Injectable{
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(InitViewModel::class.java)
 
         if (arguments == null) {
-
+            loadData()
         } else {
             if (arguments!!["isShowComicDetail"] != null) {
                 isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
-                comicId = arguments!!["comicId"] as Long
+                comicId = arguments!!["comicId"].toString()
+                GGGAppInterface.gggApp.isFromNotification = true
+                (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
+                (activity as InitialActivity).finish()
             }
         }
-        loadData()
     }
 
     private fun loadData() {
@@ -97,7 +100,7 @@ class SplashFragment : Fragment(),Injectable{
         fun create() = SplashFragment()
 
         @JvmStatic
-        fun create(isShowComicDetail: Boolean, comicId: Long): SplashFragment {
+        fun create(isShowComicDetail: Boolean, comicId: String): SplashFragment {
             val fragment = SplashFragment()
             val bundle = bundleOf(
                     "isShowComicDetail" to isShowComicDetail,

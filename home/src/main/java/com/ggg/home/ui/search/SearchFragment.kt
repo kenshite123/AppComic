@@ -69,14 +69,14 @@ class SearchFragment : HomeBaseFragment() {
         rvListComicSearch.setHasFixedSize(true)
         rvListComicSearch.layoutManager = gridLayoutManager
         rvListComicSearch.adapter = listComicAdapter
-
+        showSoftKeyboard(edtSearch)
     }
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val comicId = data as Long
-                navigationController.showComicDetail(comicId)
+                navigationController.showComicDetail(comicId.toString())
             }
             else -> {
 

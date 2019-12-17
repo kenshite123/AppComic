@@ -23,6 +23,8 @@ public class GGGAppInterface {
         public void clearListComicFavorite();
         public List<String> getListFavoriteId();
         public boolean checkIsLogin();
+        public void setFromNotification(boolean isFromNotification);
+        public boolean isFromNotification();
     }
     public static AppInterface gggApp = null;
     public static void initInstance(AppInterface appinterface)

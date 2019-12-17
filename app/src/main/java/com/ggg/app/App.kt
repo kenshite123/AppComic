@@ -31,6 +31,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
     var loginResponse: LoginResponse? = null
     private var listFavoriteId: List<String> = listOf()
+    private var isFromNotification = false
 
     override fun getCtx(): Context {
         return this
@@ -143,5 +144,13 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun getListFavoriteId(): List<String> {
         return this.listFavoriteId
+    }
+
+    override fun setFromNotification(isFromNotification: Boolean) {
+        this.isFromNotification = isFromNotification
+    }
+
+    override fun isFromNotification(): Boolean {
+        return this.isFromNotification
     }
 }

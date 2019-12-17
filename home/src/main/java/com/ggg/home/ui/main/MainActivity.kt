@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleRegistry
 import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.user.UserFragment
@@ -49,10 +50,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         setContentView(R.layout.activity_main)
 
         val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
-        val comicId = intent.getLongExtra("comicId", 0)
         val fragments: List<Fragment>
 
         if (isShowComicDetail) {
+            val comicId = intent.getStringExtra("comicId").toString()
             fragments = listOf(HomeFragment.create(comicId))
         } else {
             fragments = listOf(HomeFragment.create())

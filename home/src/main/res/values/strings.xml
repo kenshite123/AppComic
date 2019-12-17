@@ -19,9 +19,9 @@
     <string name="TEXT_COMIC_LATEST_UPDATE">New comics updated</string>
     <string name="TEXT_ANNOUNCE">Announce</string>
     <string name="TEXT_HISTORY">History</string>
-    <string name="TEXT_LIST_CHAPTERS">List chapters</string>
+    <string name="TEXT_LIST_CHAPTERS">Chapters</string>
     <string name="TEXT_DESCRIPTION">Description</string>
-    <string name="TEXT_LIST_COMMENTS">List comments</string>
+    <string name="TEXT_LIST_COMMENTS">Comments</string>
     <string name="TEXT_FOLLOW">Follow</string>
     <string name="TEXT_UNFOLLOW">Unfollow</string>
     <string name="TEXT_DOWNLOAD">Download</string>

@@ -64,7 +64,7 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
-    fun showComicDetail(comicId: Long){
+    fun showComicDetail(comicId: String){
         val fragment = ComicDetailFragment.create(comicId)
         fragNavController.pushFragment(fragment)
     }

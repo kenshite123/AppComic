@@ -118,7 +118,7 @@ class RankFragment : HomeBaseFragment() {
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val comicRankWithCategoryModel = data as ComicRankWithCategoryModel
 //                val comicWithCategoryModel = getComicWithCategoryModelFromRank(comicRankWithCategoryModel)
-                navigationController.showComicDetail(comicRankWithCategoryModel.comicRankModel!!.id)
+                navigationController.showComicDetail(comicRankWithCategoryModel.comicRankModel!!.id.toString())
             }
 
             else -> super.onEvent(eventAction, control, data)

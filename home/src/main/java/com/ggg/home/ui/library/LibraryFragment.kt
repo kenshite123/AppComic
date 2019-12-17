@@ -136,7 +136,7 @@ class LibraryFragment : HomeBaseFragment() {
         when(eventAction) {
             Constant.ACTION_CLICK_ON_COMIC_HISTORY -> {
                 val historyModel = data as HistoryModel
-                navigationController.showComicDetail(historyModel.comicModel!!.id)
+                navigationController.showComicDetail(historyModel.comicModel!!.id.toString())
             }
 
             Constant.ACTION_CLICK_ON_COMIC -> {

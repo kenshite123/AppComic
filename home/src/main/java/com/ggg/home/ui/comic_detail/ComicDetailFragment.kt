@@ -61,7 +61,7 @@ class ComicDetailFragment : HomeBaseFragment() {
         }
 
         @JvmStatic
-        fun create(comicId: Long) : ComicDetailFragment {
+        fun create(comicId: String) : ComicDetailFragment {
             val bundle = bundleOf(
                     "comicId" to comicId
             )
@@ -86,7 +86,8 @@ class ComicDetailFragment : HomeBaseFragment() {
 
         if (null == arguments?.get("comicWithCategoryModel")) {
             isLoadComicInfo = true
-            comicId = arguments?.get("comicId") as Long
+            val comicIdString = arguments?.get("comicId").toString()
+            comicId = comicIdString.toLong()
             loadComicInfoByComicId(comicId)
         } else {
             isLoadComicInfo = false

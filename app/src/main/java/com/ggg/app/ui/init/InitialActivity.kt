@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
 import com.ggg.app.R
+import com.ggg.home.utils.Constant
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class InitialActivity : AppCompatActivity() , HasSupportFragmentInjector {
@@ -32,8 +34,15 @@ class InitialActivity : AppCompatActivity() , HasSupportFragmentInjector {
         setContentView(R.layout.activity_initial)
         supportActionBar?.hide()
 
-        val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
-        val comicId = intent.getLongExtra("comicId", 0L)
+        val extras = intent.extras
+        val type = extras?.getString("type").toString()
+        var comicId = extras?.getString("comicId").toString()
+
+        var isShowComicDetail = false
+        if (Constant.TYPE_SHOW_COMIC_DETAIL == type) {
+            isShowComicDetail = true
+        }
+
         if (isShowComicDetail) {
             navigationController.showSplash(isShowComicDetail, comicId)
         } else {

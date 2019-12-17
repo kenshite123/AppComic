@@ -24,7 +24,7 @@ class NavigationController @Inject constructor(activity: InitialActivity) {
                 .commitAllowingStateLoss()
     }
 
-    fun showSplash(isShowComicDetail: Boolean, comicId: Long){
+    fun showSplash(isShowComicDetail: Boolean, comicId: String){
         val fragment = SplashFragment.create(isShowComicDetail, comicId)
         fragmentManager.beginTransaction()
                 .replace(containerId, fragment)
@@ -39,7 +39,7 @@ class NavigationController @Inject constructor(activity: InitialActivity) {
         }
     }
 
-    fun showHomeModule(isShowComicDetail: Boolean, comicId: Long){
+    fun showHomeModule(isShowComicDetail: Boolean, comicId: String){
         if (weakActivity.get() != null){
             var activity = weakActivity.get()
             val intent = Intent(activity, MainActivity::class.java)

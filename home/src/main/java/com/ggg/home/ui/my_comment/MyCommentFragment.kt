@@ -167,7 +167,7 @@ class MyCommentFragment : HomeBaseFragment() {
 
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val comicId = data as Long
-                navigationController.showComicDetail(comicId)
+                navigationController.showComicDetail(comicId.toString())
             }
 
             else -> super.onEvent(eventAction, control, data)

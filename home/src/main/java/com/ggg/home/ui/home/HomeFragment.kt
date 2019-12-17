@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ComicWithCategoryModel
@@ -53,7 +54,7 @@ class HomeFragment : HomeBaseFragment() {
         }
 
         @JvmStatic
-        fun create(comicId: Long) : HomeFragment {
+        fun create(comicId: String) : HomeFragment {
             val fragment = HomeFragment()
             val bundle = bundleOf(
                     "isShowComicDetail" to true,
@@ -79,8 +80,15 @@ class HomeFragment : HomeBaseFragment() {
 
         val isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
         if (isShowComicDetail) {
-            val comicId = arguments!!["comicId"] as Long
-            navigationController.showComicDetail(comicId)
+            if (GGGAppInterface.gggApp.isFromNotification) {
+                val comicId = arguments!!["comicId"].toString()
+                navigationController.showComicDetail(comicId)
+                GGGAppInterface.gggApp.isFromNotification = false
+            } else {
+                initViews()
+                initEvent()
+                loadData()
+            }
         } else {
             initViews()
             initEvent()
