@@ -1,6 +1,7 @@
 package com.ggg.home.ui.main
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
@@ -20,6 +22,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
@@ -53,6 +56,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         val fragments: List<Fragment>
 
         if (isShowComicDetail) {
+            GGGAppInterface.gggApp.isFromNotification = true
             val comicId = intent.getStringExtra("comicId").toString()
             fragments = listOf(HomeFragment.create(comicId))
         } else {

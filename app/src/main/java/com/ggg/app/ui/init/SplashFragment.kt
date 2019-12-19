@@ -49,7 +49,6 @@ class SplashFragment : Fragment(),Injectable{
             if (arguments!!["isShowComicDetail"] != null) {
                 isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
                 comicId = arguments!!["comicId"].toString()
-                GGGAppInterface.gggApp.isFromNotification = true
                 (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
                 (activity as InitialActivity).finish()
             }
