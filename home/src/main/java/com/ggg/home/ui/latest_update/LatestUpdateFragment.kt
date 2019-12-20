@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.vo.Status
 import com.ggg.home.R
-import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
@@ -21,11 +21,10 @@ class LatestUpdateFragment : HomeBaseFragment() {
     var isFirstLoad = true
     lateinit var listComicAdapter: ListComicAdapter
     lateinit var gridLayoutManager : GridLayoutManager
-    var listComic: List<ComicWithCategoryModel> = listOf()
+    var listComic: List<ComicModel> = listOf()
     var items: Int = 30
     var page: Int = 0
     var isLoadMore = true
-    var isFirstLoadDataApi = true
     var isLoadAllData = false
 
     companion object {
@@ -46,8 +45,8 @@ class LatestUpdateFragment : HomeBaseFragment() {
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LatestUpdateViewModel::class.java)
         isLoadMore = true
-        isFirstLoadDataApi = true
         isLoadAllData = false
+        page = 0
 
         showActionBar()
         hideBottomNavView()
@@ -61,7 +60,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
     private fun initViews() {
         listComic = listOf()
         gridLayoutManager = GridLayoutManager(context!!, 3)
-        listComicAdapter = ListComicAdapter(context!!, this, this.listComic)
+        listComicAdapter = ListComicAdapter(context!!, this, this.listComic, true)
         rvListComic.setHasFixedSize(false)
         rvListComic.layoutManager = gridLayoutManager
         rvListComic.adapter = listComicAdapter
@@ -70,41 +69,32 @@ class LatestUpdateFragment : HomeBaseFragment() {
     override fun initObserver() {
         viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB) {
-                    if (!isLoadAllData) {
-                        if (it.data.isNullOrEmpty()) {
-                            if (isFirstLoadDataApi) {
-                                showLoading()
-                            }
+            if (it.status == Status.SUCCESS) {
+                if (!isLoadAllData) {
+                    it.data?.let {
+                        if (isLoadMore) {
+                            isLoadMore = false
+                            val list = this.listComic.toMutableList()
+                            list.addAll(it)
+
+                            this.listComic = list.toList()
+
+                            listComicAdapter.notifyDataSearch(this.listComic)
+                            isLoadAllData = it.size < items
                         } else {
-                            isFirstLoadDataApi = false
-                            it.data?.let {
-                                if (isLoadMore) {
-                                    isLoadMore = false
-                                    val list = this.listComic.toMutableList()
-                                    list.addAll(it)
-
-                                    this.listComic = list.toList()
-
-                                    listComicAdapter.notifyData(this.listComic)
-                                    isLoadAllData = it.size < items
-                                } else {
-                                    this.listComic = it
-                                    listComicAdapter.notifyData(this.listComic)
-                                }
-                            }
+                            this.listComic = it
+                            listComicAdapter.notifyDataSearch(this.listComic)
                         }
                     }
                 }
 
-                it.data?.let {
-                    if (isFirstLoadDataApi) {
-                        this.listComic = it
-                        listComicAdapter.notifyData(this.listComic)
-                    }
-                    isLoadAllData = it.size < items
-                }
+//                it.data?.let {
+//                    if (isFirstLoadDataApi) {
+//                        this.listComic = it
+//                        listComicAdapter.notifyDataSearch(this.listComic)
+//                    }
+//                    isLoadAllData = it.size < items
+//                }
             }
 //            loading(it)
 //            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
@@ -156,8 +146,8 @@ class LatestUpdateFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_COMIC -> {
-                val comicWithCategoryModel = data as ComicWithCategoryModel
-                navigationController.showComicDetail(comicWithCategoryModel)
+                val conmicId = data as Long
+                navigationController.showComicDetail(conmicId)
             }
 
             else -> super.onEvent(eventAction, control, data)

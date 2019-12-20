@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
@@ -28,40 +29,40 @@ class LatestUpdateRepository {
         this.db = db
     }
 
-    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                val limit = data["limit"]!!
-                val offset = data["offset"]!! * limit
-                return db.comicDao().getListLatestUpdate(limit, offset)
-            }
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+//            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
+//                val limit = data["limit"]!!
+//                val offset = data["offset"]!! * limit
+//                return db.comicDao().getListLatestUpdate(limit, offset)
+//            }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
                 return api.getLatestUpdate(data["limit"]!!, data["offset"]!!)
             }
 
             override fun saveCallResult(item: List<ComicModel>) {
-                if (item.isNotEmpty()) {
-                    item.forEach { comicModel ->
-                        run {
-                            comicModel.categories.forEach {
-                                val categoryOfComicModel = CategoryOfComicModel()
-                                categoryOfComicModel.categoryId = it.id
-                                categoryOfComicModel.categoryName = it.name
-                                categoryOfComicModel.comicId = comicModel.id
-                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
-                            }
-                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
-                            comicModel.lastModified = System.currentTimeMillis()
-                        }
-                    }
-                    db.comicDao().insertListComic(item)
-                }
+//                if (item.isNotEmpty()) {
+//                    item.forEach { comicModel ->
+//                        run {
+//                            comicModel.categories.forEach {
+//                                val categoryOfComicModel = CategoryOfComicModel()
+//                                categoryOfComicModel.categoryId = it.id
+//                                categoryOfComicModel.categoryName = it.name
+//                                categoryOfComicModel.comicId = comicModel.id
+//                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+//                            }
+//                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+//                            comicModel.lastModified = System.currentTimeMillis()
+//                        }
+//                    }
+//                    db.comicDao().insertListComic(item)
+//                }
             }
 
-            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
-                return true
-            }
+//            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
+//                return true
+//            }
         }
         return callApi.asLiveData()
     }

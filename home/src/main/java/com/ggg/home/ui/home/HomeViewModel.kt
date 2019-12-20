@@ -16,7 +16,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     var getBannersResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
     private val requestGetListLatestUpdate: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
-    var getListLatestUpdateResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getListLatestUpdateResult: LiveData<Resource<List<ComicModel>>>
 
     init {
         getBannersResult = Transformations.switchMap(requestGetBanners) {
