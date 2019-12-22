@@ -22,6 +22,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
+import android.content.Intent
+import android.net.Uri
+import io.vrinda.kotlinpermissions.DeviceInfo.Companion.getPackageName
+
+
+
 
 class UserFragment : HomeBaseFragment() {
     private lateinit var viewModel: UserViewModel
@@ -134,6 +140,41 @@ class UserFragment : HomeBaseFragment() {
                 viewModel.logOut(param)
             }}
             )
+        }
+
+        llRate.setOnClickListener {
+            goToStore()
+        }
+
+        llFeedback.setOnClickListener {
+            goToStore()
+        }
+
+        llShareApp.setOnClickListener {
+            shareApp()
+        }
+    }
+
+    private fun goToStore() {
+        val appPackageName = getPackageName(context!!) // getPackageName() from Context or Activity object
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+        } catch (anfe: android.content.ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+        }
+    }
+
+    private fun shareApp() {
+        try {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+            var shareMessage = "\nLet me recommend you this application\n\n"
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + getPackageName(context!!) + "\n\n"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            startActivity(Intent.createChooser(shareIntent, "Choose one"))
+        } catch (e: Exception) {
+            //e.toString();
         }
     }
 

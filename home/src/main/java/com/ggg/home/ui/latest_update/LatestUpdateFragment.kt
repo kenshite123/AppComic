@@ -147,7 +147,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_COMIC -> {
                 val conmicId = data as Long
-                navigationController.showComicDetail(conmicId)
+                navigationController.showComicDetail(conmicId.toString())
             }
 
             else -> super.onEvent(eventAction, control, data)

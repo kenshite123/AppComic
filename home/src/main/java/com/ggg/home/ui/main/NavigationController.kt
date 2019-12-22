@@ -69,8 +69,9 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
-    fun showViewComic(comicWithCategoryModel: ComicWithCategoryModel, listChapterModel: List<ChapterHadRead>, positionChapter: Int) {
-        val fragment = ViewComicFragment.create(comicWithCategoryModel, listChapterModel, positionChapter)
+    fun showViewComic(comicWithCategoryModel: ComicWithCategoryModel, listChapterModel: List<ChapterHadRead>,
+                      positionChapter: Int, isLoadLatest: Boolean) {
+        val fragment = ViewComicFragment.create(comicWithCategoryModel, listChapterModel, positionChapter, isLoadLatest)
         fragNavController.pushFragment(fragment)
     }
 

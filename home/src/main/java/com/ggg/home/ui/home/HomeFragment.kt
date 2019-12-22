@@ -188,6 +188,10 @@ class HomeFragment : HomeBaseFragment() {
 //                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
                     listComicAdapter.notifyDataSearch(this.listComicLatestUpdate)
                 }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                }
             }
         })
     }

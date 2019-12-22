@@ -181,7 +181,7 @@ class ComicDetailFragment : HomeBaseFragment() {
 
         btnReadNow.setOnClickListener {
             insertCCHadRead(0)
-            navigationController.showViewComic(comicWithCategoryModel, listChapters, 0)
+            navigationController.showViewComic(comicWithCategoryModel, listChapters, 0, isLoadLatest)
         }
 
         btnFollow.setOnClickListener {
@@ -289,7 +289,7 @@ class ComicDetailFragment : HomeBaseFragment() {
             Constant.ACTION_CLICK_ON_CHAPTER -> {
                 val positionChapter = data as Int
                 insertCCHadRead(positionChapter)
-                navigationController.showViewComic(comicWithCategoryModel, listChapters, positionChapter)
+                navigationController.showViewComic(comicWithCategoryModel, listChapters, positionChapter, isLoadLatest)
             }
 
             Constant.ACTION_CLICK_ON_ITEM_CATEGORY_OF_COMIC_DETAIL -> {

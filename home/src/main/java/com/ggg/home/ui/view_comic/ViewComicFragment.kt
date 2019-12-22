@@ -28,6 +28,7 @@ class ViewComicFragment : HomeBaseFragment() {
     lateinit var listImageComicAdapter: ListImageComicAdapter
     var isShowNavigation = true
     var isShowVertical = true
+    var isLoadLatest = true
     var currentPagePosition = 0
 
     lateinit var pagerSnapHelper: PagerSnapHelper
@@ -38,12 +39,13 @@ class ViewComicFragment : HomeBaseFragment() {
         val TAG = "ViewComicFragment"
         @JvmStatic
         fun create(comicWithCategoryModel: ComicWithCategoryModel,
-                   listChapterModel: List<ChapterHadRead>, positionChapter: Int) : ViewComicFragment {
+                   listChapterModel: List<ChapterHadRead>, positionChapter: Int, isLoadLatest: Boolean) : ViewComicFragment {
             val fragment = ViewComicFragment()
             val bundle = bundleOf(
                     "comicWithCategoryModel" to comicWithCategoryModel,
                     "listChapterModel" to listChapterModel,
-                    "positionChapter" to positionChapter
+                    "positionChapter" to positionChapter,
+                    "isLoadLatest" to isLoadLatest
             )
             fragment.arguments = bundle
             return fragment
@@ -66,6 +68,7 @@ class ViewComicFragment : HomeBaseFragment() {
         comicWithCategoryModel = arguments!!["comicWithCategoryModel"] as ComicWithCategoryModel
         listChapterModel = arguments!!["listChapterModel"] as List<ChapterHadRead>
         positionChapter = arguments!!["positionChapter"] as Int
+        isLoadLatest = arguments!!["isLoadLatest"] as Boolean
 
         initViews()
         initEvent()
@@ -95,24 +98,47 @@ class ViewComicFragment : HomeBaseFragment() {
         }
 
         ivNext.setOnClickListener {
-            if (positionChapter == 0) {
-                showMsg(R.string.TEXT_FINAL_CHAPTERS_OF_COMIC_TOAST)
+            if (isLoadLatest) {
+                if (positionChapter == 0) {
+                    showMsg(R.string.TEXT_FINAL_CHAPTERS_OF_COMIC_TOAST)
+                } else {
+                    insertCCHadRead(positionChapter)
+                    positionChapter--
+                    currentPagePosition = 0
+                    loadData()
+                }
             } else {
-                insertCCHadRead(positionChapter)
-                positionChapter--
-                currentPagePosition = 0
-                loadData()
+                if (positionChapter == listChapterModel.size - 1) {
+                    showMsg(R.string.TEXT_FINAL_CHAPTERS_OF_COMIC_TOAST)
+                } else {
+                    insertCCHadRead(positionChapter)
+                    positionChapter++
+                    currentPagePosition = 0
+                    loadData()
+                }
             }
+
         }
 
         ivPrevious.setOnClickListener {
-            if (positionChapter == listChapterModel.size - 1) {
-                showMsg(R.string.TEXT_FIRST_CHAPTERS_OF_COMIC_TOAST)
+            if (isLoadLatest) {
+                if (positionChapter == listChapterModel.size - 1) {
+                    showMsg(R.string.TEXT_FIRST_CHAPTERS_OF_COMIC_TOAST)
+                } else {
+                    insertCCHadRead(positionChapter)
+                    positionChapter++
+                    currentPagePosition = 0
+                    loadData()
+                }
             } else {
-                insertCCHadRead(positionChapter)
-                positionChapter++
-                currentPagePosition = 0
-                loadData()
+                if (positionChapter == 0) {
+                    showMsg(R.string.TEXT_FIRST_CHAPTERS_OF_COMIC_TOAST)
+                } else {
+                    insertCCHadRead(positionChapter)
+                    positionChapter--
+                    currentPagePosition = 0
+                    loadData()
+                }
             }
         }
 
