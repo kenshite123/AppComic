@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.vo.Status
 import com.ggg.home.R
+import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
@@ -30,7 +31,7 @@ class HomeFragment : HomeBaseFragment() {
     lateinit var pagerSlideAdapter: PagerSlideAdapter
     var listBanners: List<ComicWithCategoryModel> = arrayListOf()
     lateinit var listComicAdapter: ListComicAdapter
-    var listComicLatestUpdate: List<ComicWithCategoryModel> = arrayListOf()
+    var listComicLatestUpdate: List<ComicModel> = arrayListOf()
     val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
@@ -105,7 +106,7 @@ class HomeFragment : HomeBaseFragment() {
         rvSlide.adapter = pagerSlideAdapter
         pagerSnapHelper.attachToRecyclerView(rvSlide)
 
-        listComicAdapter = ListComicAdapter(context!!, this,  listComicLatestUpdate)
+        listComicAdapter = ListComicAdapter(context!!, this,  listComicLatestUpdate, true)
         rvListComic.setHasFixedSize(true)
         rvListComic.layoutManager = GridLayoutManager(context!!, 3)
         rvListComic.adapter = listComicAdapter
@@ -177,15 +178,15 @@ class HomeFragment : HomeBaseFragment() {
 
         viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
             loading(it)
-            if (it.status == Status.SUCCESS || it.status == Status.ERROR || it.status == Status.SUCCESS_DB) {
-                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-                    showLoading()
-                }
+            if (it.status == Status.SUCCESS ) {
+//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
+//                    showLoading()
+//                }
 
                 it.data?.let {
-                    this.listComicLatestUpdate = it.reversed()
+                    this.listComicLatestUpdate = it
 //                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
-                    listComicAdapter.notifyData(this.listComicLatestUpdate)
+                    listComicAdapter.notifyDataSearch(this.listComicLatestUpdate)
                 }
             }
         })
@@ -218,8 +219,8 @@ class HomeFragment : HomeBaseFragment() {
             }
 
             Constant.ACTION_CLICK_ON_COMIC -> {
-                val comicWithCategoryModel = data as ComicWithCategoryModel
-                navigationController.showComicDetail(comicWithCategoryModel)
+                val conmicId = data as Long
+                navigationController.showComicDetail(conmicId.toString())
             }
 
             else -> {
