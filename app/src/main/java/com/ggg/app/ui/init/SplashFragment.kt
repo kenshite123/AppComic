@@ -49,8 +49,8 @@ class SplashFragment : Fragment(),Injectable{
             if (arguments!!["isShowComicDetail"] != null) {
                 isShowComicDetail = arguments!!["isShowComicDetail"] as Boolean
                 comicId = arguments!!["comicId"].toString()
-                (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
-                (activity as InitialActivity).finish()
+
+                viewModel.getListChapters(comicId.toLong())
             }
         }
     }
@@ -73,6 +73,13 @@ class SplashFragment : Fragment(),Injectable{
                 } else {
                     (activity as InitialActivity).navigationController.showHomeModule()
                 }
+                (activity as InitialActivity).finish()
+            }
+        })
+
+        viewModel.getListChaptersResult.observe(this, Observer {
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+                (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
                 (activity as InitialActivity).finish()
             }
         })

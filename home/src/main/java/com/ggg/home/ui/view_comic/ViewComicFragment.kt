@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CCHadReadModel
 import com.ggg.home.data.model.ChapterHadRead
@@ -34,6 +36,7 @@ class ViewComicFragment : HomeBaseFragment() {
     lateinit var pagerSnapHelper: PagerSnapHelper
     lateinit var layoutManagerForVertical: LinearLayoutManager
     lateinit var layoutManagerForHorizontal: LinearLayoutManager
+    lateinit var chapterSelected: ChapterHadRead
 
     companion object {
         val TAG = "ViewComicFragment"
@@ -90,6 +93,20 @@ class ViewComicFragment : HomeBaseFragment() {
     }
 
     override fun initObserver() {
+        viewModel.getListImageResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                val listImageComic: List<String> = chapterSelected.chapterModel!!.listImageUrlString.split(", ")
+                listImageComicAdapter.notifyData(listImageComic)
+                rvListImageComic.scrollToPosition(currentPagePosition)
+
+                if (it.status == Status.ERROR) {
+                    it.message?.let {
+                        showDialog(it)
+                    }
+                }
+            }
+        })
     }
 
     override fun initEvent() {
@@ -191,10 +208,8 @@ class ViewComicFragment : HomeBaseFragment() {
     }
 
     private fun loadData() {
-        val chapterSelected = listChapterModel[positionChapter]
-        val listImageComic: List<String> = chapterSelected.chapterModel!!.listImageUrlString.split(", ")
-        listImageComicAdapter.notifyData(listImageComic)
-        rvListImageComic.scrollToPosition(currentPagePosition)
+        chapterSelected = listChapterModel[positionChapter]
+        viewModel.getListImageOfChapter(chapterSelected)
         tvChapter.text = chapterSelected.chapterModel!!.chapterName
     }
 

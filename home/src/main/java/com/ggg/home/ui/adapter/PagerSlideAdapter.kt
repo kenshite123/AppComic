@@ -51,7 +51,7 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
                 .into(holder.ivSlide)
 
         holder.ivSlide.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, banner.id)
         }
     }
 

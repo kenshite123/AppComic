@@ -1,12 +1,12 @@
 package com.ggg.home.ui.user
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -17,16 +17,9 @@ import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.main.HomeBaseFragment
-import com.ggg.home.utils.PrefsUtil
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import io.vrinda.kotlinpermissions.DeviceInfo.Companion.getPackageName
 import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
-import android.content.Intent
-import android.net.Uri
-import io.vrinda.kotlinpermissions.DeviceInfo.Companion.getPackageName
-
-
 
 
 class UserFragment : HomeBaseFragment() {
@@ -90,13 +83,13 @@ class UserFragment : HomeBaseFragment() {
     override fun initObserver() {
         viewModel.logOutResult.observe(this, Observer {
             loading(it)
-            if (it.status == Status.SUCCESS) {
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 showDialog(R.string.TEXT_LOG_OUT_SUCCESS)
                 this.loginResponse = null
                 GGGAppInterface.gggApp.loginResponse = null
                 updateUI()
-            } else if (it.status == Status.ERROR) {
-                showDialog(it.message.toString())
+//            } else if (it.status == Status.ERROR) {
+//                showDialog(it.message.toString())
             }
         })
     }

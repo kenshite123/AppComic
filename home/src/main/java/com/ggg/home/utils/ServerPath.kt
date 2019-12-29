@@ -24,5 +24,6 @@ class ServerPath {
         const val DELETE_COMMENT = "api/comments/{commentId}/remove"
         const val GET_COMMENT_DETAIL = "api/comments/{commentId}/detail"
         const val GET_LIST_COMMENT_OF_CHAP = "api/comments/{comicId}/chapter/{chapterId}"
+        const val GET_LIST_IMAGE_OF_CHAP = "api/comic/{comicId}/chapters/{chapterId}"
     }
 }

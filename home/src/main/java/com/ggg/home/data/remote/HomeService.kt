@@ -145,4 +145,10 @@ interface HomeService {
             @Query("items") items: Long,
             @Query("page") page: Long
     ) : LiveData<ApiResponse<List<CommentModel>>>
+
+    @GET(ServerPath.GET_LIST_IMAGE_OF_CHAP)
+    fun getListImageOfChap(
+            @Path("comicId") comicId: Long,
+            @Path("chapterId") chapterId: Long
+    ) : LiveData<ApiResponse<List<String>>>
 }

@@ -8,9 +8,7 @@ import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
-import com.ggg.home.data.model.CategoryOfComicModel
-import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.*
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import javax.inject.Inject
@@ -80,6 +78,26 @@ class InitRepository {
                         }
                     }
                     db.comicDao().insertListComic(item)
+                }
+            }
+        }
+        return callApi.asLiveData()
+    }
+
+    fun getListChapters(comicId: Long): LiveData<Resource<List<ChapterModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ChapterModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ChapterModel>>> {
+                return api.getListChaptersComic(comicId)
+            }
+
+            override fun saveCallResult(item: List<ChapterModel>) {
+                if (item.isNotEmpty()) {
+                    item.map {
+                        it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
+                        it.comicId = comicId
+                        it.lastModified = System.currentTimeMillis()
+                    }
+                    db.chapterDao().insertListChapter(item)
                 }
             }
         }
