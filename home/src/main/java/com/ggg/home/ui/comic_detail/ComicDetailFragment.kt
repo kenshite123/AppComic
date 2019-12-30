@@ -1,10 +1,13 @@
 package com.ggg.home.ui.comic_detail
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -186,14 +189,8 @@ class ComicDetailFragment : HomeBaseFragment() {
 
         btnFollow.setOnClickListener {
             if (isFollow) {
-                isFollow = false
-                btnFollow.setText(R.string.TEXT_FOLLOW)
-                btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
                 unFavoriteComic()
             } else {
-                isFollow = true
-                btnFollow.setText(R.string.TEXT_UNFOLLOW)
-                btnFollow.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 favoriteComic()
             }
         }
@@ -276,11 +273,29 @@ class ComicDetailFragment : HomeBaseFragment() {
         })
 
         viewModel.favoriteComicResult.observe(this, Observer {
-//            loading(it)
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                isFollow = true
+                btnFollow.setText(R.string.TEXT_UNFOLLOW)
+                btnFollow.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+            } else {
+                it.message?.let {
+                    showDialog(it)
+                }
+            }
         })
 
         viewModel.unFavoriteComicResult.observe(this, Observer {
-//            loading(it)
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                isFollow = false
+                btnFollow.setText(R.string.TEXT_FOLLOW)
+                btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
+            } else {
+                it.message?.let {
+                    showDialog(it)
+                }
+            }
         })
     }
 
@@ -356,9 +371,20 @@ class ComicDetailFragment : HomeBaseFragment() {
             )
 
             viewModel.favoriteComic(data)
+        } else {
+            showConfirmDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_FOLLOW_COMIC,
+                    R.string.TEXT_CANCEL, DialogInterface.OnClickListener { dialogInterface, _ -> dialogInterface.dismiss() },
+                    R.string.TEXT_REGISTER, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                dialogInterface.dismiss()
+                navigationController.showRegister()
+            }},
+                    R.string.TEXT_LOGIN, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                dialogInterface.dismiss()
+                navigationController.showLogin()
+            }})
         }
 
-        GGGAppInterface.gggApp.addComicToFavorite(comicWithCategoryModel.comicModel!!.id)
+//        GGGAppInterface.gggApp.addComicToFavorite(comicWithCategoryModel.comicModel!!.id)
     }
 
     private fun unFavoriteComic() {
@@ -371,9 +397,20 @@ class ComicDetailFragment : HomeBaseFragment() {
             )
 
             viewModel.unFavoriteComic(data)
+        } else {
+            showConfirmDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_UNFOLLOW_COMIC,
+                    R.string.TEXT_CANCEL, DialogInterface.OnClickListener { dialogInterface, _ -> dialogInterface.dismiss() },
+                    R.string.TEXT_REGISTER, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                dialogInterface.dismiss()
+                navigationController.showRegister()
+            }},
+                    R.string.TEXT_LOGIN, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                dialogInterface.dismiss()
+                navigationController.showLogin()
+            }})
         }
 
-        GGGAppInterface.gggApp.removeComicToFavorite(comicWithCategoryModel.comicModel!!.id)
+//        GGGAppInterface.gggApp.removeComicToFavorite(comicWithCategoryModel.comicModel!!.id)
     }
 
     override fun onResume() {

@@ -138,13 +138,23 @@ class CommentFragment : HomeBaseFragment() {
         }
 
         if (loginResponse == null) {
-            showConfirmDialog(StringUtil.getString(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT),
-                    StringUtil.getString(R.string.TEXT_REGISTER), DialogInterface.OnClickListener { dialogInterface, _ ->
+            showConfirmDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT,
+                    R.string.TEXT_CANCEL, DialogInterface.OnClickListener { dialogInterface, _ -> dialogInterface.dismiss() },
+                    R.string.TEXT_REGISTER, DialogInterface.OnClickListener { dialogInterface, _ -> run {
                 dialogInterface.dismiss()
                 navigationController.showRegister()
-            }, "OK", DialogInterface.OnClickListener { dialogInterface, _ ->
+            }},
+                    R.string.TEXT_LOGIN, DialogInterface.OnClickListener { dialogInterface, _ -> run {
                 dialogInterface.dismiss()
-            })
+                navigationController.showLogin()
+            }})
+//            showConfirmDialog(StringUtil.getString(R.string.TEXT_ERROR_NO_LOGIN_TO_COMMENT),
+//                    StringUtil.getString(R.string.TEXT_REGISTER), DialogInterface.OnClickListener { dialogInterface, _ ->
+//                dialogInterface.dismiss()
+//                navigationController.showRegister()
+//            }, "OK", DialogInterface.OnClickListener { dialogInterface, _ ->
+//                dialogInterface.dismiss()
+//            })
             return false
         }
 

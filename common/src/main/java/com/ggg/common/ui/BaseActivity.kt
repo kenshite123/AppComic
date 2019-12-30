@@ -102,14 +102,43 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
         return showConfirmDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), message, leftBtn, leftClick, rightBtn, rightClick)
     }
 
-    fun showConfirmDialog(title: String, message: String,
-                          leftBtn: String, leftClick: DialogInterface.OnClickListener,
-                          rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
+    private fun showConfirmDialog(title: String, message: String,
+                                  leftBtn: String, leftClick: DialogInterface.OnClickListener,
+                                  rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(rightBtn, rightClick)
         builder.setNegativeButton(leftBtn, leftClick)
+        builder.setCancelable(false)
+
+        val dialog = builder.create()
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+
+        return dialog
+    }
+
+    fun showConfirmDialog(message: String,
+                          leftBtn: String, leftClick: DialogInterface.OnClickListener,
+                          centerBtn: String, centerClick: DialogInterface.OnClickListener,
+                          rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
+        return showConfirmDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), message, leftBtn, leftClick,
+                centerBtn, centerClick, rightBtn, rightClick)
+    }
+
+    private fun showConfirmDialog(title: String, message: String,
+                                  leftBtn: String, leftClick: DialogInterface.OnClickListener,
+                                  centerBtn: String, centerClick: DialogInterface.OnClickListener,
+                                  rightBtn: String, rightClick: DialogInterface.OnClickListener): Dialog {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setNeutralButton(leftBtn, leftClick)
+        builder.setNegativeButton(centerBtn, centerClick)
+        builder.setPositiveButton(rightBtn, rightClick)
         builder.setCancelable(false)
 
         val dialog = builder.create()

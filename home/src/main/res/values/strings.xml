@@ -76,6 +76,8 @@
     <string name="TEXT_HINT_EDITTEXT_COMMENT">Share your mind ...</string>
     <string name="TEXT_ERROR_NO_CONTENT_YET">No content yet</string>
     <string name="TEXT_ERROR_NO_LOGIN_TO_COMMENT">You need login first before write comment</string>
+    <string name="TEXT_ERROR_NO_LOGIN_TO_FOLLOW_COMIC">You need login first before follow comic</string>
+    <string name="TEXT_ERROR_NO_LOGIN_TO_UNFOLLOW_COMIC">You need login first before unfollow comic</string>
     <string name="TEXT_ERROR_NO_CONNECTION">Connection has been lost. Please check your connection.</string>
     <string name="TEXT_READ_NOW">Read Now</string>
     <string name="TEXT_MY_COMMENT">My comment</string>
@@ -84,4 +86,5 @@
     <string name="TEXT_OLDEST">Oldest</string>
     <string name="TEXT_LATEST">Latest</string>
     <string name="TEXT_CONFIRM_LOGOUT">Do you want to logout?</string>
+    <string name="TEXT_CANCEL">Cancel</string>
 </resources>

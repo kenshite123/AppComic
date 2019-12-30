@@ -107,6 +107,28 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         }
     }
 
+    fun showConfirmDialog(messageId: Int,
+                          leftBtnId: Int, leftClick: DialogInterface.OnClickListener,
+                          centerBtn: Int, centerClick: DialogInterface.OnClickListener,
+                          rightBtnId: Int, rightClick: DialogInterface.OnClickListener) {
+        showConfirmDialog(StringUtil.getString(messageId),
+                StringUtil.getString(leftBtnId), leftClick,
+                StringUtil.getString(centerBtn), centerClick,
+                StringUtil.getString(rightBtnId), rightClick)
+    }
+
+    private fun showConfirmDialog(message: String,
+                                  leftBtn: String, leftClick: DialogInterface.OnClickListener,
+                                  centerBtn: String, centerClick: DialogInterface.OnClickListener,
+                                  rightBtn: String, rightClick: DialogInterface.OnClickListener) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showConfirmDialog(message,
+                    leftBtn, leftClick,
+                    centerBtn, centerClick,
+                    rightBtn, rightClick)
+        }
+    }
+
     fun showDialog(id: Int) {
         showDialog(StringUtil.getString(R.string.TEXT_ANNOUNCE), StringUtil.getString(id))
     }

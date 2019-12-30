@@ -20,7 +20,8 @@ import com.ggg.home.ui.main.HomeBaseFragment
 import io.vrinda.kotlinpermissions.DeviceInfo.Companion.getPackageName
 import kotlinx.android.synthetic.main.fragment_user.*
 import timber.log.Timber
-
+import java.lang.StringBuilder
+import java.util.LinkedHashSet
 
 class UserFragment : HomeBaseFragment() {
     private lateinit var viewModel: UserViewModel
@@ -87,6 +88,7 @@ class UserFragment : HomeBaseFragment() {
                 showDialog(R.string.TEXT_LOG_OUT_SUCCESS)
                 this.loginResponse = null
                 GGGAppInterface.gggApp.loginResponse = null
+                GGGAppInterface.gggApp.clearListComicFavorite()
                 updateUI()
 //            } else if (it.status == Status.ERROR) {
 //                showDialog(it.message.toString())
@@ -140,7 +142,7 @@ class UserFragment : HomeBaseFragment() {
         }
 
         llFeedback.setOnClickListener {
-            goToStore()
+            sendEmail()
         }
 
         llShareApp.setOnClickListener {
@@ -187,5 +189,63 @@ class UserFragment : HomeBaseFragment() {
     override fun onPause() {
         super.onPause()
         Timber.d("onPause")
+    }
+
+    private fun sendEmail() {
+        val to = "heavenmanga2017@gmail.com"
+        val subject = "Contact ${getString(R.string.app_name)}"
+        val body = "Your feedback will help us make your experience better. Let us know what you think: <br/> <br/> <br/> <br/>" +
+                        "--------- <br/> Feedback from Heaven Toon"
+        val intent = build(to,subject, body)
+        startActivity(intent)
+    }
+
+    fun build(to: String, subject: String, body: String): Intent {
+        val mailtoUri = constructMailtoUri(to, subject, body)
+        return Intent(Intent.ACTION_SENDTO, mailtoUri)
+    }
+
+    private fun constructMailtoUri(to: String, subject: String, body: String): Uri {
+        val mailto = StringBuilder(1024)
+        mailto.append("mailto:")
+        val tos = LinkedHashSet<String>()
+        tos.add(to)
+        addRecipients(mailto, tos)
+
+        var hasQueryParameters = false
+        hasQueryParameters = addQueryParameter(mailto, "subject", subject, hasQueryParameters)
+        addQueryParameter(mailto, "body", body, hasQueryParameters)
+
+        return Uri.parse(mailto.toString())
+    }
+
+    private fun addRecipients(mailto: StringBuilder, recipients: Set<String>) {
+        if (recipients.isEmpty()) {
+            return
+        }
+
+        for (recipient in recipients) {
+            mailto.append(encodeRecipient(recipient))
+            mailto.append(',')
+        }
+
+        mailto.setLength(mailto.length - 1)
+    }
+
+    private fun encodeRecipient(recipient: String): String {
+        val index = recipient.lastIndexOf('@')
+        val localPart = recipient.substring(0, index)
+        val host = recipient.substring(index + 1)
+        return Uri.encode(localPart) + "@" + Uri.encode(host)
+    }
+
+    private fun addQueryParameter(mailto: StringBuilder, field: String, value: String?, hasQueryParameters: Boolean): Boolean {
+        if (value == null) {
+            return hasQueryParameters
+        }
+
+        mailto.append(if (hasQueryParameters) '&' else '?').append(field).append('=').append(Uri.encode(value))
+
+        return true
     }
 }
