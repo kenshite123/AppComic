@@ -17,8 +17,8 @@ abstract class ComicDao {
     abstract fun getListLatestUpdate(limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
-    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId = :categoryId and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') GROUP BY comic.id ORDER BY comic.id DESC limit :limit offset :offset")
-    abstract fun getListComicByCategory(categoryId: Long, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') GROUP BY comic.id ORDER BY comic.id DESC limit :limit offset :offset")
+    abstract fun getListComicByCategory(listCategoryId: List<Long>, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertComic(comic: ComicModel)
@@ -44,4 +44,20 @@ abstract class ComicDao {
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 /*and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '')*/ and comic.id in (:data) GROUP BY comic.id ORDER BY comic.lastModified DESC")
     abstract fun getListComicFollow(data: List<String>) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) DESC limit :limit offset :offset")
+    abstract fun getAllListComic(listCategoryId: List<Long>, status: String, type: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) DESC limit :limit offset :offset")
+    abstract fun getAllListComic(status: String, type: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListLatestUpdateByFilter(listCategoryId: List<Long>, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListLatestUpdateByFilter(status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 }

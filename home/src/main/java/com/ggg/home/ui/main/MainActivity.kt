@@ -13,6 +13,7 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
@@ -87,7 +88,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                             bottomNavView.selectedItemId = R.id.navHome
                         }
 
-                        CategoryFragment.TAG -> {
+                        CategoryAndLatestUpdateFragment.TAG -> {
                             bottomNavView.selectedItemId = R.id.navCategory
                         }
 
@@ -154,8 +155,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
                 R.id.navCategory -> {
                     fragNavController.currentFrag?.let {
-                        if (it::class.java.simpleName != CategoryFragment.TAG) {
-                            navigationController.showCategory()
+                        if (it::class.java.simpleName != CategoryAndLatestUpdateFragment.TAG) {
+                            navigationController.showCategoryAndLatestUpdate()
                         }
                     }
                     true

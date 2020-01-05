@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import java.io.Serializable
 
-
 class ComicWithCategoryModel : Serializable {
     @Embedded
     var comicModel: ComicModel? = null

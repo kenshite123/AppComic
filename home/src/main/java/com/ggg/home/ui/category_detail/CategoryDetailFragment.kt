@@ -146,8 +146,9 @@ class CategoryDetailFragment : HomeBaseFragment() {
     }
 
     private fun loadData() {
+        val listCategoryId = listOf(this.categoryModel.categoryId)
         val data = hashMapOf(
-                "categoryId" to this.categoryModel.categoryId,
+                "listCategoryId" to listCategoryId,
                 "limit" to items,
                 "offset" to page
         )
@@ -156,7 +157,7 @@ class CategoryDetailFragment : HomeBaseFragment() {
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
-            Constant.ACTION_CLICK_ON_COMIC -> {
+            Constant.ACTION_CLICK_ON_COMIC_WITH_CATEGORY_MODEL -> {
                 val comicWithCategoryModel = data as ComicWithCategoryModel
                 navigationController.showComicDetail(comicWithCategoryModel)
             }

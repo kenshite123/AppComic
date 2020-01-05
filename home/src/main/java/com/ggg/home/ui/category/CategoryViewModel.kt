@@ -15,7 +15,7 @@ class CategoryViewModel @Inject constructor(private val categoryRepository: Cate
     private val requestGetAllListCategories: MutableLiveData<Boolean> = MutableLiveData()
     var getAllListCategoriesResult: LiveData<Resource<List<CategoryModel>>>
 
-    private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Long>> = MutableLiveData()
+    private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
     var getListComicByCategoryResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
     private val requestGetListComicByKeyWords: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
@@ -39,7 +39,7 @@ class CategoryViewModel @Inject constructor(private val categoryRepository: Cate
         requestGetAllListCategories.value = true
     }
 
-    fun getListComicByCategory(data: HashMap<String, Long>) {
+    fun getListComicByCategory(data: HashMap<String, Any>) {
         requestGetListComicByCategory.value = data
     }
 

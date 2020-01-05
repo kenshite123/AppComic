@@ -14,10 +14,10 @@ import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
+import com.ggg.home.utils.Constant
 import javax.inject.Inject
 
-class CategoryRepository {
-
+class CategoryAndLatestUpdateRepository {
     private val executor: AppExecutors
     private var api: HomeService
     private var retrofit: HomeRetrofitProvider
@@ -54,29 +54,49 @@ class CategoryRepository {
         return callApi.asLiveData()
     }
 
-    fun getListComicByCategory(data: HashMap<String, Any>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+    fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                return api.getLatestUpdate(data["limit"]!!, data["offset"]!!)
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+            }
+        }
+        return callApi.asLiveData()
+    }
+
+    fun getAllListComicByFilter(data: HashMap<String, Any>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+        val listCategoryId = data["listCategoryId"] as List<Long>
+        val status = data["status"] as String
+        val type = data["type"] as String
+        val limit = data["limit"] as Int
+        val offset = data["offset"] as Int
+
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                val limit = data["limit"]!! as Long
-                val offset = data["offset"]!! as Long * limit
-
-                return db.comicDao().getListComicByCategory(
-                        data["listCategoryId"] as List<Long>,
-                        limit.toInt(),
-                        offset.toInt()
-                )
+                return if (listCategoryId.isNotEmpty() && listCategoryId.count() == 1 && listCategoryId[0] == -1L) {
+                    if (type == Constant.FILTER_COMIC_TYPE_UPDATED) {
+                        db.comicDao().getListLatestUpdateByFilter(status, limit, offset)
+                    } else {
+                        db.comicDao().getAllListComic(status, type, limit, offset)
+                    }
+                } else {
+                    if (type == Constant.FILTER_COMIC_TYPE_UPDATED) {
+                        db.comicDao().getListLatestUpdateByFilter(listCategoryId, status, limit, offset)
+                    } else {
+                        db.comicDao().getAllListComic(listCategoryId, status, type, limit, offset)
+                    }
+                }
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
-                return api.getListComicByCategory(
-                        data["listCategoryId"] as List<Long>,
-                        (data["limit"] as Long).toInt(),
-                        (data["offset"] as Long).toInt()
-                )
+                return api.getAllListComicByFilter(listCategoryId, status, type, limit, offset)
             }
 
             override fun saveCallResult(item: List<ComicModel>) {
                 if (item.isNotEmpty()) {
+                    db.comicDao().updateClearListBanners()
                     item.forEach { comicModel ->
                         run {
                             comicModel.categories.forEach {
@@ -97,26 +117,6 @@ class CategoryRepository {
             override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
                 return true
             }
-        }
-        return callApi.asLiveData()
-    }
-
-    fun getListComicByKeyWords(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
-        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
-
-
-            override fun createCall():  LiveData<ApiResponse<List<ComicModel>>> {
-                return api.getListComicByKeyWords(
-                        data["keywords"] as String,
-                        (data["limit"] as Long).toInt(),
-                        (data["offset"] as Long).toInt()
-                )
-            }
-
-            override fun saveCallResult(item: List<ComicModel>) {
-
-            }
-
         }
         return callApi.asLiveData()
     }

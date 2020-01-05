@@ -10,7 +10,7 @@ import com.ggg.home.repository.CategoryDetailRepository
 import javax.inject.Inject
 
 class CategoryDetailViewModel @Inject constructor(private val categoryDetailRepository: CategoryDetailRepository) : ViewModel() {
-    private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Long>> = MutableLiveData()
+    private val requestGetListComicByCategory: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
     var getListComicByCategoryResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
     init {
@@ -19,7 +19,7 @@ class CategoryDetailViewModel @Inject constructor(private val categoryDetailRepo
         }
     }
 
-    fun getListComicByCategory(data: HashMap<String, Long>) {
+    fun getListComicByCategory(data: HashMap<String, Any>) {
         requestGetListComicByCategory.value = data
     }
 }

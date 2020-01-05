@@ -182,7 +182,7 @@ class CategoryFragment : HomeBaseFragment() {
                 }
             }
 
-            Constant.ACTION_CLICK_ON_COMIC -> {
+            Constant.ACTION_CLICK_ON_COMIC_WITH_CATEGORY_MODEL -> {
                 val comicWithCategoryModel = data as ComicWithCategoryModel
                 navigationController.showComicDetail(comicWithCategoryModel)
             }
@@ -194,8 +194,9 @@ class CategoryFragment : HomeBaseFragment() {
     }
 
     private fun loadListComicByCategory() {
+        val listCategoryId = listOf(listCategories[positionOfCategorySelected].id)
         val data = hashMapOf(
-                "categoryId" to this.listCategories[positionOfCategorySelected].id,
+                "listCategoryId" to listCategoryId,
                 "limit" to items,
                 "offset" to page
         )

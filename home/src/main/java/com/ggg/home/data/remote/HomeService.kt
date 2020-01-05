@@ -41,7 +41,7 @@ interface HomeService {
 
     @GET(ServerPath.LIST_COMIC)
     fun getListComicByCategory(
-            @Query("category") categoryId: Long,
+            @Query("category") listCategoryId: List<Long>,
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
@@ -151,4 +151,13 @@ interface HomeService {
             @Path("comicId") comicId: Long,
             @Path("chapterId") chapterId: Long
     ) : LiveData<ApiResponse<List<String>>>
+
+    @GET(ServerPath.LIST_COMIC)
+    fun getAllListComicByFilter(
+            @Query("category") listCategoryId: List<Long>,
+            @Query("status") status: String,
+            @Query("type") type: String,
+            @Query("items") limit: Int,
+            @Query("page") offset: Int
+    ) : LiveData<ApiResponse<List<ComicModel>>>
 }

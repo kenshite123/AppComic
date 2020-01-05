@@ -72,6 +72,7 @@
     <string name="TEXT_RANK_WEEK">Top Week</string>
     <string name="TEXT_RANK_MONTH">Top Month</string>
     <string name="TEXT_RANK_ALL">All</string>
+    <string name="TEXT_ALL">All</string>
     <string name="TEXT_SEND">Send</string>
     <string name="TEXT_HINT_EDITTEXT_COMMENT">Share your mind ...</string>
     <string name="TEXT_ERROR_NO_CONTENT_YET">No content yet</string>
@@ -87,4 +88,7 @@
     <string name="TEXT_LATEST">Latest</string>
     <string name="TEXT_CONFIRM_LOGOUT">Do you want to logout?</string>
     <string name="TEXT_CANCEL">Cancel</string>
+    <string name="TEXT_STATUS">Status</string>
+    <string name="TEXT_TYPE">Type</string>
+    <string name="TEXT_SORT_BY">Sort by</string>
 </resources>

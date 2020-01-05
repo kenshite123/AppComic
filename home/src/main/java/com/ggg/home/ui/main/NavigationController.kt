@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import com.ggg.home.R
 import com.ggg.home.data.model.*
 import com.ggg.home.ui.category.CategoryFragment
+import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
@@ -37,6 +38,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
 
     fun showCategory(){
         val fragment = CategoryFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showCategoryAndLatestUpdate() {
+        val fragment = CategoryAndLatestUpdateFragment.create()
         fragNavController.pushFragment(fragment)
     }
 

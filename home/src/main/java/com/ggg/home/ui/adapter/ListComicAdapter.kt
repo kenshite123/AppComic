@@ -90,7 +90,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
             itemViewHolder.tvChap.text = comic.latestChapter
 
             itemViewHolder.ivComic.setOnClickListener {
-                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, it, comicWithCategoryModel)
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_WITH_CATEGORY_MODEL, it, comicWithCategoryModel)
             }
         }
 

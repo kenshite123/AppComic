@@ -3,6 +3,7 @@ package com.ggg.home.di
 import androidx.lifecycle.ViewModel
 import com.ggg.common.di.ViewModelKey
 import com.ggg.home.ui.category.CategoryViewModel
+import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateViewModel
 import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.change_password.ChangePassWordViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
@@ -116,4 +117,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(CommentOfChapViewModel::class)
     abstract fun bindCommentOfChapViewModel(commentOfChapViewModel: CommentOfChapViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoryAndLatestUpdateViewModel::class)
+    abstract fun bindCategoryAndLatestUpdateViewModel(categoryAndLatestUpdateViewModel: CategoryAndLatestUpdateViewModel): ViewModel
 }

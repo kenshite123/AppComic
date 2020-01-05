@@ -28,14 +28,14 @@ class CategoryDetailRepository {
         this.db = db
     }
 
-    fun getListComicByCategory(data: HashMap<String, Long>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+    fun getListComicByCategory(data: HashMap<String, Any>): LiveData<Resource<List<ComicWithCategoryModel>>> {
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                val limit = data["limit"]!!
-                val offset = data["offset"]!! * limit
+                val limit = data["limit"]!! as Long
+                val offset = data["offset"]!! as Long * limit
 
                 return db.comicDao().getListComicByCategory(
-                        data["categoryId"] as Long,
+                        data["listCategoryId"] as List<Long>,
                         limit.toInt(),
                         offset.toInt()
                 )
@@ -43,7 +43,7 @@ class CategoryDetailRepository {
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
                 return api.getListComicByCategory(
-                        data["categoryId"] as Long,
+                        data["listCategoryId"] as List<Long>,
                         (data["limit"] as Long).toInt(),
                         (data["offset"] as Long).toInt()
                 )

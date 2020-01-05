@@ -87,26 +87,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
                         }
                     }
                 }
-
-//                it.data?.let {
-//                    if (isFirstLoadDataApi) {
-//                        this.listComic = it
-//                        listComicAdapter.notifyDataSearch(this.listComic)
-//                    }
-//                    isLoadAllData = it.size < items
-//                }
             }
-//            loading(it)
-//            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-//                    showLoading()
-//                }
-//
-//                it.data?.let {
-//                    this.listComicLatestUpdate = it
-//                    listComicAdapter.notifyData(this.listComicLatestUpdate)
-//                }
-//            }
         })
     }
 
@@ -146,8 +127,8 @@ class LatestUpdateFragment : HomeBaseFragment() {
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_COMIC -> {
-                val conmicId = data as Long
-                navigationController.showComicDetail(conmicId.toString())
+                val comicId = data as Long
+                navigationController.showComicDetail(comicId.toString())
             }
 
             else -> super.onEvent(eventAction, control, data)
