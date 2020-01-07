@@ -28,11 +28,11 @@ import java.util.*
 class HomeFragment : HomeBaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
-    lateinit var pagerSlideAdapter: PagerSlideAdapter
-    var listBanners: List<ComicWithCategoryModel> = arrayListOf()
+    private lateinit var pagerSlideAdapter: PagerSlideAdapter
+    private var listBanners: List<ComicWithCategoryModel> = arrayListOf()
     lateinit var listComicAdapter: ListComicAdapter
     var listComicLatestUpdate: List<ComicModel> = arrayListOf()
-    val pagerSnapHelper = PagerSnapHelper()
+    private val pagerSnapHelper = PagerSnapHelper()
 
     lateinit var timer: Timer
     lateinit var timerTask: TimerTask
@@ -110,6 +110,21 @@ class HomeFragment : HomeBaseFragment() {
         rvListComic.setHasFixedSize(true)
         rvListComic.layoutManager = GridLayoutManager(context!!, 3)
         rvListComic.adapter = listComicAdapter
+
+        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            val dataLatestUpdate = hashMapOf(
+                    "limit" to 21,
+                    "offset" to 0
+            )
+            viewModel.getListLatestUpdate(dataLatestUpdate)
+        }
     }
 
     private fun initTimerToSlide() {
@@ -178,14 +193,10 @@ class HomeFragment : HomeBaseFragment() {
 
         viewModel.getListLatestUpdateResult.observe(this, androidx.lifecycle.Observer {
             loading(it)
-            if (it.status == Status.SUCCESS ) {
-//                if (it.status == Status.SUCCESS_DB && it.data.isNullOrEmpty()) {
-//                    showLoading()
-//                }
-
+            if (it.status == Status.SUCCESS) {
+                swipeRefreshLayout.isRefreshing = false
                 it.data?.let {
                     this.listComicLatestUpdate = it
-//                    this.listComicLatestUpdate = it.distinctBy { it.comicModel?.id }
                     listComicAdapter.notifyDataSearch(this.listComicLatestUpdate)
                 }
             } else if (it.status == Status.ERROR) {

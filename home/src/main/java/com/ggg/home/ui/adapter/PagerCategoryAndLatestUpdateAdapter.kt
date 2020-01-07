@@ -1,6 +1,7 @@
 package com.ggg.home.ui.adapter
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.view.CategoryFilterItemView
 import com.ggg.home.data.view.StatusTypeFilterItemView
+import com.ggg.home.ui.custom.CategoryFilterView
 import com.ggg.home.ui.custom.StatusTypeFilterView
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
@@ -40,13 +42,14 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     var isLoadAllDataCategory = false
     var currentPositionStatusSelected = 0
     var currentPositionTypeSelected = 0
-    var currentPositionCategorySelected = listOf(0)
+    var listCategoryIdSelected = listOf(-1L)
 
     var listStatusFilterItemView = listOf<StatusTypeFilterItemView>()
     var listTypeFilterItemView = listOf<StatusTypeFilterItemView>()
     var listCategoryFilterItemView = listOf<CategoryFilterItemView>()
     private var isType = false
 
+    private lateinit var categoryFilterView: CategoryFilterView
     private lateinit var statusTypeFilterView: StatusTypeFilterView
     private lateinit var ctlCategory: ConstraintLayout
     private lateinit var tvCategories: TextView
@@ -89,12 +92,12 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                                   listComicFilter: List<ComicWithCategoryModel>, isLoadAllDataCategory: Boolean) {
         this.listCategories = listCategories
         val list = mutableListOf(
-                CategoryFilterItemView(CategoryModel(), isSelected = currentPositionCategorySelected.indexOf(0) >= 0, isAll = true)
+                CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
         )
 
         for (i in 0 until listCategories.count()) {
             val categoryModel = listCategories[i]
-            list.add(CategoryFilterItemView(categoryModel, isSelected = currentPositionCategorySelected.indexOf(i + 1) >= 0, isAll = false))
+            list.add(CategoryFilterItemView(categoryModel, isSelected = listCategoryIdSelected.indexOf(categoryModel.id) >= 0, isAll = false))
         }
         this.listCategoryFilterItemView = list.toList()
 
@@ -166,6 +169,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         val gridLayoutManager = GridLayoutManager(weakContext.get(), 3)
         val listComicAdapter = ListComicAdapter(weakContext.get()!!, listener, listComicFilter)
 
+        categoryFilterView = view.findViewById(R.id.categoryFilterView)
         statusTypeFilterView = view.findViewById(R.id.statusTypeFilterView)
         ctlCategory = view.findViewById(R.id.ctlCategory)
         tvCategories = view.findViewById(R.id.tvCategories)
@@ -191,6 +195,18 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_TYPE_UPDATED, isSelected = currentPositionTypeSelected == 2, isType = true)
         )
 
+        if (listCategoryFilterItemView.isNotEmpty() && listCategoryFilterItemView[0].isSelected) {
+            tvCategories.text = "All"
+        } else {
+            val mutableList = mutableListOf<String>()
+            for (i in 0 until listCategoryFilterItemView.count()) {
+                val categoryFilterItemView = listCategoryFilterItemView[i]
+                if (categoryFilterItemView.isSelected) {
+                    mutableList.add(categoryFilterItemView.categoryModel.name)
+                }
+            }
+            tvCategories.text = TextUtils.join(",", mutableList)
+        }
         tvType.text = listTypeFilterItemView[currentPositionTypeSelected].statusType
         tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
 
@@ -230,7 +246,10 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         }
 
         ctlCategory.setOnClickListener {
-
+            categoryFilterView.visibility = View.VISIBLE
+            categoryFilterView.bringToFront()
+            categoryFilterView.setData(this, listCategoryFilterItemView)
+            categoryFilterView.reloadViews()
         }
     }
 
@@ -238,6 +257,29 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         when (eventAction) {
             Constant.ACTION_CLOSE_STATUS_TYPE_FILTER_SELECT_VIEW -> {
                 statusTypeFilterView.visibility = View.GONE
+            }
+
+            Constant.ACTION_CLOSE_CATEGORY_FILTER_SELECT_VIEW -> {
+                categoryFilterView.visibility = View.GONE
+                val listCategoryFilterView = data as List<CategoryFilterItemView>
+                if (listCategoryFilterView.isNotEmpty() && listCategoryFilterView[0].isSelected) {
+                    listCategoryIdSelected = listOf(-1L)
+                    tvCategories.text = "All"
+                } else {
+                    val mutableList = mutableListOf<String>()
+                    listCategoryIdSelected = listOf()
+                    for (i in 0 until listCategoryFilterView.count()) {
+                        val categoryFilterItemView = listCategoryFilterItemView[i]
+                        if (categoryFilterItemView.isSelected) {
+                            val list = listCategoryIdSelected.toMutableList()
+                            list.add(categoryFilterItemView.categoryModel.id)
+                            mutableList.add(categoryFilterItemView.categoryModel.name)
+                            listCategoryIdSelected = list.toList()
+                        }
+                    }
+                    tvCategories.text = TextUtils.join(", ", mutableList)
+                }
+                loadListComicFilter()
             }
 
             Constant.ACTION_CLICK_ON_ITEM_STATUS_TYPE_FILTER -> {
@@ -250,6 +292,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                         statusTypeFilterItemView.isSelected = i == currentPositionTypeSelected
                     }
                     tvType.text = listTypeFilterItemView[currentPositionTypeSelected].statusType
+                    loadListComicFilter()
                 } else {
                     this.currentPositionStatusSelected = position
                     for (i in 0 until listStatusFilterItemView.count()) {
@@ -257,18 +300,23 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                         statusTypeFilterItemView.isSelected = i == currentPositionStatusSelected
                     }
                     tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
-                    
-                    val data = hashMapOf(
-                            "isLoadMore" to false,
-                            "statusSelected" to listStatusFilterItemView[currentPositionStatusSelected].statusType,
-                            "typeSelected" to listTypeFilterItemView[currentPositionTypeSelected].statusType
-                    )
-                    listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_BY_FILTER, null, data)
+                    loadListComicFilter()
                 }
             }
 
             else -> {}
         }
+    }
+
+    fun loadListComicFilter() {
+        val dataLoadApi = hashMapOf(
+                "isLoadMore" to false,
+                "statusSelected" to listStatusFilterItemView[currentPositionStatusSelected].statusType,
+                "typeSelected" to listTypeFilterItemView[currentPositionTypeSelected].statusType,
+                "listCategoryIdSelected" to listCategoryIdSelected
+        )
+        pageCategory = 0
+        listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_BY_FILTER, null, dataLoadApi)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

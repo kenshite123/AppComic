@@ -22,6 +22,7 @@ import com.ggg.common.ui.utils.BaseSectionData
 import com.ggg.common.utils.LanguageManager
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
+import com.ggg.common.utils.Utils
 import com.ggg.common.vo.Resource
 import com.ggg.common.vo.Status
 import com.ggg.common.ws.BaseResponse
@@ -238,7 +239,8 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
         if (activity is BaseActivity){
             if (data.status == Status.LOADING) {
                 (activity as BaseActivity).showLoading()
-            }else if (data.status == Status.SUCCESS || data.status == Status.ERROR || data.status == Status.SUCCESS_DB){
+            }else if (data.status == Status.SUCCESS || data.status == Status.ERROR ||
+                    (data.status == Status.SUCCESS_DB  && !Utils.isAvailableNetwork(activity as BaseActivity))) {
                 (activity as BaseActivity).hideLoading()
             }
         }

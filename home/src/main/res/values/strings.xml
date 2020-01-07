@@ -91,4 +91,6 @@
     <string name="TEXT_STATUS">Status</string>
     <string name="TEXT_TYPE">Type</string>
     <string name="TEXT_SORT_BY">Sort by</string>
+    <string name="TEXT_DONE">Done</string>
+    <string name="TEXT_RESET">Reset</string>
 </resources>

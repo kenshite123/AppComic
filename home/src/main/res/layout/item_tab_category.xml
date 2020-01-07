@@ -176,7 +176,17 @@
 
     <include
         android:id="@+id/statusTypeFilterView"
-        layout="@layout/item_bound_status_type_filter_view"
+        layout="@layout/layout_bound_status_type_filter_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+    <include
+        android:id="@+id/categoryFilterView"
+        layout="@layout/layout_bound_category_filter_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"

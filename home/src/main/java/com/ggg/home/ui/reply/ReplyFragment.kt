@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.CommonUtils
 import com.ggg.common.utils.DateTimeUtil
-import com.ggg.common.utils.StringUtil
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CommentModel
@@ -25,7 +24,6 @@ import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListCommentAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
-import com.ggg.home.utils.Utils
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_reply.*

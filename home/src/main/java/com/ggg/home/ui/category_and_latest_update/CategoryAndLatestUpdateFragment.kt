@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
+import com.ggg.common.ui.BaseActivity
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CategoryModel
@@ -15,7 +16,7 @@ import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.PagerCategoryAndLatestUpdateAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
-import com.google.android.material.tabs.TabLayout
+import com.ggg.common.utils.Utils
 import kotlinx.android.synthetic.main.fragment_category_and_latest_update.*
 import timber.log.Timber
 
@@ -33,12 +34,13 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
 
     var listCategoryIdSelected = listOf(-1L)
     var statusSelected = Constant.FILTER_COMIC_STATUS_ALL
-    var typeSelected = Constant.FILTER_COMIC_TYPE_NEW
+    var typeSelected = Constant.FILTER_COMIC_TYPE_POPULAR
     var listCategories: List<CategoryModel> = listOf()
     private var listComicFilter = listOf<ComicWithCategoryModel>()
 
     var isLoadAllDataLatestUpdate = false
     var isLoadAllDataCategory = false
+    var isLoadMore = false
 
     companion object {
         const val TAG = "CategoryAndLatestUpdateFragment"
@@ -67,8 +69,8 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
 
         currentPagePosition = 0
         viewModel.getAllListCategories()
-        loadDataLatestUpdate(false)
         loadDataCategory()
+        loadDataLatestUpdate(false)
     }
 
     private fun initViews() {
@@ -120,11 +122,14 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                 loading(it)
             }
 
-            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+            if (it.status == Status.SUCCESS || (it.status == Status.SUCCESS_DB && !Utils.isAvailableNetwork(activity as BaseActivity)) || it.status == Status.ERROR) {
                 it.data?.let {
+                    if (!isLoadMore) {
+                        this.listComicFilter = listOf()
+                    }
+                    isLoadAllDataCategory = it.count() < 30
                     val list = this.listComicFilter.toMutableList()
                     list.addAll(it)
-                    isLoadAllDataCategory = it.count() < 30
                     this.listComicFilter = list.toList()
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(this.listCategories, this.listComicFilter,
@@ -147,11 +152,13 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                 currentPagePosition = position
                 when (position) {
                     0 -> {
+                        currentPagePosition = 0
                         pagerCategoryAndLatestUpdateAdapter.notifyDataLatestUpdate(listComicLatestUpdate,
                                 isLoadAllDataLatestUpdate)
                     }
 
                     else -> {
+                        currentPagePosition = 1
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
                                 isLoadAllDataCategory)
                     }
@@ -192,6 +199,12 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
 
             Constant.ACTION_LOAD_LIST_COMIC_BY_FILTER -> {
                 val hm = data as HashMap<String, Any>
+                pageCategory = 0
+                this.isLoadMore = hm["isLoadMore"] as Boolean
+                this.statusSelected = hm["statusSelected"] as String
+                this.typeSelected = hm["typeSelected"] as String
+                this.listCategoryIdSelected = hm["listCategoryIdSelected"] as List<Long>
+                loadDataCategory()
             }
 
             else -> super.onEvent(eventAction, control, data)

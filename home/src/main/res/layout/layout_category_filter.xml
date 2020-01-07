@@ -17,10 +17,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlInfo"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="250dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/llFooter"
         android:background="@color/white">
         <TextView
             android:id="@+id/tvTitle"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/black"
-            android:text="@string/TEXT_STATUS"
+            android:text="@string/TEXT_CATEGORY"
             android:gravity="center"
             android:textSize="20sp"
             android:lines="1"
@@ -45,7 +45,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="#f5f5f5"/>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvStatusType"
+            android:id="@+id/rvCategory"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/v2"
@@ -57,4 +57,44 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/llFooter"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/tvReset"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_btn_reset_category_filter"
+            android:gravity="center"
+            android:text="@string/TEXT_RESET"
+            android:textColor="#5f5f5f"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tvDone"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_btn_done_category_filter"
+            android:textColor="@color/white"
+            android:text="@string/TEXT_DONE"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:lines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

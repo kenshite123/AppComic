@@ -1,16 +1,13 @@
 package com.ggg.home.ui.comic_detail
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -27,7 +24,7 @@ import com.ggg.home.ui.adapter.ListCategoryComicDetailAdapter
 import com.ggg.home.ui.adapter.PagerComicDetailAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
-import com.ggg.home.utils.Utils
+import com.ggg.common.utils.Utils
 import kotlinx.android.synthetic.main.fragment_comic_detail.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber

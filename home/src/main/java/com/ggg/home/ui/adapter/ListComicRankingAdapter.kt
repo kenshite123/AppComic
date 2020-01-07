@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,11 +17,9 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.SpannableObject
 import com.ggg.home.R
-import com.ggg.home.data.model.CategoryOfComicModel
 import com.ggg.home.data.model.ComicRankWithCategoryModel
 import com.ggg.home.utils.Constant
-import com.ggg.home.utils.Utils
-import kotlinx.android.synthetic.main.fragment_comic_detail.*
+import com.ggg.common.utils.Utils
 import java.lang.ref.WeakReference
 
 class ListComicRankingAdapter : RecyclerView.Adapter<ListComicRankingAdapter.ViewHolder> {

@@ -41,6 +41,10 @@ class StatusTypeFilterView : ConstraintLayout {
         v1.setOnClickListener {
             listener.onEvent(Constant.ACTION_CLOSE_STATUS_TYPE_FILTER_SELECT_VIEW, null, null)
         }
+
+        ctlFilter.setOnClickListener {
+
+        }
     }
 
     fun reloadViews() {
