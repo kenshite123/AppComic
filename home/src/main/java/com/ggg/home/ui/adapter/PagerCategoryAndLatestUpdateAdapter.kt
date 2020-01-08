@@ -48,6 +48,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     var listTypeFilterItemView = listOf<StatusTypeFilterItemView>()
     var listCategoryFilterItemView = listOf<CategoryFilterItemView>()
     private var isType = false
+    var pastVisibleItemsCategory = 0
 
     private lateinit var categoryFilterView: CategoryFilterView
     private lateinit var statusTypeFilterView: StatusTypeFilterView
@@ -89,7 +90,8 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     }
 
     fun notifyDataListComicFilter(listCategories: List<CategoryModel>,
-                                  listComicFilter: List<ComicWithCategoryModel>, isLoadAllDataCategory: Boolean) {
+                                  listComicFilter: List<ComicWithCategoryModel>,
+                                  isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int) {
         this.listCategories = listCategories
         val list = mutableListOf(
                 CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
@@ -105,6 +107,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         if (isLoadMoreCategory) {
             isLoadMoreCategory = false
         }
+        this.pastVisibleItemsCategory = pastVisibleItemsCategory
         this.isLoadAllDataCategory = isLoadAllDataCategory
         notifyDataSetChanged()
     }
@@ -210,6 +213,8 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         tvType.text = listTypeFilterItemView[currentPositionTypeSelected].statusType
         tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
 
+        rvListComic.scrollToPosition(pastVisibleItemsCategory)
+
         rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -222,7 +227,12 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             isLoadMoreCategory = true
                             pageCategory++
-                            listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_FILTER, null, pageCategory)
+                            val hm = hashMapOf(
+                                    "isLoadMore" to true,
+                                    "pageCategory" to pageCategory,
+                                    "pastVisibleItems" to pastVisibleItems
+                            )
+                            listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_FILTER, null, hm)
                         }
                     }
                 }
@@ -299,7 +309,11 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                         val statusTypeFilterItemView = listStatusFilterItemView[i]
                         statusTypeFilterItemView.isSelected = i == currentPositionStatusSelected
                     }
-                    tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
+                    if (listStatusFilterItemView[currentPositionStatusSelected].statusType == Constant.FILTER_COMIC_STATUS_UPDATED) {
+                        tvStatus.text = "Completed"
+                    } else {
+                        tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
+                    }
                     loadListComicFilter()
                 }
             }

@@ -108,5 +108,6 @@ dependencies {
     implementation project(path: ':common')
     //CaptchaImageView
     implementation 'com.github.jineshfrancs:CaptchaImageView:1.0'
+    implementation 'com.github.adhishlal:gifloader:1.1'
 
 }

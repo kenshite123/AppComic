@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
+import com.bumptech.glide.Glide
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
@@ -17,6 +18,7 @@ import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragmen
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.home.HomeFragment
 import com.ggg.home.ui.library.LibraryFragment
+import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
@@ -67,6 +69,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
         fragNavController.rootFragments = fragments
         fragNavController.initialize(0, savedInstanceState)
+        ivLoading.setImageResource(R.drawable.loading)
+        rltLoading.bringToFront()
         initEvents()
     }
 
@@ -90,6 +94,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
                         CategoryAndLatestUpdateFragment.TAG -> {
                             bottomNavView.selectedItemId = R.id.navCategory
+                        }
+
+                        SearchFragment.TAG -> {
+                            bottomNavView.selectedItemId = R.id.navSearch
                         }
 
                         LibraryFragment.TAG -> {
@@ -142,6 +150,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
     }
 
     private fun initEvents() {
+        rltLoading.setOnClickListener {
+
+        }
+
         bottomNavView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navHome -> {
@@ -157,6 +169,15 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                     fragNavController.currentFrag?.let {
                         if (it::class.java.simpleName != CategoryAndLatestUpdateFragment.TAG) {
                             navigationController.showCategoryAndLatestUpdate()
+                        }
+                    }
+                    true
+                }
+
+                R.id.navSearch -> {
+                    fragNavController.currentFrag?.let {
+                        if (it::class.java.simpleName != SearchFragment.TAG) {
+                            navigationController.showSearch()
                         }
                     }
                     true
@@ -183,5 +204,17 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                 else -> false
             }
         }
+    }
+
+    override fun showScreenById(resourceId: Int) {
+        bottomNavView.selectedItemId = resourceId
+    }
+
+    override fun showLoading() {
+        rltLoading.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        rltLoading.visibility = View.GONE
     }
 }

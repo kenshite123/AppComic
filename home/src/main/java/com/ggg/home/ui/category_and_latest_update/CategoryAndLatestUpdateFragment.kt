@@ -40,7 +40,8 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
 
     var isLoadAllDataLatestUpdate = false
     var isLoadAllDataCategory = false
-    var isLoadMore = false
+    var isLoadMoreCategory = false
+    var pastVisibleItemsCategory = 0
 
     companion object {
         const val TAG = "CategoryAndLatestUpdateFragment"
@@ -119,12 +120,12 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
 
         viewModel.getListComicByFilterResult.observe(this, Observer {
             if (currentPagePosition == 1) {
-                loading(it)
+                loadingWithConnection(it)
             }
 
             if (it.status == Status.SUCCESS || (it.status == Status.SUCCESS_DB && !Utils.isAvailableNetwork(activity as BaseActivity)) || it.status == Status.ERROR) {
                 it.data?.let {
-                    if (!isLoadMore) {
+                    if (!isLoadMoreCategory) {
                         this.listComicFilter = listOf()
                     }
                     isLoadAllDataCategory = it.count() < 30
@@ -133,7 +134,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     this.listComicFilter = list.toList()
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(this.listCategories, this.listComicFilter,
-                                isLoadAllDataCategory)
+                                isLoadAllDataCategory, pastVisibleItemsCategory)
                     }
                 }
             }
@@ -160,7 +161,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     else -> {
                         currentPagePosition = 1
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
-                                isLoadAllDataCategory)
+                                isLoadAllDataCategory, pastVisibleItemsCategory)
                     }
                 }
             }
@@ -200,10 +201,18 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
             Constant.ACTION_LOAD_LIST_COMIC_BY_FILTER -> {
                 val hm = data as HashMap<String, Any>
                 pageCategory = 0
-                this.isLoadMore = hm["isLoadMore"] as Boolean
+                this.isLoadMoreCategory = hm["isLoadMore"] as Boolean
                 this.statusSelected = hm["statusSelected"] as String
                 this.typeSelected = hm["typeSelected"] as String
                 this.listCategoryIdSelected = hm["listCategoryIdSelected"] as List<Long>
+                loadDataCategory()
+            }
+
+            Constant.ACTION_LOAD_LIST_COMIC_FILTER -> {
+                val hm = data as HashMap<String, Any>
+                this.isLoadMoreCategory = hm["isLoadMore"] as Boolean
+                this.pageCategory = hm["pageCategory"] as Int
+                this.pastVisibleItemsCategory = hm["pastVisibleItems"] as Int
                 loadDataCategory()
             }
 

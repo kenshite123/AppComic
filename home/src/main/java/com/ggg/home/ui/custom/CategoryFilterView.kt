@@ -80,7 +80,7 @@ class CategoryFilterView: ConstraintLayout, OnEventControlListener {
                     val categoryFilterItemView = listCategoryFilterView[position]
                     categoryFilterItemView.isSelected = !categoryFilterItemView.isSelected
 
-                    val list = listCategoryFilterView.filter { it.isSelected == true }
+                    val list = listCategoryFilterView.filter { it.isSelected }
                     if (list.isEmpty()) {
                         resetCategorySelected()
                     }

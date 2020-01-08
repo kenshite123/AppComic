@@ -11,6 +11,11 @@
         android:title="@string/TEXT_CATEGORY" />
 
     <item
+        android:id="@+id/navSearch"
+        android:icon="@drawable/icon_search_black"
+        android:title="@string/TEXT_SEARCH" />
+
+    <item
         android:id="@+id/navLib"
         android:icon="@drawable/icon_library"
         android:title="@string/TEXT_LIBRARY" />

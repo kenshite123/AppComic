@@ -71,10 +71,10 @@ class CategoryAndLatestUpdateRepository {
         val status = data["status"] as String
         val type = data["type"] as String
         val limit = data["limit"] as Int
-        val offset = data["offset"] as Int
 
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
+                val offset = data["offset"] as Int * limit
                 return if (listCategoryId.isNotEmpty() && listCategoryId.count() == 1 && listCategoryId[0] == -1L) {
                     if (type == Constant.FILTER_COMIC_TYPE_UPDATED) {
                         db.comicDao().getListLatestUpdateByFilter(status, limit, offset)
@@ -91,6 +91,7 @@ class CategoryAndLatestUpdateRepository {
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                val offset = data["offset"] as Int
                 return api.getAllListComicByFilter(listCategoryId, status, type, limit, offset)
             }
 

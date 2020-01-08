@@ -17,6 +17,7 @@ class ListStatusTypeFilterAdapter : RecyclerView.Adapter<ListStatusTypeFilterAda
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     lateinit var listStatusTypeFilterItemView: List<StatusTypeFilterItemView>
+    var isType = false
 
     constructor(context: Context, listener: OnEventControlListener, listStatusTypeFilterItemView: List<StatusTypeFilterItemView>) {
         this.weakContext = WeakReference(context)
@@ -24,8 +25,9 @@ class ListStatusTypeFilterAdapter : RecyclerView.Adapter<ListStatusTypeFilterAda
         this.listStatusTypeFilterItemView = listStatusTypeFilterItemView
     }
 
-    fun notifyData(listStatusTypeFilterItemView: List<StatusTypeFilterItemView>) {
+    fun notifyData(listStatusTypeFilterItemView: List<StatusTypeFilterItemView>, isType: Boolean) {
         this.listStatusTypeFilterItemView = listStatusTypeFilterItemView
+        this.isType = isType
         notifyDataSetChanged()
     }
 
@@ -40,7 +42,11 @@ class ListStatusTypeFilterAdapter : RecyclerView.Adapter<ListStatusTypeFilterAda
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val statusTypeFilterItemView = listStatusTypeFilterItemView[position]
-        holder.tvStatusType.text = statusTypeFilterItemView.statusType
+        if (statusTypeFilterItemView.statusType == Constant.FILTER_COMIC_STATUS_UPDATED && !isType) {
+            holder.tvStatusType.text = "Completed"
+        } else {
+            holder.tvStatusType.text = statusTypeFilterItemView.statusType
+        }
         if (statusTypeFilterItemView.isSelected) {
             holder.tvStatusType.setBackgroundResource(R.drawable.bg_item_filter_selected)
             holder.tvStatusType.setTextColor(Color.parseColor("#128bff"))

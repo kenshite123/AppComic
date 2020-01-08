@@ -60,20 +60,22 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
         super.onCreate(savedInstanceState)
         dialog = SpotsDialog.Builder()
                 .setContext(this)
+                .setMessage(" ")
                 .setCancelable(false)
                 .build()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        dialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
 
     }
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         dialog = SpotsDialog.Builder()
                 .setContext(this)
+                .setMessage(" ")
                 .setCancelable(false)
                 .build()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        dialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     fun showActionBar() {
@@ -170,11 +172,11 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
         dialog.show()
     }
 
-    fun showLoading(){
-        if (!dialog.isShowing) {
-            dialog.show()
-        }
-    }
+//    fun showLoading(){
+//        if (!dialog.isShowing) {
+//            dialog.show()
+//        }
+//    }
 
 //    fun requestPermisson(arrays: Array<String>, callBack: PermissionCallBack) {
 //        requestPermissions(arrays, object: io.vrinda.kotlinpermissions.PermissionCallBack{
@@ -196,11 +198,11 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
         super.onDestroy()
         dialog.dismiss()
     }
-    fun hideLoading(){
-        if (dialog.isShowing) {
-            dialog.dismiss()
-        }
-    }
+//    fun hideLoading(){
+//        if (dialog.isShowing) {
+//            dialog.dismiss()
+//        }
+//    }
     fun initAdapter(recycleListView: RecyclerView, listData: MutableLiveData<List<BaseSectionData>>, isHideDevice: Boolean = false, orientation:Int = RecyclerView.VERTICAL) {
         val adapter = BaseCellAdapter(this)
         val linearLayoutManager = LinearLayoutManager(this, orientation, false)
@@ -233,4 +235,9 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
 
     open fun hideBottomNavView() {
     }
+
+    open fun showScreenById(resourceId: Int) {}
+
+    open fun showLoading() {}
+    open fun hideLoading() {}
 }

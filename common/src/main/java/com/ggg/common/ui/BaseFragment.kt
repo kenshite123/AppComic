@@ -235,7 +235,18 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
             (activity as BaseActivity).hideLoading()
         }
     }
+
     fun <T> loading(data: Resource<T>){
+        if (activity is BaseActivity){
+            if (data.status == Status.LOADING) {
+                (activity as BaseActivity).showLoading()
+            } else if (data.status == Status.SUCCESS || data.status == Status.ERROR || data.status == Status.SUCCESS_DB) {
+                (activity as BaseActivity).hideLoading()
+            }
+        }
+    }
+
+    fun <T> loadingWithConnection(data: Resource<T>){
         if (activity is BaseActivity){
             if (data.status == Status.LOADING) {
                 (activity as BaseActivity).showLoading()
@@ -369,6 +380,12 @@ open class BaseFragment: Fragment(), Injectable, BaseCellAdapter.ItemCellClickLi
     }
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
+    }
+
+    fun showScreenById(resourceId: Int) {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showScreenById(resourceId)
+        }
     }
     //endregion
 }

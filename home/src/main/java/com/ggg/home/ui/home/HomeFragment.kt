@@ -213,7 +213,7 @@ class HomeFragment : HomeBaseFragment() {
         }
 
         ivLatestUpdate.setOnClickListener {
-            navigationController.showLatestUpdate()
+            showScreenById(R.id.navCategory)
         }
 
         ivFavorite.setOnClickListener {
@@ -221,7 +221,7 @@ class HomeFragment : HomeBaseFragment() {
         }
 
         ivSearch.setOnClickListener {
-            navigationController.showSearch()
+            showScreenById(R.id.navSearch)
         }
     }
 
@@ -234,8 +234,8 @@ class HomeFragment : HomeBaseFragment() {
             }
 
             Constant.ACTION_CLICK_ON_COMIC -> {
-                val conmicId = data as Long
-                navigationController.showComicDetail(conmicId.toString())
+                val comicId = data as Long
+                navigationController.showComicDetail(comicId.toString())
             }
 
             else -> {

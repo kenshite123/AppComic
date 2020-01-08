@@ -58,6 +58,6 @@ class StatusTypeFilterView : ConstraintLayout {
         } else {
             tvTitle.text = mContext.get()!!.getString(R.string.TEXT_STATUS)
         }
-        listStatusTypeFilterAdapter.notifyData(listStatusTypeFilterItemView)
+        listStatusTypeFilterAdapter.notifyData(listStatusTypeFilterItemView, isType)
     }
 }
