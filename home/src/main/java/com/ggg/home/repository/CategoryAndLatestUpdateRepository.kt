@@ -121,4 +121,22 @@ class CategoryAndLatestUpdateRepository {
         }
         return callApi.asLiveData()
     }
+
+    fun getListLatestUpdateWithFilter(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                val listCategoryId = data["listCategoryId"] as List<Long>
+                val status = data["status"] as String
+                val type = data["type"] as String
+                val limit = data["limit"] as Int
+                val offset = data["offset"] as Int
+
+                return api.getAllListComicByFilter(listCategoryId, status, type, limit, offset)
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+            }
+        }
+        return callApi.asLiveData()
+    }
 }

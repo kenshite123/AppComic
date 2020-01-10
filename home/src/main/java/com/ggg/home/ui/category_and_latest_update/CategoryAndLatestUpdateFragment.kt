@@ -37,11 +37,13 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
     var typeSelected = Constant.FILTER_COMIC_TYPE_POPULAR
     var listCategories: List<CategoryModel> = listOf()
     private var listComicFilter = listOf<ComicWithCategoryModel>()
+    private var listLatestUpdateFilter = listOf<ComicModel>()
 
     var isLoadAllDataLatestUpdate = false
     var isLoadAllDataCategory = false
     var isLoadMoreCategory = false
     var pastVisibleItemsCategory = 0
+    var pastVisibleItemsLatestUpdate = 0
 
     companion object {
         const val TAG = "CategoryAndLatestUpdateFragment"
@@ -108,7 +110,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     this.listComicLatestUpdate = list.toList()
                     if (currentPagePosition == 0) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataLatestUpdate(this.listComicLatestUpdate,
-                                isLoadAllDataLatestUpdate)
+                                isLoadAllDataLatestUpdate, pastVisibleItemsLatestUpdate)
                     }
                 }
             } else if (it.status == Status.ERROR) {
@@ -139,6 +141,36 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                 }
             }
         })
+
+        viewModel.getListLatestUpdateWithFilterResult.observe(this, Observer {
+            if (currentPagePosition == 1) {
+                loading(it)
+            }
+
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    if (!isLoadMoreCategory) {
+                        this.listLatestUpdateFilter = listOf()
+                    }
+                    isLoadAllDataCategory = it.count() < 30
+                    val list = this.listLatestUpdateFilter.toMutableList()
+                    list.addAll(it)
+                    this.listLatestUpdateFilter = list.toList()
+                    if (currentPagePosition == 1) {
+                        pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(this.listCategories, this.listLatestUpdateFilter,
+                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                    }
+                }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                    if (currentPagePosition == 1) {
+                        pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(this.listCategories, listOf(),
+                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                    }
+                }
+            }
+        })
     }
 
     override fun initEvent() {
@@ -155,13 +187,18 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     0 -> {
                         currentPagePosition = 0
                         pagerCategoryAndLatestUpdateAdapter.notifyDataLatestUpdate(listComicLatestUpdate,
-                                isLoadAllDataLatestUpdate)
+                                isLoadAllDataLatestUpdate, pastVisibleItemsLatestUpdate)
                     }
 
                     else -> {
                         currentPagePosition = 1
-                        pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
-                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                        if (typeSelected == Constant.FILTER_COMIC_TYPE_UPDATED) {
+                            pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(listCategories, listLatestUpdateFilter,
+                                    isLoadAllDataCategory, pastVisibleItemsCategory)
+                        } else {
+                            pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
+                                    isLoadAllDataCategory, pastVisibleItemsCategory)
+                        }
                     }
                 }
             }
@@ -183,8 +220,9 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
             }
 
             Constant.ACTION_LOAD_LIST_COMIC_LATEST_UPDATE -> {
-                val page = data as Int
-                this.pageLatestUpdate = page
+                val hm = data as HashMap<String, Any>
+                this.pageLatestUpdate = hm["pageLatestUpdate"] as Int
+                this.pastVisibleItemsLatestUpdate = hm["pastVisibleItemsLatestUpdate"] as Int
                 loadDataLatestUpdate(false)
             }
 
@@ -240,6 +278,10 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                 "limit" to 30,
                 "offset" to pageCategory
         )
-        viewModel.getAllListComicByFilter(dataFilter)
+        if (typeSelected == Constant.FILTER_COMIC_TYPE_UPDATED) {
+            viewModel.getListLatestUpdateWithFilter(dataFilter)
+        } else {
+            viewModel.getAllListComicByFilter(dataFilter)
+        }
     }
 }

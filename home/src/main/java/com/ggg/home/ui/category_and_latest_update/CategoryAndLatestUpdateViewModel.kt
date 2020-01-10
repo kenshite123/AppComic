@@ -21,6 +21,9 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
     private val requestGetListComicByFilter: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
     var getListComicByFilterResult: LiveData<Resource<List<ComicWithCategoryModel>>>
 
+    private val requestGetListLatestUpdateWithFilter: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
+    var getListLatestUpdateWithFilterResult: LiveData<Resource<List<ComicModel>>>
+
     init {
         getAllListCategoriesResult = Transformations.switchMap(requestGetAllListCategories) {
             return@switchMap categoryAndLatestUpdateRepository.getAllListCategories()
@@ -32,6 +35,10 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
 
         getListComicByFilterResult = Transformations.switchMap(requestGetListComicByFilter) {
             return@switchMap categoryAndLatestUpdateRepository.getAllListComicByFilter(it)
+        }
+
+        getListLatestUpdateWithFilterResult = Transformations.switchMap(requestGetListLatestUpdateWithFilter) {
+            return@switchMap categoryAndLatestUpdateRepository.getListLatestUpdateWithFilter(it)
         }
     }
 
@@ -45,5 +52,9 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
 
     fun getAllListComicByFilter(data: HashMap<String, Any>) {
         requestGetListComicByFilter.value = data
+    }
+
+    fun getListLatestUpdateWithFilter(data: HashMap<String, Any>) {
+        requestGetListLatestUpdateWithFilter.value = data
     }
 }

@@ -38,6 +38,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     var pageCategory = 0
     var isLoadMoreCategory = true
     var listComicFilter: List<ComicWithCategoryModel> = listOf()
+    var listLatestUpdateFilter: List<ComicModel> = listOf()
     var listCategories: List<CategoryModel> = listOf()
     var isLoadAllDataCategory = false
     var currentPositionStatusSelected = 0
@@ -48,6 +49,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     var listTypeFilterItemView = listOf<StatusTypeFilterItemView>()
     var listCategoryFilterItemView = listOf<CategoryFilterItemView>()
     private var isType = false
+    var pastVisibleItemsLatestUpdate = 0
     var pastVisibleItemsCategory = 0
 
     private lateinit var categoryFilterView: CategoryFilterView
@@ -80,12 +82,13 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         return listTitle.count()
     }
 
-    fun notifyDataLatestUpdate(listComicLatestUpdate: List<ComicModel>, isLoadAllDataLatestUpdate: Boolean) {
+    fun notifyDataLatestUpdate(listComicLatestUpdate: List<ComicModel>, isLoadAllDataLatestUpdate: Boolean, pastVisibleItemsLatestUpdate: Int) {
         this.listComicLatestUpdate = listComicLatestUpdate
         if (isLoadMoreLatestUpdate) {
             isLoadMoreLatestUpdate = false
         }
         this.isLoadAllDataLatestUpdate = isLoadAllDataLatestUpdate
+        this.pastVisibleItemsLatestUpdate = pastVisibleItemsLatestUpdate
         notifyDataSetChanged()
     }
 
@@ -104,6 +107,29 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         this.listCategoryFilterItemView = list.toList()
 
         this.listComicFilter = listComicFilter
+        if (isLoadMoreCategory) {
+            isLoadMoreCategory = false
+        }
+        this.pastVisibleItemsCategory = pastVisibleItemsCategory
+        this.isLoadAllDataCategory = isLoadAllDataCategory
+        notifyDataSetChanged()
+    }
+
+    fun notifyDataListLatestUpdateFilter(listCategories: List<CategoryModel>,
+                                         listLatestUpdateFilter: List<ComicModel>,
+                                         isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int) {
+        this.listCategories = listCategories
+        val list = mutableListOf(
+                CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
+        )
+
+        for (i in 0 until listCategories.count()) {
+            val categoryModel = listCategories[i]
+            list.add(CategoryFilterItemView(categoryModel, isSelected = listCategoryIdSelected.indexOf(categoryModel.id) >= 0, isAll = false))
+        }
+        this.listCategoryFilterItemView = list.toList()
+
+        this.listLatestUpdateFilter = listLatestUpdateFilter
         if (isLoadMoreCategory) {
             isLoadMoreCategory = false
         }
@@ -148,6 +174,8 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
             listener.onEvent(Constant.ACTION_PULL_TO_REFRESH_LIST_COMIC_LATEST_UPDATE, null, null)
         }
 
+        rvListComic.scrollToPosition(pastVisibleItemsLatestUpdate)
+
         rvListComic.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -160,7 +188,11 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             isLoadMoreLatestUpdate = true
                             pageLatestUpdate++
-                            listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_LATEST_UPDATE, null, pageLatestUpdate)
+                            val hm = hashMapOf(
+                                    "pastVisibleItemsLatestUpdate" to pastVisibleItems,
+                                    "pageLatestUpdate" to pageLatestUpdate
+                            )
+                            listener.onEvent(Constant.ACTION_LOAD_LIST_COMIC_LATEST_UPDATE, null, hm)
                         }
                     }
                 }
@@ -170,8 +202,6 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
 
     private fun processCategory(view: View) {
         val gridLayoutManager = GridLayoutManager(weakContext.get(), 3)
-        val listComicAdapter = ListComicAdapter(weakContext.get()!!, listener, listComicFilter)
-
         categoryFilterView = view.findViewById(R.id.categoryFilterView)
         statusTypeFilterView = view.findViewById(R.id.statusTypeFilterView)
         ctlCategory = view.findViewById(R.id.ctlCategory)
@@ -181,10 +211,6 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         ctlType = view.findViewById(R.id.ctlType)
         tvType = view.findViewById(R.id.tvType)
         val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
-
-        rvListComic.setHasFixedSize(false)
-        rvListComic.layoutManager = gridLayoutManager
-        rvListComic.adapter = listComicAdapter
 
         listStatusFilterItemView = listOf(
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_STATUS_ALL, isSelected = currentPositionStatusSelected == 0, isType = false),
@@ -197,6 +223,16 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_TYPE_NEW, isSelected = currentPositionTypeSelected == 1, isType = true),
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_TYPE_UPDATED, isSelected = currentPositionTypeSelected == 2, isType = true)
         )
+
+        val listComicAdapter = if (listTypeFilterItemView[currentPositionTypeSelected].statusType == Constant.FILTER_COMIC_TYPE_UPDATED) {
+            ListComicAdapter(weakContext.get()!!, listener, listLatestUpdateFilter, true)
+        } else {
+            ListComicAdapter(weakContext.get()!!, listener, listComicFilter)
+        }
+
+        rvListComic.setHasFixedSize(false)
+        rvListComic.layoutManager = gridLayoutManager
+        rvListComic.adapter = listComicAdapter
 
         if (listCategoryFilterItemView.isNotEmpty() && listCategoryFilterItemView[0].isSelected) {
             tvCategories.text = "All"
@@ -211,7 +247,11 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
             tvCategories.text = TextUtils.join(",", mutableList)
         }
         tvType.text = listTypeFilterItemView[currentPositionTypeSelected].statusType
-        tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
+        if (listStatusFilterItemView[currentPositionStatusSelected].statusType == Constant.FILTER_COMIC_STATUS_UPDATED) {
+            tvStatus.text = "Completed"
+        } else {
+            tvStatus.text = listStatusFilterItemView[currentPositionStatusSelected].statusType
+        }
 
         rvListComic.scrollToPosition(pastVisibleItemsCategory)
 

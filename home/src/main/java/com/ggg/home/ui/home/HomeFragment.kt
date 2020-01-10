@@ -200,6 +200,7 @@ class HomeFragment : HomeBaseFragment() {
                     listComicAdapter.notifyDataSearch(this.listComicLatestUpdate)
                 }
             } else if (it.status == Status.ERROR) {
+                swipeRefreshLayout.isRefreshing = false
                 it.message?.let {
                     showDialog(it)
                 }

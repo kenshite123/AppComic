@@ -55,10 +55,10 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     }
 
     override fun getItemCount(): Int {
-        if (isFromSearch) {
-            return listComicSearch.count()
+        return if (isFromSearch) {
+            listComicSearch.count()
         } else {
-            return listComic.count()
+            listComic.count()
         }
     }
 

@@ -23,7 +23,8 @@
             app:tabBackground="@drawable/bg_tab_layout"
             app:tabIndicatorHeight="0dp"
             android:paddingStart="10dp"
-            android:paddingEnd="10dp"/>
+            android:paddingEnd="10dp"
+            app:tabRippleColor="@null"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
