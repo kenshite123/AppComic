@@ -136,7 +136,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     this.listComicFilter = list.toList()
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(this.listCategories, this.listComicFilter,
-                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                                isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                     }
                 }
             }
@@ -158,7 +158,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     this.listLatestUpdateFilter = list.toList()
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(this.listCategories, this.listLatestUpdateFilter,
-                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                                isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                     }
                 }
             } else if (it.status == Status.ERROR) {
@@ -166,7 +166,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     showDialog(it)
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(this.listCategories, listOf(),
-                                isLoadAllDataCategory, pastVisibleItemsCategory)
+                                isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                     }
                 }
             }
@@ -194,10 +194,10 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                         currentPagePosition = 1
                         if (typeSelected == Constant.FILTER_COMIC_TYPE_UPDATED) {
                             pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(listCategories, listLatestUpdateFilter,
-                                    isLoadAllDataCategory, pastVisibleItemsCategory)
+                                    isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                         } else {
                             pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
-                                    isLoadAllDataCategory, pastVisibleItemsCategory)
+                                    isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                         }
                     }
                 }

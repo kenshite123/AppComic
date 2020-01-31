@@ -76,33 +76,12 @@ class HomeRepository {
 
     fun getListLatestUpdate(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
         val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
-
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
                 return api.getLatestUpdate(data["limit"]!!, data["offset"]!!)
             }
 
             override fun saveCallResult(item: List<ComicModel>) {
-//                if (item.isNotEmpty()) {
-//                    item.forEach { comicModel ->
-//                        run {
-//                            comicModel.categories.forEach {
-//                                val categoryOfComicModel = CategoryOfComicModel()
-//                                categoryOfComicModel.categoryId = it.id
-//                                categoryOfComicModel.categoryName = it.name
-//                                categoryOfComicModel.comicId = comicModel.id
-//                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
-//                            }
-//                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
-//                            comicModel.lastModified = System.currentTimeMillis()
-//                        }
-//                    }
-//                    db.comicDao().insertListComic(item)
-//                }
             }
-
-//            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
-//                return true
-//            }
         }
         return callApi.asLiveData()
     }

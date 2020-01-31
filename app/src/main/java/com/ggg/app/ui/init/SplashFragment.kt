@@ -58,16 +58,27 @@ class SplashFragment : Fragment(),Injectable{
     private fun loadData() {
         viewModel.getBanners()
 
-        val dataLatestUpdate = hashMapOf(
-                "limit" to 21,
-                "offset" to 0
-        )
-        viewModel.getListLatestUpdate(dataLatestUpdate)
+//        val dataLatestUpdate = hashMapOf(
+//                "limit" to 21,
+//                "offset" to 0
+//        )
+//        viewModel.getListLatestUpdate(dataLatestUpdate)
     }
 
     private fun initObserve() {
-        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).observe(this, Observer {
-            if (it.second.status == Status.SUCCESS || it.second.status == Status.ERROR) {
+//        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).observe(this, Observer {
+//            if (it.second.status == Status.SUCCESS || it.second.status == Status.ERROR) {
+//                if (isShowComicDetail) {
+//                    (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
+//                } else {
+//                    (activity as InitialActivity).navigationController.showHomeModule()
+//                }
+//                (activity as InitialActivity).finish()
+//            }
+//        })
+
+        viewModel.getBannersResult.observe(this, Observer {
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 if (isShowComicDetail) {
                     (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
                 } else {
@@ -97,7 +108,7 @@ class SplashFragment : Fragment(),Injectable{
         super.onDestroy()
         viewModel.getBannersResult.removeObservers(this)
         viewModel.getListLatestUpdateResult.removeObservers(this)
-        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).removeObservers(this)
+//        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).removeObservers(this)
     }
 
     companion object {

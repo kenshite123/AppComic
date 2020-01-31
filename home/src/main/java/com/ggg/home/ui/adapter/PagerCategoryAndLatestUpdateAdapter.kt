@@ -94,8 +94,22 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
 
     fun notifyDataListComicFilter(listCategories: List<CategoryModel>,
                                   listComicFilter: List<ComicWithCategoryModel>,
-                                  isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int) {
+                                  isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int,
+                                  listCategoryIdSelected: List<Long>, statusSelected: String, typeSelected: String) {
         this.listCategories = listCategories
+        this.listCategoryIdSelected = listCategoryIdSelected
+        currentPositionStatusSelected = when (statusSelected) {
+            Constant.FILTER_COMIC_STATUS_ALL -> 0
+            Constant.FILTER_COMIC_STATUS_UPDATING -> 1
+            else -> 2
+        }
+
+        currentPositionTypeSelected = when (typeSelected) {
+            Constant.FILTER_COMIC_TYPE_POPULAR -> 0
+            Constant.FILTER_COMIC_TYPE_NEW -> 1
+            else -> 2
+        }
+
         val list = mutableListOf(
                 CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
         )
@@ -117,15 +131,29 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
 
     fun notifyDataListLatestUpdateFilter(listCategories: List<CategoryModel>,
                                          listLatestUpdateFilter: List<ComicModel>,
-                                         isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int) {
+                                         isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int,
+                                         listCategoryIdSelected: List<Long>, statusSelected: String, typeSelected: String) {
         this.listCategories = listCategories
+        this.listCategoryIdSelected = listCategoryIdSelected
+
+        currentPositionStatusSelected = when (statusSelected) {
+            Constant.FILTER_COMIC_STATUS_ALL -> 0
+            Constant.FILTER_COMIC_STATUS_UPDATING -> 1
+            else -> 2
+        }
+
+        currentPositionTypeSelected = when (typeSelected) {
+            Constant.FILTER_COMIC_TYPE_POPULAR -> 0
+            Constant.FILTER_COMIC_TYPE_NEW -> 1
+            else -> 2
+        }
         val list = mutableListOf(
-                CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
+                CategoryFilterItemView(CategoryModel(), isSelected = this.listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
         )
 
         for (i in 0 until listCategories.count()) {
             val categoryModel = listCategories[i]
-            list.add(CategoryFilterItemView(categoryModel, isSelected = listCategoryIdSelected.indexOf(categoryModel.id) >= 0, isAll = false))
+            list.add(CategoryFilterItemView(categoryModel, isSelected = this.listCategoryIdSelected.indexOf(categoryModel.id) >= 0, isAll = false))
         }
         this.listCategoryFilterItemView = list.toList()
 
