@@ -2,6 +2,7 @@ package com.ggg.home.repository
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.utils.NetworkOnlyResource
@@ -61,6 +62,7 @@ class CategoryRepository {
                 val offset = data["offset"]!! as Long * limit
 
                 return db.comicDao().getListComicByCategory(
+                        GGGAppInterface.gggApp.siteDeploy,
                         data["listCategoryId"] as List<Long>,
                         limit.toInt(),
                         offset.toInt()

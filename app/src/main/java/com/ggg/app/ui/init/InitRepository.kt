@@ -103,4 +103,17 @@ class InitRepository {
         }
         return callApi.asLiveData()
     }
+
+    fun getConfig(): LiveData<Resource<ConfigModel>> {
+        val callApi = object : NetworkOnlyResource<ConfigModel>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<ConfigModel>> {
+                return api.getConfig()
+            }
+
+            override fun saveCallResult(item: ConfigModel) {
+
+            }
+        }
+        return callApi.asLiveData()
+    }
 }

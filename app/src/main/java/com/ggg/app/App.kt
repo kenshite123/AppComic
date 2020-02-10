@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.facebook.stetho.Stetho
 import com.ggg.app.di.AppInjector
 import com.ggg.common.GGGAppInterface
+import com.ggg.home.data.model.ConfigModel
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.utils.PrefsUtil
 import com.google.firebase.iid.FirebaseInstanceId
@@ -30,6 +31,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
     var loginResponse: LoginResponse? = null
+    private var siteDeploy = false
     private var listFavoriteId: List<String> = listOf()
     private var isFromNotification = false
 
@@ -152,5 +154,13 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun isFromNotification(): Boolean {
         return this.isFromNotification
+    }
+
+    override fun setSiteDeploy(siteDeploy: Boolean) {
+        this.siteDeploy = siteDeploy
+    }
+
+    override fun getSiteDeploy(): Boolean {
+        return this.siteDeploy
     }
 }

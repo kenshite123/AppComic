@@ -3,6 +3,7 @@ package com.ggg.home.utils
 class ServerPath {
     companion object {
         var baseUri = "http://144.76.71.134:8080/"
+        const val CONFIG = "api/app/config"
         const val LOGIN = "api/auth/login"
         const val REGISTER = "api/auth/register"
         const val BANNERS = "api/homepage/banners"

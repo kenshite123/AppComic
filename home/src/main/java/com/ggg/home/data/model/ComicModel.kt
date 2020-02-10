@@ -61,6 +61,10 @@ class ComicModel : Serializable {
         @Ignore
         var authors: List<String> = listOf()
 
+        @SerializedName("deploy")
+        @Expose
+        var deploy: Int = 0
+
         var authorsString: String? = ""
         var lastModified: Long = System.currentTimeMillis()
 }

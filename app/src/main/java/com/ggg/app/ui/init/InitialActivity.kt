@@ -49,10 +49,4 @@ class InitialActivity : AppCompatActivity() , HasSupportFragmentInjector {
             navigationController.showSplash()
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 15 && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "Hello World", Toast.LENGTH_SHORT).show()
-        }
-    }
 }

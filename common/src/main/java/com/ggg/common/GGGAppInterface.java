@@ -25,6 +25,8 @@ public class GGGAppInterface {
         public boolean checkIsLogin();
         public void setFromNotification(boolean isFromNotification);
         public boolean isFromNotification();
+        public void setSiteDeploy(boolean siteDeploy);
+        public boolean getSiteDeploy();
     }
     public static AppInterface gggApp = null;
     public static void initInstance(AppInterface appinterface)

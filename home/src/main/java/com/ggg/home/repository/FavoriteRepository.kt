@@ -2,6 +2,7 @@ package com.ggg.home.repository
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.vo.Resource
@@ -34,6 +35,7 @@ class FavoriteRepository {
                 val limit = data["limit"]!!
                 val offset = data["offset"]!! * limit
                 return db.comicDao().getListFavoriteComic(
+                        GGGAppInterface.gggApp.siteDeploy,
                         limit,
                         offset
                 )

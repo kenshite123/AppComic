@@ -22,7 +22,7 @@ class HomeModule {
     @Provides
     fun provideConnectDb(app: Application): HomeDB {
         return Room.databaseBuilder(app, HomeDB::class.java, "home.db")
-//                .addMigrations(HomeDB.migration12)
+                .addMigrations(HomeDB.migration12)
                 .build()
     }
 

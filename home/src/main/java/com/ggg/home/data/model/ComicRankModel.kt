@@ -59,6 +59,10 @@ class ComicRankModel {
     @Ignore
     var authors: List<String> = listOf()
 
+    @SerializedName("deploy")
+    @Expose
+    var deploy: Int = 0
+
     var authorsString: String? = ""
     var hadFollow: Int = Constant.IS_UNFOLLOW
     var type: String = ""

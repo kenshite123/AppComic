@@ -56,27 +56,11 @@ class SplashFragment : Fragment(),Injectable{
     }
 
     private fun loadData() {
+        viewModel.getConfig()
         viewModel.getBanners()
-
-//        val dataLatestUpdate = hashMapOf(
-//                "limit" to 21,
-//                "offset" to 0
-//        )
-//        viewModel.getListLatestUpdate(dataLatestUpdate)
     }
 
     private fun initObserve() {
-//        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).observe(this, Observer {
-//            if (it.second.status == Status.SUCCESS || it.second.status == Status.ERROR) {
-//                if (isShowComicDetail) {
-//                    (activity as InitialActivity).navigationController.showHomeModule(isShowComicDetail, comicId)
-//                } else {
-//                    (activity as InitialActivity).navigationController.showHomeModule()
-//                }
-//                (activity as InitialActivity).finish()
-//            }
-//        })
-
         viewModel.getBannersResult.observe(this, Observer {
             if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
                 if (isShowComicDetail) {
@@ -94,6 +78,17 @@ class SplashFragment : Fragment(),Injectable{
                 (activity as InitialActivity).finish()
             }
         })
+
+        viewModel.getConfigModelResult.observe(this, Observer {
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    if (!it.siteDeploy.isEmpty() &&
+                            (it.siteDeploy.toLowerCase().contains("true") || it.siteDeploy.toLowerCase().contains("false"))) {
+                        GGGAppInterface.gggApp.siteDeploy = it.siteDeploy.toLowerCase().contains("true")
+                    }
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -107,7 +102,8 @@ class SplashFragment : Fragment(),Injectable{
     override fun onDestroy() {
         super.onDestroy()
         viewModel.getBannersResult.removeObservers(this)
-        viewModel.getListLatestUpdateResult.removeObservers(this)
+        viewModel.getConfigModelResult.removeObservers(this)
+//        viewModel.getListLatestUpdateResult.removeObservers(this)
 //        viewModel.getBannersResult.combineLatest(viewModel.getListLatestUpdateResult).removeObservers(this)
     }
 

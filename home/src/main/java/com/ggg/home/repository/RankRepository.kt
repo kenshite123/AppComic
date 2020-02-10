@@ -2,6 +2,7 @@ package com.ggg.home.repository
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.vo.Resource
@@ -30,6 +31,7 @@ class RankRepository {
         val callApi = object : NetworkBoundResource<List<ComicRankWithCategoryModel>, List<ComicRankModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicRankWithCategoryModel>> {
                 return db.comicRankDao().getListRankByType(
+                        GGGAppInterface.gggApp.siteDeploy,
                         data["type"]!! as String,
                         data["limit"]!! as Int,
                         data["offset"]!! as Int

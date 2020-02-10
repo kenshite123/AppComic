@@ -22,6 +22,9 @@ interface HomeService {
             @Query("token") token: String
     ): LiveData<ApiResponse<LoginResponse>>
 
+    @GET(ServerPath.CONFIG)
+    fun getConfig() : LiveData<ApiResponse<ConfigModel>>
+
     @POST(ServerPath.REGISTER)
     fun register(
             @Body registerBody: RegisterBody

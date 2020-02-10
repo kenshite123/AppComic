@@ -2,6 +2,7 @@ package com.ggg.home.repository
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.utils.NetworkOnlyResource
@@ -77,15 +78,15 @@ class CategoryAndLatestUpdateRepository {
                 val offset = data["offset"] as Int * limit
                 return if (listCategoryId.isNotEmpty() && listCategoryId.count() == 1 && listCategoryId[0] == -1L) {
                     if (type == Constant.FILTER_COMIC_TYPE_UPDATED) {
-                        db.comicDao().getListLatestUpdateByFilter(status, limit, offset)
+                        db.comicDao().getListLatestUpdateByFilter(GGGAppInterface.gggApp.siteDeploy, status, limit, offset)
                     } else {
-                        db.comicDao().getAllListComic(status, type, limit, offset)
+                        db.comicDao().getAllListComic(GGGAppInterface.gggApp.siteDeploy, status, type, limit, offset)
                     }
                 } else {
                     if (type == Constant.FILTER_COMIC_TYPE_UPDATED) {
-                        db.comicDao().getListLatestUpdateByFilter(listCategoryId, status, limit, offset)
+                        db.comicDao().getListLatestUpdateByFilter(GGGAppInterface.gggApp.siteDeploy, listCategoryId, status, limit, offset)
                     } else {
-                        db.comicDao().getAllListComic(listCategoryId, status, type, limit, offset)
+                        db.comicDao().getAllListComic(GGGAppInterface.gggApp.siteDeploy, listCategoryId, status, type, limit, offset)
                     }
                 }
             }

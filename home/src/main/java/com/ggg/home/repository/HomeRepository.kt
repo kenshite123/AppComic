@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.utils.NetworkOnlyResource
@@ -40,7 +41,7 @@ class HomeRepository {
     fun getBanners(): LiveData<Resource<List<ComicWithCategoryModel>>> {
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                return db.comicDao().getListBanners()
+                return db.comicDao().getListBanners(GGGAppInterface.gggApp.siteDeploy)
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
