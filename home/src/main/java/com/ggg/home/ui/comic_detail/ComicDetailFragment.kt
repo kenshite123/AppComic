@@ -92,6 +92,9 @@ class ComicDetailFragment : HomeBaseFragment() {
         } else {
             isLoadComicInfo = false
             comicWithCategoryModel = arguments?.get("comicWithCategoryModel") as ComicWithCategoryModel
+            comicWithCategoryModel.comicModel?.let {
+                comicId = it.id
+            }
             initViews()
             initEvent()
             loadListChapter()
@@ -274,6 +277,7 @@ class ComicDetailFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 isFollow = true
                 btnFollow.setText(R.string.TEXT_UNFOLLOW)
+                GGGAppInterface.gggApp.addComicToFavorite(comicId)
                 btnFollow.setBackgroundColor(resources.getColor(R.color.colorPrimary))
             } else {
                 it.message?.let {
@@ -287,6 +291,7 @@ class ComicDetailFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 isFollow = false
                 btnFollow.setText(R.string.TEXT_FOLLOW)
+                GGGAppInterface.gggApp.removeComicToFavorite(comicId)
                 btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
             } else {
                 it.message?.let {

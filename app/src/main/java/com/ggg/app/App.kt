@@ -134,10 +134,12 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun removeComicToFavorite(comicId: String) {
         val s = listFavoriteId.toMutableList()
-        s.remove(comicId)
+        if (s.isNotEmpty()) {
+            s.remove(comicId)
 
-        listFavoriteId = s.toList()
-        PrefsUtil.instance.setStringValue("favorites", TextUtils.join(",", listFavoriteId))
+            listFavoriteId = s.toList()
+            PrefsUtil.instance.setStringValue("favorites", TextUtils.join(",", listFavoriteId))
+        }
     }
 
     override fun clearListComicFavorite() {

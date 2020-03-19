@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.ggg.common.utils.CommonUtils
 import com.ggg.common.vo.Resource
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ComicModel
@@ -20,6 +21,9 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
 
     private val requestGetListComicByFilter: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
     var getListComicByFilterResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+
+    private val requestGetListComicByFilterOnline: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
+    var getListComicByFilterOnlineResult: LiveData<Resource<List<ComicModel>>>
 
     private val requestGetListLatestUpdateWithFilter: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
     var getListLatestUpdateWithFilterResult: LiveData<Resource<List<ComicModel>>>
@@ -40,6 +44,10 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
         getListLatestUpdateWithFilterResult = Transformations.switchMap(requestGetListLatestUpdateWithFilter) {
             return@switchMap categoryAndLatestUpdateRepository.getListLatestUpdateWithFilter(it)
         }
+
+        getListComicByFilterOnlineResult = Transformations.switchMap(requestGetListComicByFilterOnline) {
+            return@switchMap categoryAndLatestUpdateRepository.getAllListComicByFilterOnline(it)
+        }
     }
 
     fun getAllListCategories() {
@@ -52,6 +60,10 @@ class CategoryAndLatestUpdateViewModel @Inject constructor(private val categoryA
 
     fun getAllListComicByFilter(data: HashMap<String, Any>) {
         requestGetListComicByFilter.value = data
+    }
+
+    fun getAllListComicByFilterOnline(data: HashMap<String, Any>) {
+        requestGetListComicByFilterOnline.value = data
     }
 
     fun getListLatestUpdateWithFilter(data: HashMap<String, Any>) {

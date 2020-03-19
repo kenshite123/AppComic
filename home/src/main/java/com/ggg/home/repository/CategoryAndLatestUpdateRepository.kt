@@ -123,6 +123,41 @@ class CategoryAndLatestUpdateRepository {
         return callApi.asLiveData()
     }
 
+    fun getAllListComicByFilterOnline(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+        val listCategoryId = data["listCategoryId"] as List<Long>
+        val status = data["status"] as String
+        val type = data["type"] as String
+        val limit = data["limit"] as Int
+
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                val offset = data["offset"] as Int
+                return api.getAllListComicByFilter(listCategoryId, status, type, limit, offset)
+            }
+
+            override fun saveCallResult(item: List<ComicModel>) {
+                if (item.isNotEmpty()) {
+                    db.comicDao().updateClearListBanners()
+                    item.forEach { comicModel ->
+                        run {
+                            comicModel.categories.forEach {
+                                val categoryOfComicModel = CategoryOfComicModel()
+                                categoryOfComicModel.categoryId = it.id
+                                categoryOfComicModel.categoryName = it.name
+                                categoryOfComicModel.comicId = comicModel.id
+                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+                            }
+                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+                            comicModel.lastModified = System.currentTimeMillis()
+                        }
+                    }
+                    db.comicDao().insertListComic(item)
+                }
+            }
+        }
+        return callApi.asLiveData()
+    }
+
     fun getListLatestUpdateWithFilter(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
         val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {

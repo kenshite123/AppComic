@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.ggg.common.ui.BaseActivity
+import com.ggg.common.utils.CommonUtils
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CategoryModel
@@ -37,6 +38,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
     var typeSelected = Constant.FILTER_COMIC_TYPE_POPULAR
     var listCategories: List<CategoryModel> = listOf()
     private var listComicFilter = listOf<ComicWithCategoryModel>()
+    private var listComicFilterOnline = listOf<ComicModel>()
     private var listLatestUpdateFilter = listOf<ComicModel>()
 
     var isLoadAllDataLatestUpdate = false
@@ -136,6 +138,28 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                     this.listComicFilter = list.toList()
                     if (currentPagePosition == 1) {
                         pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(this.listCategories, this.listComicFilter,
+                                isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
+                    }
+                }
+            }
+        })
+
+        viewModel.getListComicByFilterOnlineResult.observe(this, Observer {
+            if (currentPagePosition == 1) {
+                loading(it)
+            }
+
+            if (it.status == Status.SUCCESS || it.status == Status.ERROR) {
+                it.data?.let {
+                    if (!isLoadMoreCategory) {
+                        this.listComicFilterOnline = listOf()
+                    }
+                    isLoadAllDataCategory = it.count() < 30
+                    val list = this.listComicFilterOnline.toMutableList()
+                    list.addAll(it)
+                    this.listComicFilterOnline = list.toList()
+                    if (currentPagePosition == 1) {
+                        pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(this.listCategories, this.listComicFilterOnline, true,
                                 isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                     }
                 }
@@ -281,7 +305,11 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
         if (typeSelected == Constant.FILTER_COMIC_TYPE_UPDATED) {
             viewModel.getListLatestUpdateWithFilter(dataFilter)
         } else {
-            viewModel.getAllListComicByFilter(dataFilter)
+            if (Utils.isAvailableNetwork(activity!!)) {
+                viewModel.getAllListComicByFilterOnline(dataFilter)
+            } else {
+                viewModel.getAllListComicByFilter(dataFilter)
+            }
         }
     }
 }

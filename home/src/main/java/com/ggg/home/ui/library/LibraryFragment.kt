@@ -50,8 +50,6 @@ class LibraryFragment : HomeBaseFragment() {
 
         initViews()
         initEvent()
-        loadDataHistory()
-        loadDataListComicFollow()
     }
 
     private fun initViews() {
@@ -154,5 +152,8 @@ class LibraryFragment : HomeBaseFragment() {
             initObserver()
             isFirstLoad = false
         }
+
+        loadDataHistory()
+        loadDataListComicFollow()
     }
 }

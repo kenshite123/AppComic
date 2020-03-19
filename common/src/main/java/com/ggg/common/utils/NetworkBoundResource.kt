@@ -33,11 +33,10 @@ abstract class NetworkBoundResource <ResultType, RequestType>{
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
-        var apiResponse: LiveData<ApiResponse<RequestType>>
-        if (CommonUtils.isInternetAvailable()) {
-            apiResponse = createCall()
+        var apiResponse: LiveData<ApiResponse<RequestType>> = if (CommonUtils.isInternetAvailable()) {
+            createCall()
         } else {
-            apiResponse = MutableLiveData<ApiResponse<RequestType>>()
+            MutableLiveData<ApiResponse<RequestType>>()
         }
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
         result.addSource(dbSource) { newData -> result.setValue(Resource.successDB(newData)) }

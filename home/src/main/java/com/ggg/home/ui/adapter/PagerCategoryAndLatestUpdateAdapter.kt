@@ -37,7 +37,9 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
 
     var pageCategory = 0
     var isLoadMoreCategory = true
-    var listComicFilter: List<ComicWithCategoryModel> = listOf()
+    private var listComicFilter: List<ComicWithCategoryModel> = listOf()
+    private var isLoadOnline = false
+    var listComicFilterOnline: List<ComicModel> = listOf()
     var listLatestUpdateFilter: List<ComicModel> = listOf()
     var listCategories: List<CategoryModel> = listOf()
     var isLoadAllDataCategory = false
@@ -121,6 +123,45 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         this.listCategoryFilterItemView = list.toList()
 
         this.listComicFilter = listComicFilter
+        if (isLoadMoreCategory) {
+            isLoadMoreCategory = false
+        }
+        this.pastVisibleItemsCategory = pastVisibleItemsCategory
+        this.isLoadAllDataCategory = isLoadAllDataCategory
+        notifyDataSetChanged()
+    }
+
+    fun notifyDataListComicFilter(listCategories: List<CategoryModel>,
+                                  listComicFilterOnline: List<ComicModel>,
+                                  isLoadOnline: Boolean,
+                                  isLoadAllDataCategory: Boolean, pastVisibleItemsCategory: Int,
+                                  listCategoryIdSelected: List<Long>, statusSelected: String, typeSelected: String) {
+        this.listCategories = listCategories
+        this.isLoadOnline = isLoadOnline
+        this.listCategoryIdSelected = listCategoryIdSelected
+        currentPositionStatusSelected = when (statusSelected) {
+            Constant.FILTER_COMIC_STATUS_ALL -> 0
+            Constant.FILTER_COMIC_STATUS_UPDATING -> 1
+            else -> 2
+        }
+
+        currentPositionTypeSelected = when (typeSelected) {
+            Constant.FILTER_COMIC_TYPE_POPULAR -> 0
+            Constant.FILTER_COMIC_TYPE_NEW -> 1
+            else -> 2
+        }
+
+        val list = mutableListOf(
+                CategoryFilterItemView(CategoryModel(), isSelected = listCategoryIdSelected.indexOf(-1L) >= 0, isAll = true)
+        )
+
+        for (i in 0 until listCategories.count()) {
+            val categoryModel = listCategories[i]
+            list.add(CategoryFilterItemView(categoryModel, isSelected = listCategoryIdSelected.indexOf(categoryModel.id) >= 0, isAll = false))
+        }
+        this.listCategoryFilterItemView = list.toList()
+
+        this.listComicFilterOnline = listComicFilterOnline
         if (isLoadMoreCategory) {
             isLoadMoreCategory = false
         }
@@ -255,7 +296,11 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         val listComicAdapter = if (listTypeFilterItemView[currentPositionTypeSelected].statusType == Constant.FILTER_COMIC_TYPE_UPDATED) {
             ListComicAdapter(weakContext.get()!!, listener, listLatestUpdateFilter, true)
         } else {
-            ListComicAdapter(weakContext.get()!!, listener, listComicFilter)
+            if (isLoadOnline) {
+                ListComicAdapter(weakContext.get()!!, listener, listComicFilterOnline, true)
+            } else {
+                ListComicAdapter(weakContext.get()!!, listener, listComicFilter)
+            }
         }
 
         rvListComic.setHasFixedSize(false)
