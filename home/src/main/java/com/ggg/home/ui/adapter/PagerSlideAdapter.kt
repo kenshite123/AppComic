@@ -44,7 +44,7 @@ class PagerSlideAdapter : RecyclerView.Adapter<PagerSlideAdapter.ViewHolder> {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comicWithCategoryModel = listBanners[position]
         val banner = comicWithCategoryModel.comicModel!!
-        Glide.with(weakContext.get())
+        Glide.with(weakContext.get()!!)
                 .load(banner.bigImageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

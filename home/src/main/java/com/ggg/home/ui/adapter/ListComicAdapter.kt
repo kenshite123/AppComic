@@ -65,7 +65,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
     override fun onBindViewHolder(itemViewHolder: ViewHolder, position: Int) {
         if (isFromSearch) {
             val comic = listComicSearch[position]
-            Glide.with(weakContext.get())
+            Glide.with(weakContext.get()!!)
                     .load(comic.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -80,7 +80,7 @@ class ListComicAdapter : RecyclerView.Adapter<ListComicAdapter.ViewHolder> {
         } else {
             val comicWithCategoryModel = listComic[position]
             val comic = comicWithCategoryModel.comicModel!!
-            Glide.with(weakContext.get())
+            Glide.with(weakContext.get()!!)
                     .load(comic.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

@@ -1,5 +1,6 @@
 package com.ggg.home.ui.view_comic
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CCHadReadModel
@@ -20,6 +25,7 @@ import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_view_comic.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
+import java.io.File
 
 class ViewComicFragment : HomeBaseFragment() {
     private lateinit var viewModel: ViewComicViewModel
@@ -112,6 +118,25 @@ class ViewComicFragment : HomeBaseFragment() {
     override fun initEvent() {
         ivBack.setOnClickListener {
             navigationController.popToBackStack()
+        }
+
+        ivDownload.setOnClickListener {
+            val listImageComic = listImageComicAdapter.listImageComic
+            if (!listImageComic.isNullOrEmpty()) {
+                listImageComic.forEach {url ->
+                    Glide.with(this)
+                            .load(url)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .downloadOnly(object : SimpleTarget<File?>() {
+                                override fun onLoadFailed(errorDrawable: Drawable?) {
+                                    super.onLoadFailed(errorDrawable)
+                                }
+
+                                override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+                                }
+                            })
+                }
+            }
         }
 
         ivNext.setOnClickListener {

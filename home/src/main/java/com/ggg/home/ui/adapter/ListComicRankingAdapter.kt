@@ -52,7 +52,7 @@ class ListComicRankingAdapter : RecyclerView.Adapter<ListComicRankingAdapter.Vie
         val comicRankWithCategoryModel = listComic[position]
         val comicRankModel = comicRankWithCategoryModel.comicRankModel
 
-        Glide.with(weakContext.get())
+        Glide.with(weakContext.get()!!)
                 .load(comicRankModel?.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

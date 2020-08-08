@@ -32,7 +32,7 @@ import timber.log.Timber
 class ComicDetailFragment : HomeBaseFragment() {
     private lateinit var viewModel: ComicDetailViewModel
     var isFirstLoad = true
-    lateinit var comicWithCategoryModel: ComicWithCategoryModel
+    var comicWithCategoryModel = ComicWithCategoryModel()
     lateinit var listCategoryComicDetailAdapter: ListCategoryComicDetailAdapter
     lateinit var pagerComicDetailAdapter: PagerComicDetailAdapter
     lateinit var listChapters: List<ChapterHadRead>
@@ -84,6 +84,8 @@ class ComicDetailFragment : HomeBaseFragment() {
         showActionBar()
         hideBottomNavView()
 
+        initViews()
+        initEvent()
         if (null == arguments?.get("comicWithCategoryModel")) {
             isLoadComicInfo = true
             val comicIdString = arguments?.get("comicId").toString()
@@ -95,14 +97,25 @@ class ComicDetailFragment : HomeBaseFragment() {
             comicWithCategoryModel.comicModel?.let {
                 comicId = it.id
             }
-            initViews()
-            initEvent()
+            loadData()
             loadListChapter()
             loadListComment()
         }
     }
 
     private fun initViews() {
+        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories ?: listOf(), false)
+        rvListCategory.setHasFixedSize(true)
+//        rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
+        rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
+        rvListCategory.adapter = listCategoryComicDetailAdapter
+
+        pagerComicDetailAdapter = PagerComicDetailAdapter(context!!, this)
+        viewPager.adapter = pagerComicDetailAdapter
+        tabLayout.setupWithViewPager(viewPager)
+    }
+
+    private fun loadData() {
         listComments = listOf()
         currentPagePosition = 0
         val comic = comicWithCategoryModel.comicModel
@@ -144,16 +157,6 @@ class ComicDetailFragment : HomeBaseFragment() {
             btnFollow.setText(R.string.TEXT_FOLLOW)
             btnFollow.setBackgroundColor(Color.parseColor("#ffab02"))
         }
-
-        listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories, false)
-        rvListCategory.setHasFixedSize(true)
-//        rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
-        rvListCategory.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
-        rvListCategory.adapter = listCategoryComicDetailAdapter
-
-        pagerComicDetailAdapter = PagerComicDetailAdapter(context!!, this)
-        viewPager.adapter = pagerComicDetailAdapter
-        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun initEvent() {
@@ -264,8 +267,7 @@ class ComicDetailFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
                 it.data?.let {
                     this.comicWithCategoryModel = it
-                    initViews()
-                    initEvent()
+                    loadData()
                     loadListChapter()
                     loadListComment()
                 }
@@ -350,12 +352,16 @@ class ComicDetailFragment : HomeBaseFragment() {
     }
 
     private fun insertCCHadRead(positionChapter: Int) {
-        comicWithCategoryModel.comicModel?.let {
-            val ccHadReadModel = CCHadReadModel()
-            ccHadReadModel.comicId = it.id
-            ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
-            ccHadReadModel.lastModified = System.currentTimeMillis()
-            viewModel.insertCCHadRead(ccHadReadModel)
+        try {
+            comicWithCategoryModel.comicModel?.let {
+                val ccHadReadModel = CCHadReadModel()
+                ccHadReadModel.comicId = it.id
+                ccHadReadModel.chapterId = listChapters[positionChapter].chapterModel!!.chapterId
+                ccHadReadModel.lastModified = System.currentTimeMillis()
+                viewModel.insertCCHadRead(ccHadReadModel)
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 

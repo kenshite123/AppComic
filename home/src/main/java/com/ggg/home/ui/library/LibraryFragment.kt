@@ -28,6 +28,9 @@ class LibraryFragment : HomeBaseFragment() {
     var currentPagePosition = 0
     var items = 60
     var page = 0
+    var pageHistory = 0
+    var isLoadAllDataHistory = false;
+    var isLoadMoreHistory = false;
 
     companion object {
         val TAG = "LibraryFragment"
@@ -64,7 +67,17 @@ class LibraryFragment : HomeBaseFragment() {
                 loading(it)
             }
             it.data?.let {
-                this.listHistoryModel = it
+                if (isLoadMoreHistory) {
+                    val list = this.listHistoryModel.toMutableList()
+                    list.addAll(it)
+                    this.listHistoryModel = list.toList()
+
+                    isLoadMoreHistory = false
+                    isLoadAllDataHistory = it.count() >= items
+                } else {
+                    this.listHistoryModel = it
+                }
+
                 if (currentPagePosition == 0) {
                     pagerLibraryAdapter.notifyData(this.listHistoryModel)
                 }
@@ -110,7 +123,7 @@ class LibraryFragment : HomeBaseFragment() {
     private fun loadDataHistory() {
         val data = hashMapOf(
                 "limit" to items,
-                "offset" to page
+                "offset" to pageHistory
         )
         viewModel.getListHistory(data)
     }
@@ -140,6 +153,14 @@ class LibraryFragment : HomeBaseFragment() {
             Constant.ACTION_CLICK_ON_COMIC_WITH_CATEGORY_MODEL -> {
                 val comicWithCategoryModel = data as ComicWithCategoryModel
                 navigationController.showComicDetail(comicWithCategoryModel)
+            }
+
+            Constant.ACTION_LOAD_MORE_LIST_COMIC_HISTORY -> {
+                if (!isLoadAllDataHistory && !isLoadMoreHistory) {
+                    isLoadMoreHistory = true
+                    pageHistory++
+                    loadDataHistory()
+                }
             }
 
             else -> super.onEvent(eventAction, control, data)

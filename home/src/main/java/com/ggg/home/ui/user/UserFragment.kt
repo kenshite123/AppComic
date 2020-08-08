@@ -59,8 +59,8 @@ class UserFragment : HomeBaseFragment() {
             loginResponse?.let {
                 it.user?.let {
                     tvUsername.text = it.fullName
-                    if (!it.imageUrl.isEmpty()) {
-                        Glide.with(context)
+                    if (it.imageUrl.isNotEmpty()) {
+                        Glide.with(context!!)
                                 .load(it.imageUrl)
                                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)

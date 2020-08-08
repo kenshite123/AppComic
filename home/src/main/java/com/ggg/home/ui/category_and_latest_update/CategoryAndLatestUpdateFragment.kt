@@ -220,8 +220,13 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
                             pagerCategoryAndLatestUpdateAdapter.notifyDataListLatestUpdateFilter(listCategories, listLatestUpdateFilter,
                                     isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
                         } else {
-                            pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
-                                    isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
+                            if (Utils.isAvailableNetwork(activity!!)) {
+                                pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilterOnline, true,
+                                        isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
+                            } else {
+                                pagerCategoryAndLatestUpdateAdapter.notifyDataListComicFilter(listCategories, listComicFilter,
+                                        isLoadAllDataCategory, pastVisibleItemsCategory, listCategoryIdSelected, statusSelected, typeSelected)
+                            }
                         }
                     }
                 }

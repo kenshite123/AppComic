@@ -51,7 +51,7 @@ class ListCommentAdapter : RecyclerView.Adapter<ListCommentAdapter.ViewHolder> {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val commentModel = listComments[position]
         if (!commentModel.userComment.imageUrl.isEmpty()) {
-            Glide.with(weakContext.get())
+            Glide.with(weakContext.get()!!)
                     .load(commentModel.userComment.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

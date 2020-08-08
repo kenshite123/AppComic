@@ -42,7 +42,7 @@ class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHol
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageURL = listImageComic[position]
 
-        Glide.with(weakContext.get())
+        Glide.with(weakContext.get()!!)
                 .load(imageURL)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

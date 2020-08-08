@@ -99,7 +99,7 @@ class ReplyFragment : HomeBaseFragment() {
     private fun initViews() {
         tvReplies.visibility = View.GONE
         if (!commentModel.userComment.imageUrl.isEmpty()) {
-            Glide.with(context)
+            Glide.with(context!!)
                     .load(commentModel.userComment.imageUrl)
                     .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

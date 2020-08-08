@@ -45,7 +45,7 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
         val historyModel = listHistoryModel[position]
         val comic = historyModel.comicModel!!
 
-        Glide.with(weakContext.get())
+        Glide.with(weakContext.get()!!)
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

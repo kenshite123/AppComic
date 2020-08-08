@@ -54,7 +54,7 @@ class ListMyCommentAdapter : RecyclerView.Adapter<ListMyCommentAdapter.ViewHolde
             holder.tvCommentParent.text = commentModel.replies[0].content
         }
 
-        Glide.with(weakContext.get())
+        Glide.with(weakContext.get()!!)
                 .load(commentModel.comicModel.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
