@@ -96,4 +96,5 @@
     <string name="TEXT_CHOOSE_CHAP_TO_DOWNLOAD">Choose chap to download</string>
     <string name="TEXT_TOTAL_CHAP">Total %s</string>
     <string name="TEXT_QUANTITY_CHAP_CHOSEN">Selected %s chap</string>
+    <string name="TEXT_SELECT_ALL">Select all</string>
 </resources>

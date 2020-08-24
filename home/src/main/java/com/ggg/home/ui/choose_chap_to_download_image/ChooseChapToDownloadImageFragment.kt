@@ -8,27 +8,23 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ChapterModel
-import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListChapterDownloadImageAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
-import com.ggg.home.utils.PrefsUtil
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_choose_chap_to_download_image.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
 
 class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
     private lateinit var viewModel: ChooseChapToDownloadImageViewModel
-    var loginResponse: LoginResponse? = null
     var isFirstLoad = true
     var comicId: Long = 0
     var isLoadLatest = true
     var countChapterSelected = 0
     var totalChapter = 0
-    var listChapter = mutableListOf<ChapterModel>()
+    var listChapters = listOf<ChapterModel>()
 
     private lateinit var listChapterDownloadImageAdapter: ListChapterDownloadImageAdapter
 
@@ -54,12 +50,6 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         Timber.d("onActivityCreated")
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChooseChapToDownloadImageViewModel::class.java)
 
-        val jsonLoginResponse = PrefsUtil.instance.getStringValue("LoginResponse", "")
-        if (!jsonLoginResponse.isNullOrEmpty()) {
-            this.loginResponse = Gson().fromJson<LoginResponse>(
-                    jsonLoginResponse, object : TypeToken<LoginResponse>() {}.type)
-        }
-
         comicId = arguments!!["comicId"] as Long
 
         initViews()
@@ -72,10 +62,10 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         hideBottomNavView()
         setTitleActionBar(R.string.TEXT_CHOOSE_CHAP_TO_DOWNLOAD)
 
-        tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, countChapterSelected.toString())
-        tvQuantityChoose.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countChapterSelected.toString())
+        tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, totalChapter.toString())
+        tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countChapterSelected.toString())
 
-        listChapterDownloadImageAdapter = ListChapterDownloadImageAdapter(context!!, this, listChapter)
+        listChapterDownloadImageAdapter = ListChapterDownloadImageAdapter(context!!, this, listChapters)
         rvListChapter.setHasFixedSize(false)
         rvListChapter.layoutManager = GridLayoutManager(context!!, 3)
         rvListChapter.adapter = listChapterDownloadImageAdapter
@@ -87,6 +77,8 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                 isLoadLatest = true
                 tvLatest.setTextColor(Color.parseColor("#d75c3b"))
                 tvOldest.setTextColor(Color.parseColor("#969696"))
+                this.listChapters = this.listChapters.reversed()
+                listChapterDownloadImageAdapter.notifyData(listChapters)
             }
         }
 
@@ -95,24 +87,41 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                 isLoadLatest = false
                 tvLatest.setTextColor(Color.parseColor("#969696"))
                 tvOldest.setTextColor(Color.parseColor("#d75c3b"))
+                this.listChapters = this.listChapters.reversed()
+                listChapterDownloadImageAdapter.notifyData(listChapters)
             }
+        }
+
+        llSelectAll.setOnClickListener {
+
+        }
+
+        llDownload.setOnClickListener {
+
         }
     }
 
     override fun initObserver() {
         viewModel.getListChaptersResult.observe(this, Observer {
-            hideLoading()
-            listChapter = if (!it.isNullOrEmpty()) {
-                it.toMutableList()
-            } else {
-                mutableListOf()
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    listChapters = if (!it.isNullOrEmpty()) {
+                        it
+                    } else {
+                        mutableListOf()
+                    }
+                    listChapterDownloadImageAdapter.notifyData(listChapters)
+                }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                }
             }
-            listChapterDownloadImageAdapter.notifyData(listChapter)
         })
     }
 
     private fun loadData() {
-        showLoading()
         viewModel.getListChapters(comicId)
     }
 
