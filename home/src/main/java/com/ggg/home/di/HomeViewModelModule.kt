@@ -6,6 +6,7 @@ import com.ggg.home.ui.category.CategoryViewModel
 import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateViewModel
 import com.ggg.home.ui.category_detail.CategoryDetailViewModel
 import com.ggg.home.ui.change_password.ChangePassWordViewModel
+import com.ggg.home.ui.choose_chap_to_download_image.ChooseChapToDownloadImageViewModel
 import com.ggg.home.ui.comic_detail.ComicDetailViewModel
 import com.ggg.home.ui.comment.CommentViewModel
 import com.ggg.home.ui.comment_of_chap.CommentOfChapViewModel
@@ -122,4 +123,9 @@ abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(CategoryAndLatestUpdateViewModel::class)
     abstract fun bindCategoryAndLatestUpdateViewModel(categoryAndLatestUpdateViewModel: CategoryAndLatestUpdateViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChooseChapToDownloadImageViewModel::class)
+    abstract fun bindChooseChapToDownloadImageViewModel(chooseChapToDownloadImageViewModel: ChooseChapToDownloadImageViewModel): ViewModel
 }

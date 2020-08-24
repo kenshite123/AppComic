@@ -121,22 +121,23 @@ class ViewComicFragment : HomeBaseFragment() {
         }
 
         ivDownload.setOnClickListener {
-            val listImageComic = listImageComicAdapter.listImageComic
-            if (!listImageComic.isNullOrEmpty()) {
-                listImageComic.forEach {url ->
-                    Glide.with(this)
-                            .load(url)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .downloadOnly(object : SimpleTarget<File?>() {
-                                override fun onLoadFailed(errorDrawable: Drawable?) {
-                                    super.onLoadFailed(errorDrawable)
-                                }
-
-                                override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
-                                }
-                            })
-                }
-            }
+            navigationController.showChooseChapToDownloadImage(comicId = comicWithCategoryModel.comicModel!!.id)
+//            val listImageComic = listImageComicAdapter.listImageComic
+//            if (!listImageComic.isNullOrEmpty()) {
+//                listImageComic.forEach {url ->
+//                    Glide.with(this)
+//                            .load(url)
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                            .downloadOnly(object : SimpleTarget<File?>() {
+//                                override fun onLoadFailed(errorDrawable: Drawable?) {
+//                                    super.onLoadFailed(errorDrawable)
+//                                }
+//
+//                                override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+//                                }
+//                            })
+//                }
+//            }
         }
 
         ivNext.setOnClickListener {

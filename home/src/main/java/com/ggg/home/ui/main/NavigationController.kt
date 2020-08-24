@@ -8,6 +8,7 @@ import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragment
 import com.ggg.home.ui.category_detail.CategoryDetailFragment
 import com.ggg.home.ui.change_password.ChangePassWordFragment
+import com.ggg.home.ui.choose_chap_to_download_image.ChooseChapToDownloadImageFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.comment.CommentFragment
 import com.ggg.home.ui.comment_of_chap.CommentOfChapFragment
@@ -141,6 +142,11 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         intent.addCategory(Intent.CATEGORY_HOME)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         weakActivity.get()!!.startActivity(intent)
+    }
+
+    fun showChooseChapToDownloadImage(comicId: Long) {
+        val fragment = ChooseChapToDownloadImageFragment.create(comicId)
+        fragNavController.pushFragment(fragment)
     }
 
     //endregion

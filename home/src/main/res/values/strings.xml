@@ -93,4 +93,7 @@
     <string name="TEXT_SORT_BY">Sort by</string>
     <string name="TEXT_DONE">Done</string>
     <string name="TEXT_RESET">Reset</string>
+    <string name="TEXT_CHOOSE_CHAP_TO_DOWNLOAD">Choose chap to download</string>
+    <string name="TEXT_TOTAL_CHAP">Total %s</string>
+    <string name="TEXT_QUANTITY_CHAP_CHOSEN">Selected %s chap</string>
 </resources>

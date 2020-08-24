@@ -179,19 +179,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal">
-        <com.rey.material.widget.TextView
-            android:id="@+id/btnFollow"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            style="@style/btn_ripple_normal_0"
-            android:textColor="@color/white"
-            android:text="@string/TEXT_FOLLOW"
-            android:gravity="center"
-            android:textSize="@dimen/sp24"
-            android:ellipsize="end"
-            android:lines="1"
-            android:background="#ffab02"/>
+            android:orientation="horizontal">
+            <com.rey.material.widget.RelativeLayout
+                android:id="@+id/rltDownload"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                style="@style/btn_ripple_normal_0"
+                android:background="@color/white"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="@dimen/dp50"
+                    android:layout_height="@dimen/dp50"
+                    android:padding="@dimen/dp5"
+                    android:visibility="visible"
+                    android:src="@drawable/ic_download"/>
+            </com.rey.material.widget.RelativeLayout>
+            <com.rey.material.widget.TextView
+                android:id="@+id/btnFollow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/btn_ripple_normal_0"
+                android:textColor="@color/white"
+                android:text="@string/TEXT_FOLLOW"
+                android:gravity="center"
+                android:textSize="@dimen/sp24"
+                android:ellipsize="end"
+                android:lines="1"
+                android:background="#ffab02"/>
+        </LinearLayout>
         <com.rey.material.widget.TextView
             android:id="@+id/btnReadNow"
             android:layout_width="0dp"

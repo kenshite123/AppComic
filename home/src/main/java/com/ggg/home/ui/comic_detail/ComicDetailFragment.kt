@@ -197,6 +197,10 @@ class ComicDetailFragment : HomeBaseFragment() {
                 favoriteComic()
             }
         }
+
+        rltDownload.setOnClickListener {
+            navigationController.showChooseChapToDownloadImage(comicId = comicId)
+        }
     }
 
     private fun loadListChapter() {
