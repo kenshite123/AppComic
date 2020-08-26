@@ -10,6 +10,7 @@ import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
 import com.ggg.home.data.model.post_param.ChangePassWordBody
+import com.ggg.home.data.model.post_param.DataGetListImageToDownloadParam
 import com.ggg.home.data.model.response.*
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
@@ -163,4 +164,10 @@ interface HomeService {
             @Query("items") limit: Int,
             @Query("page") offset: Int
     ) : LiveData<ApiResponse<List<ComicModel>>>
+
+    @POST(ServerPath.GET_LIST_IMAGE_TO_DOWNLOAD)
+    fun getListImageToDownload(
+            @Path("comicId") comicId: Long,
+            @Body dataGetListImageToDownloadParam: DataGetListImageToDownloadParam
+    ) : LiveData<ApiResponse<List<ChapterModel>>>
 }

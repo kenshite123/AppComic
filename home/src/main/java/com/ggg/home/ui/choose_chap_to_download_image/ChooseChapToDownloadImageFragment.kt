@@ -1,6 +1,7 @@
 package com.ggg.home.ui.choose_chap_to_download_image
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,20 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.ui.adapter.ListChapterDownloadImageAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_choose_chap_to_download_image.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
+import java.io.File
 
 class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
     private lateinit var viewModel: ChooseChapToDownloadImageViewModel
@@ -93,11 +100,30 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         }
 
         llSelectAll.setOnClickListener {
-
+            if (!listChapters.isNullOrEmpty()) {
+                listChapters.map { it.isSelected = true }
+                listChapterDownloadImageAdapter.notifyData(listChapters)
+                tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count().toString())
+            }
         }
 
         llDownload.setOnClickListener {
+            if (!this.listChapters.isNullOrEmpty()) {
+                val listChapterId = mutableListOf<Long>()
+                this.listChapters.forEach {
+                    if (it.isSelected) {
+                        listChapterId.add(it.chapterId)
+                    }
+                }
+                if (!listChapterId.isNullOrEmpty()) {
+                    val param = hashMapOf(
+                            "comicId" to comicId,
+                            "chapterIds" to listChapterId
+                    )
 
+                    viewModel.getListImageToDownload(param)
+                }
+            }
         }
     }
 
@@ -112,6 +138,7 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                         mutableListOf()
                     }
                     listChapterDownloadImageAdapter.notifyData(listChapters)
+                    tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, listChapters.count().toString())
                 }
             } else if (it.status == Status.ERROR) {
                 it.message?.let {
@@ -119,6 +146,44 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                 }
             }
         })
+
+        viewModel.getListImageToDownloadResult.observe(this, Observer {
+            loading(it)
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    if (!it.isNullOrEmpty()) {
+                        val listImageString = mutableListOf<String>()
+                        it.forEach {
+                            if (!it.imageUrls.isNullOrEmpty()) {
+                                listImageString.addAll(it.imageUrls)
+                            }
+                        }
+
+                        processDownloadImage(listImageString)
+                    }
+                }
+            } else if (it.status == Status.ERROR) {
+                it.message?.let {
+                    showDialog(it)
+                }
+            }
+        })
+    }
+
+    private fun processDownloadImage(listImageString: MutableList<String>) {
+        listImageString.forEach {
+            Glide.with(this)
+                    .load(it)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .downloadOnly(object : SimpleTarget<File?>() {
+                        override fun onLoadFailed(errorDrawable: Drawable?) {
+                            super.onLoadFailed(errorDrawable)
+                        }
+
+                        override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+                        }
+                    })
+        }
     }
 
     private fun loadData() {
@@ -130,6 +195,16 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         if (isFirstLoad) {
             initObserver()
             isFirstLoad = false
+        }
+    }
+
+    override fun onEvent(eventAction: Int, control: View?, data: Any?) {
+        when (eventAction) {
+            Constant.ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE -> {
+                val countSelectedChap = listChapters.count { it.isSelected }
+                tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countSelectedChap.toString())
+            }
+            else -> super.onEvent(eventAction, control, data)
         }
     }
 }

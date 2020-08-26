@@ -47,6 +47,18 @@
             android:visibility="visible"
             android:src="@drawable/ic_download"
             android:tint="@color/white"/>
+        <ImageView
+            android:id="@+id/ivReport"
+            android:layout_width="@dimen/dp50"
+            android:layout_height="@dimen/dp50"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivDownload"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/dp20"
+            android:padding="@dimen/dp10"
+            android:visibility="visible"
+            android:src="@drawable/ic_report"
+            android:tint="@color/white"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

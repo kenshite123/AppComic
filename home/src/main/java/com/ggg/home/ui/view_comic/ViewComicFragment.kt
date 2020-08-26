@@ -122,22 +122,10 @@ class ViewComicFragment : HomeBaseFragment() {
 
         ivDownload.setOnClickListener {
             navigationController.showChooseChapToDownloadImage(comicId = comicWithCategoryModel.comicModel!!.id)
-//            val listImageComic = listImageComicAdapter.listImageComic
-//            if (!listImageComic.isNullOrEmpty()) {
-//                listImageComic.forEach {url ->
-//                    Glide.with(this)
-//                            .load(url)
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                            .downloadOnly(object : SimpleTarget<File?>() {
-//                                override fun onLoadFailed(errorDrawable: Drawable?) {
-//                                    super.onLoadFailed(errorDrawable)
-//                                }
-//
-//                                override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
-//                                }
-//                            })
-//                }
-//            }
+        }
+
+        ivReport.setOnClickListener {
+
         }
 
         ivNext.setOnClickListener {

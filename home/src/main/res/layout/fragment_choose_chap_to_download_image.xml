@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlHeader"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp40"
+        android:layout_height="@dimen/dp60"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -39,7 +39,8 @@
                 android:id="@+id/tvLatest"
                 style="@style/normal_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="@string/TEXT_LATEST"
                 android:textSize="@dimen/sp22"
                 android:layout_marginEnd="@dimen/dp10"
@@ -55,7 +56,8 @@
                 android:id="@+id/tvOldest"
                 style="@style/normal_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="@string/TEXT_OLDEST"
                 android:textSize="@dimen/sp22"
                 android:textColor="#969696"/>

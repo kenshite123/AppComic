@@ -29,7 +29,7 @@ class CategoryAndLatestUpdateFragment: HomeBaseFragment() {
     private var pageCategory = 0
     private var currentPagePosition = 0
 
-    var isPullToRefreshLatestUpdate = false
+    private var isPullToRefreshLatestUpdate = false
     private var listComicLatestUpdate = listOf<ComicModel>()
     lateinit var pagerCategoryAndLatestUpdateAdapter: PagerCategoryAndLatestUpdateAdapter
 

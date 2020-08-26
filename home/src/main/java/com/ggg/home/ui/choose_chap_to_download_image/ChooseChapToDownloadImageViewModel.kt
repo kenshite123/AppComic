@@ -13,13 +13,24 @@ class ChooseChapToDownloadImageViewModel @Inject constructor(private val chooseC
     private val requestGetListChapters: MutableLiveData<Long> = MutableLiveData()
     var getListChaptersResult: LiveData<Resource<List<ChapterModel>>>
 
+    private val requestGetListImageToDownload: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
+    var getListImageToDownloadResult: LiveData<Resource<List<ChapterModel>>>
+
     init {
         getListChaptersResult = Transformations.switchMap(requestGetListChapters) {
             return@switchMap chooseChapToDownloadImageRepository.getListChapters(it)
+        }
+
+        getListImageToDownloadResult = Transformations.switchMap(requestGetListImageToDownload) {
+            return@switchMap chooseChapToDownloadImageRepository.getListImageToDownload(it)
         }
     }
 
     fun getListChapters(comicId: Long) {
         requestGetListChapters.value = comicId
+    }
+
+    fun getListImageToDownload(param: HashMap<String, Any>) {
+        requestGetListImageToDownload.value = param
     }
 }
