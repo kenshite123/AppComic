@@ -42,7 +42,7 @@ abstract class ComicDao {
     abstract fun getListHistory(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<HistoryModel>>
 
     @Transaction
-    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 /*and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '')*/ and comic.id in (:data) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC")
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 /*and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '')*/ and comic.id in (:data) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY cate.lastModified DESC, comic.lastModified DESC")
     abstract fun getListComicFollow(siteDeploy: Boolean, data: List<String>) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction

@@ -2,15 +2,13 @@ package com.ggg.home.data.remote
 
 import androidx.lifecycle.LiveData
 import com.ggg.common.ws.ApiResponse
+import com.ggg.common.ws.BaseResponse
 import com.ggg.home.data.model.*
-import com.ggg.home.data.model.post_param.RegisterBody
-import com.ggg.home.data.model.post_param.WriteCommentBody
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.CommentModel
-import com.ggg.home.data.model.post_param.ChangePassWordBody
-import com.ggg.home.data.model.post_param.DataGetListImageToDownloadParam
+import com.ggg.home.data.model.post_param.*
 import com.ggg.home.data.model.response.*
 import com.ggg.home.utils.ServerPath
 import retrofit2.http.*
@@ -170,4 +168,10 @@ interface HomeService {
             @Path("comicId") comicId: Long,
             @Body dataGetListImageToDownloadParam: DataGetListImageToDownloadParam
     ) : LiveData<ApiResponse<List<ChapterModel>>>
+
+    @POST(ServerPath.SEND_REPORT)
+    fun sendReport(
+            @Header("Authorization") authorization: String? = null,
+            @Body dataSendReportParam: DataSendReportParam
+    ) : LiveData<ApiResponse<Any>>
 }

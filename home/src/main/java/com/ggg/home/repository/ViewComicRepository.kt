@@ -4,11 +4,13 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.CCHadReadModel
 import com.ggg.home.data.model.ChapterHadRead
+import com.ggg.home.data.model.post_param.DataSendReportParam
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import org.jetbrains.anko.doAsync
@@ -65,6 +67,20 @@ class ViewComicRepository {
 
         }
 
+        return callApi.asLiveData()
+    }
+
+    fun sendReport(data: HashMap<String, Any?>): LiveData<Resource<Any>> {
+        val callApi = object : NetworkOnlyResource<Any>(appExecutors = executor) {
+            override fun createCall(): LiveData<ApiResponse<Any>> {
+                val token = data["token"] as? String
+                val dataSendReportParam = data["dataSendReportParam"] as DataSendReportParam
+                return api.sendReport(authorization = token, dataSendReportParam = dataSendReportParam)
+            }
+
+            override fun saveCallResult(item: Any) {
+            }
+        }
         return callApi.asLiveData()
     }
 }

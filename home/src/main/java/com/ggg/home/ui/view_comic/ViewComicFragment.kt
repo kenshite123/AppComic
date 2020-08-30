@@ -1,6 +1,5 @@
 package com.ggg.home.ui.view_comic
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,22 +9,24 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.CCHadReadModel
 import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.post_param.DataSendReportParam
+import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.ListImageComicAdapter
+import com.ggg.home.ui.custom.ReportComicView
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_view_comic.*
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
-import java.io.File
+import java.util.concurrent.TimeUnit
 
 class ViewComicFragment : HomeBaseFragment() {
     private lateinit var viewModel: ViewComicViewModel
@@ -43,6 +44,9 @@ class ViewComicFragment : HomeBaseFragment() {
     lateinit var layoutManagerForVertical: LinearLayoutManager
     lateinit var layoutManagerForHorizontal: LinearLayoutManager
     lateinit var chapterSelected: ChapterHadRead
+    lateinit var reportComicView: ReportComicView
+    var loginResponse: LoginResponse? = null
+    var token: String? = null
 
     companion object {
         val TAG = "ViewComicFragment"
@@ -64,7 +68,10 @@ class ViewComicFragment : HomeBaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_comic, container, false)
+        val view = inflater.inflate(R.layout.fragment_view_comic, container, false)
+        reportComicView = view.findViewById(R.id.reportComicView)
+        reportComicView.listener = this
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -73,6 +80,13 @@ class ViewComicFragment : HomeBaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewComicViewModel::class.java)
         hideActionBar()
         hideBottomNavView()
+
+        loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse?
+        token = if (loginResponse?.tokenType.isNullOrEmpty() || loginResponse?.accessToken.isNullOrEmpty()) {
+            null
+        } else {
+            loginResponse?.tokenType + loginResponse?.accessToken
+        }
 
         comicWithCategoryModel = arguments!!["comicWithCategoryModel"] as ComicWithCategoryModel
         listChapterModel = arguments!!["listChapterModel"] as List<ChapterHadRead>
@@ -99,6 +113,19 @@ class ViewComicFragment : HomeBaseFragment() {
     }
 
     override fun initObserver() {
+        val disposable = Observable.interval(10, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    isShowNavigation = true
+                    showHideNavigation()
+                }, {
+
+                }, {
+
+                })
+        messageEvent.add(disposable)
+
         viewModel.getListImageResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
@@ -113,6 +140,8 @@ class ViewComicFragment : HomeBaseFragment() {
                 }
             }
         })
+
+        viewModel.sendReportResult.observe(this, Observer {  })
     }
 
     override fun initEvent() {
@@ -125,7 +154,7 @@ class ViewComicFragment : HomeBaseFragment() {
         }
 
         ivReport.setOnClickListener {
-
+            showReportComicView()
         }
 
         ivNext.setOnClickListener {
@@ -233,6 +262,23 @@ class ViewComicFragment : HomeBaseFragment() {
                 showHideNavigation()
             }
 
+            Constant.ACTION_HIDE_REPORT_COMIC_VIEW -> {
+                hideReportComicView()
+            }
+
+            Constant.ACTION_SEND_REPORT -> {
+                hideReportComicView()
+                val dataSendReportParam = DataSendReportParam()
+                dataSendReportParam.comicId = comicWithCategoryModel.comicModel!!.id
+                dataSendReportParam.chapterId = chapterSelected.chapterModel!!.chapterId
+                val data = hashMapOf<String, Any?>(
+                        "token" to token,
+                        "dataSendReportParam" to dataSendReportParam
+                )
+                viewModel.sendReport(data)
+                showToastRelease(getString(R.string.TEXT_THANK_FOR_YOUR_REPORT))
+            }
+
             else -> super.onEvent(eventAction, control, data)
         }
     }
@@ -247,6 +293,17 @@ class ViewComicFragment : HomeBaseFragment() {
             llFooter.visibility = View.VISIBLE
             isShowNavigation = true
         }
+    }
+
+    private fun showReportComicView() {
+        isShowNavigation = true
+        showHideNavigation()
+        reportComicView.resetView()
+        reportComicView.visibility = View.VISIBLE
+    }
+
+    private fun hideReportComicView() {
+        reportComicView.visibility = View.GONE
     }
 
     override fun onDetach() {

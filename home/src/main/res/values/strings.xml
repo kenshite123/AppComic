@@ -97,4 +97,13 @@
     <string name="TEXT_TOTAL_CHAP">Total %s</string>
     <string name="TEXT_QUANTITY_CHAP_CHOSEN">Selected %s chap</string>
     <string name="TEXT_SELECT_ALL">Select all</string>
+    <string name="TEXT_REPORT">Report</string>
+    <string name="TEXT_REPORT_1">Vague pictures</string>
+    <string name="TEXT_REPORT_2">Out-of-order pictures</string>
+    <string name="TEXT_REPORT_3">Out-of-order chapters</string>
+    <string name="TEXT_REPORT_4">Inappropriate content</string>
+    <string name="TEXT_REPORT_5">Missing translation</string>
+    <string name="TEXT_REPORT_6">Wrong translation</string>
+    <string name="TEXT_SUBMIT">Submit</string>
+    <string name="TEXT_THANK_FOR_YOUR_REPORT">Thank for your report. We will review soon.</string>
 </resources>

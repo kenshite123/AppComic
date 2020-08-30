@@ -28,5 +28,6 @@ class ServerPath {
         const val GET_LIST_COMMENT_OF_CHAP = "api/comments/{comicId}/chapter/{chapterId}"
         const val GET_LIST_IMAGE_OF_CHAP = "api/comic/{comicId}/chapters/{chapterId}"
         const val GET_LIST_IMAGE_TO_DOWNLOAD = "api/comic/{comicId}/chapters"
+        const val SEND_REPORT = "/api/reports/create"
     }
 }
