@@ -178,9 +178,11 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                     .downloadOnly(object : SimpleTarget<File?>() {
                         override fun onLoadFailed(errorDrawable: Drawable?) {
                             super.onLoadFailed(errorDrawable)
+                            Timber.e("download image fail: $it")
                         }
 
                         override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+                            Timber.e("download image success: $it")
                         }
                     })
         }

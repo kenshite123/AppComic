@@ -267,10 +267,12 @@ class ViewComicFragment : HomeBaseFragment() {
             }
 
             Constant.ACTION_SEND_REPORT -> {
+                val content = data.toString()
                 hideReportComicView()
                 val dataSendReportParam = DataSendReportParam()
                 dataSendReportParam.comicId = comicWithCategoryModel.comicModel!!.id
                 dataSendReportParam.chapterId = chapterSelected.chapterModel!!.chapterId
+                dataSendReportParam.content = content
                 val data = hashMapOf<String, Any?>(
                         "token" to token,
                         "dataSendReportParam" to dataSendReportParam

@@ -28,42 +28,50 @@ class ReportComicView : ConstraintLayout {
 
     private fun addEvents() {
         ctlInfo.setOnClickListener {  }
+
         v1.setOnClickListener {
             listener.onEvent(Constant.ACTION_HIDE_REPORT_COMIC_VIEW, null, null)
         }
+
         tvSubmit.setOnClickListener {
             listener.onEvent(Constant.ACTION_SEND_REPORT, null, content)
         }
+
         rd1.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
                 content = rd1.text.toString()
             }
         }
+
         rd2.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
                 content = rd2.text.toString()
             }
         }
+
         rd3.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
                 content = rd3.text.toString()
             }
         }
+
         rd4.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
                 content = rd4.text.toString()
             }
         }
+
         rd5.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
                 content = rd5.text.toString()
             }
         }
+
         rd6.setOnCheckedChangeListener { _, isChecked ->
             checkEnableButtonSubmit()
             if (isChecked) {
