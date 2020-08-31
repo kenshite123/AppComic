@@ -7,6 +7,9 @@ object Constant {
     const val IS_FOLLOW = 1
     const val IS_UNFOLLOW = 0
 
+    const val IS_NOT_DOWNLOAD = 0
+    const val IS_DOWNLOADED = 1
+
     const val TYPE_SHOW_COMIC_DETAIL = "SHOW_COMIC_DETAIL"
 
     const val TOPIC_TYPE_COMMENT = "comment"
@@ -53,4 +56,6 @@ object Constant {
     const val ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE = 25
     const val ACTION_HIDE_REPORT_COMIC_VIEW = 26
     const val ACTION_SEND_REPORT = 27
+    const val ACTION_LOAD_MORE_LIST_COMIC_DOWNLOADED = 28
+    const val ACTION_CLICK_ON_COMIC_DOWNLOADED = 29
 }

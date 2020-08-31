@@ -33,6 +33,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     var loginResponse: LoginResponse? = null
     private var siteDeploy = false
     private var listFavoriteId: List<String> = listOf()
+    private var listDownloadedId: List<String> = listOf()
     private var isFromNotification = false
 
     override fun getCtx(): Context {
@@ -94,6 +95,11 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         if (!favorites.isNullOrEmpty()) {
             listFavoriteId = favorites.split(",")
         }
+
+        val downloaded = PrefsUtil.instance.getStringValue("downloaded", "")
+        if (!downloaded.isNullOrEmpty()) {
+            listDownloadedId = downloaded.split(",")
+        }
     }
 
     override fun getLoginResponse(): Any? {
@@ -148,6 +154,42 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun getListFavoriteId(): List<String> {
         return this.listFavoriteId
+    }
+
+    override fun addComicToDownloaded(comicId: Long) {
+        addComicToDownloaded(comicId.toString())
+    }
+
+    override fun addComicToDownloaded(comicId: String) {
+        if (!listDownloadedId.contains(comicId)) {
+            val s = listDownloadedId.toMutableList()
+            s.add(comicId)
+
+            listDownloadedId = s.toList()
+            PrefsUtil.instance.setStringValue("downloaded", TextUtils.join(",", listDownloadedId))
+        }
+    }
+
+    override fun removeComicToDownloaded(comicId: Long) {
+        removeComicToDownloaded(comicId.toString())
+    }
+
+    override fun removeComicToDownloaded(comicId: String) {
+        val s = listDownloadedId.toMutableList()
+        if (s.isNotEmpty()) {
+            s.remove(comicId)
+
+            listDownloadedId = s.toList()
+            PrefsUtil.instance.setStringValue("downloaded", TextUtils.join(",", listDownloadedId))
+        }
+    }
+
+    override fun clearListComicDownloaded() {
+        listDownloadedId = listOf()
+    }
+
+    override fun getListDownloadedId(): List<String> {
+        return this.listDownloadedId
     }
 
     override fun setFromNotification(isFromNotification: Boolean) {

@@ -23,6 +23,7 @@
     <string name="TEXT_DESCRIPTION">Description</string>
     <string name="TEXT_LIST_COMMENTS">Comments</string>
     <string name="TEXT_FOLLOW">Follow</string>
+    <string name="TEXT_DOWNLOADED">Downloaded</string>
     <string name="TEXT_UNFOLLOW">Unfollow</string>
     <string name="TEXT_DOWNLOAD">Download</string>
     <string name="TEXT_LOGIN">Login</string>

@@ -35,5 +35,7 @@ class ChapterModel : Serializable {
         var comicId: Long = 0
         var listImageUrlString: String = ""
         var lastModified: Long = System.currentTimeMillis()
+        @Ignore
         var isSelected = false
+        var hadDownloaded = Constant.IS_NOT_DOWNLOAD
 }

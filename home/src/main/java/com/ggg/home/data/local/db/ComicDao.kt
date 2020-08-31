@@ -2,6 +2,7 @@ package com.ggg.home.data.local.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.ggg.home.data.model.ComicDownloadedModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.HistoryModel
@@ -60,4 +61,12 @@ abstract class ComicDao {
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
     abstract fun getListLatestUpdateByFilter(siteDeploy: Boolean, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+//    @Transaction
+//    @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and chap.hadDownloaded = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+//    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicDownloadedModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic where 1 = 1 and comic.id in (:listComicId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int, listComicId: List<String>) : LiveData<List<ComicModel>>
 }

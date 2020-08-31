@@ -13,14 +13,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.ChapterModel
 import com.ggg.home.ui.adapter.ListChapterDownloadImageAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.ui.main.MainActivity
 import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_choose_chap_to_download_image.*
 import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.io.File
 
@@ -159,7 +162,10 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                             }
                         }
 
-                        processDownloadImage(listImageString)
+                        GGGAppInterface.gggApp.addComicToDownloaded(comicId)
+                        listChapterDownloadImageAdapter.notifyData(listChapters)
+                        tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, listChapters.count().toString())
+                        (activity as MainActivity).processDownloadImage(listImageString)
                     }
                 }
             } else if (it.status == Status.ERROR) {
@@ -168,24 +174,6 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                 }
             }
         })
-    }
-
-    private fun processDownloadImage(listImageString: MutableList<String>) {
-        listImageString.forEach {
-            Glide.with(this)
-                    .load(it)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .downloadOnly(object : SimpleTarget<File?>() {
-                        override fun onLoadFailed(errorDrawable: Drawable?) {
-                            super.onLoadFailed(errorDrawable)
-                            Timber.e("download image fail: $it")
-                        }
-
-                        override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
-                            Timber.e("download image success: $it")
-                        }
-                    })
-        }
     }
 
     private fun loadData() {

@@ -6,13 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyDbResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
-import com.ggg.home.data.model.CategoryOfComicModel
-import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.ComicWithCategoryModel
-import com.ggg.home.data.model.HistoryModel
+import com.ggg.home.data.model.*
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import javax.inject.Inject
@@ -99,5 +97,18 @@ class LibraryRepository {
         }
 
         return callApi.asLiveData()
+    }
+
+    fun getListComicDownloaded(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+        val getDataFromDb = object : NetworkOnlyDbResource<List<ComicModel>>(appExecutors = executor){
+            override fun loadFromDb(): LiveData<List<ComicModel>> {
+                val limit = data["limit"]!! as Int
+                val offset = data["offset"]!! as Int * limit
+                val listComicId = data["listComicId"] as List<String>
+                return db.comicDao().getListComicDownloaded(siteDeploy = GGGAppInterface.gggApp.siteDeploy,
+                        limit = limit, offset = offset, listComicId = listComicId)
+            }
+        }
+        return getDataFromDb.asLiveData()
     }
 }

@@ -2,6 +2,7 @@ package com.ggg.home.ui.main
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -10,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
 import com.ggg.home.R
@@ -25,7 +29,9 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
@@ -216,5 +222,25 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
     override fun hideLoading() {
         rltLoading.visibility = View.GONE
+    }
+
+    fun processDownloadImage(listImageString: MutableList<String>) {
+        doAsync {
+            listImageString.forEach {
+                Glide.with(GGGAppInterface.gggApp.ctx)
+                        .load(it)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .downloadOnly(object : SimpleTarget<File?>() {
+                            override fun onLoadFailed(errorDrawable: Drawable?) {
+                                super.onLoadFailed(errorDrawable)
+                                Timber.e("download image fail: $it")
+                            }
+
+                            override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+                                Timber.e("download image success: $it")
+                            }
+                        })
+            }
+        }
     }
 }

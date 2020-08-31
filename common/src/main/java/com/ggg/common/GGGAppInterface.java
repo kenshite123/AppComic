@@ -22,6 +22,12 @@ public class GGGAppInterface {
         public void removeComicToFavorite(String comicId);
         public void clearListComicFavorite();
         public List<String> getListFavoriteId();
+        public void addComicToDownloaded(long comicId);
+        public void addComicToDownloaded(String comicId);
+        public void removeComicToDownloaded(long comicId);
+        public void removeComicToDownloaded(String comicId);
+        public void clearListComicDownloaded();
+        public List<String> getListDownloadedId();
         public boolean checkIsLogin();
         public void setFromNotification(boolean isFromNotification);
         public boolean isFromNotification();

@@ -12,6 +12,7 @@ import com.ggg.home.data.model.post_param.DataGetListImageToDownloadParam
 import com.ggg.home.data.model.response.ChangePassWordResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
+import com.ggg.home.utils.Constant
 import javax.inject.Inject
 
 class ChooseChapToDownloadImageRepository {
@@ -40,7 +41,6 @@ class ChooseChapToDownloadImageRepository {
     fun getListImageToDownload(param: HashMap<String, Any>): LiveData<Resource<List<ChapterModel>>> {
         val callApi = object : NetworkOnlyResource<List<ChapterModel>>(appExecutors = executor){
             override fun saveCallResult(item: List<ChapterModel>) {
-
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ChapterModel>>> {
