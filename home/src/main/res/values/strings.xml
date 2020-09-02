@@ -98,6 +98,7 @@
     <string name="TEXT_TOTAL_CHAP">Total %s</string>
     <string name="TEXT_QUANTITY_CHAP_CHOSEN">Selected %s chap</string>
     <string name="TEXT_SELECT_ALL">Select all</string>
+    <string name="TEXT_DESELECT_ALL">Deselect all</string>
     <string name="TEXT_REPORT">Report</string>
     <string name="TEXT_REPORT_1">Vague pictures</string>
     <string name="TEXT_REPORT_2">Out-of-order pictures</string>

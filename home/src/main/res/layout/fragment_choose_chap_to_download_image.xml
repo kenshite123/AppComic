@@ -116,15 +116,17 @@
                 <com.rey.material.widget.LinearLayout
                     android:id="@+id/llSelectAll"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    style="@style/btn_ripple_normal_0">
+                    style="@style/btn_ripple_normal_0"
+                    android:gravity="center">
                     <ImageView
                         android:layout_width="@dimen/dp30"
                         android:layout_height="@dimen/dp30"
                         android:src="@drawable/ic_tick"
                         android:padding="@dimen/dp8"/>
                     <TextView
+                        android:id="@+id/tvSelectAll"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/dp30"
                         android:text="@string/TEXT_SELECT_ALL"
@@ -150,9 +152,10 @@
                 <com.rey.material.widget.LinearLayout
                     android:id="@+id/llDownload"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    style="@style/btn_ripple_normal_0">
+                    style="@style/btn_ripple_normal_0"
+                    android:gravity="center">
                     <ImageView
                         android:layout_width="@dimen/dp30"
                         android:layout_height="@dimen/dp30"

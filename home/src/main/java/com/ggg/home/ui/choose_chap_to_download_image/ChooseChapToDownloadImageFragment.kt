@@ -35,6 +35,7 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
     var countChapterSelected = 0
     var totalChapter = 0
     var listChapters = listOf<ChapterModel>()
+    var isSelectAll = true
 
     private lateinit var listChapterDownloadImageAdapter: ListChapterDownloadImageAdapter
 
@@ -103,10 +104,21 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         }
 
         llSelectAll.setOnClickListener {
-            if (!listChapters.isNullOrEmpty()) {
-                listChapters.map { it.isSelected = true }
+            if (isSelectAll) {
+                if (!listChapters.isNullOrEmpty()) {
+                    listChapters.map { it.isSelected = true }
+                    listChapterDownloadImageAdapter.notifyData(listChapters)
+                    tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count().toString())
+                }
+
+                isSelectAll = false
+                tvSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
+            } else {
+                listChapters.map { it.isSelected = false }
                 listChapterDownloadImageAdapter.notifyData(listChapters)
                 tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count().toString())
+                isSelectAll = true
+                tvSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
             }
         }
 
@@ -193,6 +205,14 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
             Constant.ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE -> {
                 val countSelectedChap = listChapters.count { it.isSelected }
                 tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countSelectedChap.toString())
+
+                if (countSelectedChap == totalChapter) {
+                    isSelectAll = false
+                    tvSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
+                } else {
+                    isSelectAll = true
+                    tvSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+                }
             }
             else -> super.onEvent(eventAction, control, data)
         }

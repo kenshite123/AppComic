@@ -42,12 +42,30 @@ class ComicDetailRepository {
 
             override fun saveCallResult(item: List<ChapterModel>) {
                 if (item.isNotEmpty()) {
-                    item.map {
-                        it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
-                        it.comicId = comicId
-                        it.lastModified = System.currentTimeMillis()
+                    val listChapter = db.chapterDao().getListChaptersComicData(comicId = comicId)
+                    if (!listChapter.isNullOrEmpty()) {
+                        for (i in 0 until item.count()) {
+                            val chapterModel = item[i]
+                            val list = listChapter.filter { it.chapterId == chapterModel.chapterId }
+                            if (list.isNullOrEmpty()) {
+                                chapterModel.listImageUrlString = TextUtils.join(", ", chapterModel.imageUrls)
+                                chapterModel.comicId = comicId
+                                chapterModel.lastModified = System.currentTimeMillis()
+                            } else {
+                                chapterModel.listImageUrlString = list[0].listImageUrlString
+                                chapterModel.comicId = comicId
+                                chapterModel.lastModified = System.currentTimeMillis()
+                            }
+                            db.chapterDao().insertChapter(chapterModel)
+                        }
+                    } else {
+                        item.map {
+                            it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
+                            it.comicId = comicId
+                            it.lastModified = System.currentTimeMillis()
+                            db.chapterDao().insertChapter(it)
+                        }
                     }
-                    db.chapterDao().insertListChapter(item)
                 }
             }
 

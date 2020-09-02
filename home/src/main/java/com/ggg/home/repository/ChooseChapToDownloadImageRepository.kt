@@ -1,5 +1,6 @@
 package com.ggg.home.repository
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkOnlyDbResource
@@ -41,6 +42,13 @@ class ChooseChapToDownloadImageRepository {
     fun getListImageToDownload(param: HashMap<String, Any>): LiveData<Resource<List<ChapterModel>>> {
         val callApi = object : NetworkOnlyResource<List<ChapterModel>>(appExecutors = executor){
             override fun saveCallResult(item: List<ChapterModel>) {
+                val comicId = param["comicId"]!!.toString().toLong()
+                item.forEach {
+                    it.comicId = comicId
+                    it.lastModified = System.currentTimeMillis()
+                    it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
+                    db.chapterDao().insertChapter(it)
+                }
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ChapterModel>>> {
