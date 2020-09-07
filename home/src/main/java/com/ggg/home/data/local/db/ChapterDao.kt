@@ -26,4 +26,7 @@ abstract class ChapterDao {
     @Transaction
     @Query("SELECT chap.* FROM ChapterModel chap LEFT JOIN CCHadReadModel cchrm on chap.chapterId = cchrm.chapterId and chap.comicId = cchrm.comicId WHERE 1 = 1 AND chap.chapterId = :chapterId ORDER BY chap.chapterId DESC")
     abstract fun getChapterHadRead(chapterId: Long): LiveData<ChapterHadRead>
+
+    @Query("UPDATE ChapterModel SET hadDownloaded = 0, listImageUrlString = '' where 1 = 1")
+    abstract fun clearCacheImageDownload()
 }

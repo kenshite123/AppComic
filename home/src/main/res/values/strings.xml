@@ -15,6 +15,7 @@
     <string name="APP_REVIEWS">App reviews</string>
     <string name="SHARE_FRIENDS">Share friends</string>
     <string name="MY_COMMENT">My comment</string>
+    <string name="CLEAR_CACHE">Clear cache image</string>
     <string name="FEEDBACK">Feedback</string>
     <string name="TEXT_COMIC_LATEST_UPDATE">New comics updated</string>
     <string name="TEXT_ANNOUNCE">Announce</string>

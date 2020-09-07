@@ -67,6 +67,6 @@ abstract class ComicDao {
 //    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicDownloadedModel>>
 
     @Transaction
-    @Query("SELECT comic.* FROM ComicModel comic where 1 = 1 and comic.id in (:listComicId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
-    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int, listComicId: List<String>) : LiveData<List<ComicModel>>
+    @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and chap.hadDownloaded = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY chap.lastModified DESC limit :limit offset :offset")
+    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicModel>>
 }

@@ -104,9 +104,8 @@ class LibraryRepository {
             override fun loadFromDb(): LiveData<List<ComicModel>> {
                 val limit = data["limit"]!! as Int
                 val offset = data["offset"]!! as Int * limit
-                val listComicId = data["listComicId"] as List<String>
                 return db.comicDao().getListComicDownloaded(siteDeploy = GGGAppInterface.gggApp.siteDeploy,
-                        limit = limit, offset = offset, listComicId = listComicId)
+                        limit = limit, offset = offset)
             }
         }
         return getDataFromDb.asLiveData()

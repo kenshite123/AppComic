@@ -9,6 +9,7 @@ import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
+import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class UserRepository {
@@ -37,5 +38,11 @@ class UserRepository {
             }
         }
         return callApi.asLiveData()
+    }
+
+    fun clearCacheImageDownload() {
+        doAsync {
+            db.chapterDao().clearCacheImageDownload()
+        }
     }
 }

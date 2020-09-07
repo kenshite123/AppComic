@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +53,12 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
             holder.tvChapterName.setTextColor(Color.parseColor("#949494"))
         }
 
+        if (chapterModel.hadDownloaded == Constant.IS_DOWNLOADED) {
+            holder.ivDownloaded.visibility = View.VISIBLE
+        } else {
+            holder.ivDownloaded.visibility = View.GONE
+        }
+
         holder.llChapters.setOnClickListener {
             listener.onEvent(Constant.ACTION_CLICK_ON_CHAPTER, it, position)
         }
@@ -60,6 +67,7 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvChapterName: TextView = itemView.findViewById(R.id.tvChapterName)
         var tvUpdateDate: TextView = itemView.findViewById(R.id.tvUpdateDate)
+        var ivDownloaded: ImageView = itemView.findViewById(R.id.ivDownloaded)
         var llChapters: LinearLayout = itemView.findViewById(R.id.llChapters)
     }
 }

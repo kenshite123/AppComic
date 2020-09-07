@@ -47,6 +47,7 @@ class ChooseChapToDownloadImageRepository {
                     it.comicId = comicId
                     it.lastModified = System.currentTimeMillis()
                     it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
+                    it.hadDownloaded = Constant.IS_DOWNLOADED
                     db.chapterDao().insertChapter(it)
                 }
             }

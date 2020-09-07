@@ -174,8 +174,9 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                             }
                         }
 
-                        GGGAppInterface.gggApp.addComicToDownloaded(comicId)
+//                        GGGAppInterface.gggApp.addComicToDownloaded(comicId)
                         listChapterDownloadImageAdapter.notifyData(listChapters)
+                        tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countChapterSelected.toString())
                         tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, listChapters.count().toString())
                         (activity as MainActivity).processDownloadImage(listImageString)
                     }

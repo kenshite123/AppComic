@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.main.HomeBaseFragment
 import io.vrinda.kotlinpermissions.DeviceInfo.Companion.getPackageName
 import kotlinx.android.synthetic.main.fragment_user.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
 import java.lang.StringBuilder
 import java.util.LinkedHashSet
@@ -33,7 +36,6 @@ class UserFragment : HomeBaseFragment() {
         @JvmStatic
         fun create() = UserFragment()
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -147,6 +149,20 @@ class UserFragment : HomeBaseFragment() {
 
         llShareApp.setOnClickListener {
             shareApp()
+        }
+
+        llClearCache.setOnClickListener {
+            showLoading()
+            doAsync {
+                viewModel.clearCacheImageDownload()
+                Glide.get(context!!).clearDiskCache()
+            }
+            
+            Glide.get(context!!).clearMemory()
+
+            Handler().postDelayed({
+                context?.runOnUiThread { hideLoading() }
+            }, 2000)
         }
     }
 

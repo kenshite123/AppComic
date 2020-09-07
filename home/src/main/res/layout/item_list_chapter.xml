@@ -1,34 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llChapters"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/dp5">
-
-    <TextView
-        android:id="@+id/tvChapterName"
-        style="@style/normal_text"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
-        android:gravity="center_vertical"
-        android:layout_marginStart="@dimen/dp10"
-        android:layout_marginEnd="@dimen/dp10"
-        android:textColor="#161616"
-        android:textSize="@dimen/sp24"/>
+        android:layout_height="@dimen/dp85">
+        <ImageView
+            android:id="@+id/ivDownloaded"
+            android:layout_width="@dimen/dp50"
+            android:layout_height="@dimen/dp50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="@dimen/dp10"
+            android:src="@drawable/ic_report"
+            android:padding="@dimen/dp10"/>
+        <TextView
+            android:id="@+id/tvChapterName"
+            style="@style/normal_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp50"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/dp10"
+            android:layout_marginEnd="@dimen/dp10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivDownloaded"
+            android:textColor="#161616"
+            android:textSize="@dimen/sp24"/>
 
-    <TextView
-        android:id="@+id/tvUpdateDate"
-        style="@style/normal_text"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp35"
-        android:gravity="right|center_vertical"
-        android:layout_marginStart="@dimen/dp10"
-        android:layout_marginEnd="@dimen/dp10"
-        android:textColor="#969696"
-        android:textSize="@dimen/sp20"/>
-
+        <TextView
+            android:id="@+id/tvUpdateDate"
+            style="@style/normal_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp35"
+            android:gravity="right|center_vertical"
+            android:layout_marginStart="@dimen/dp10"
+            android:layout_marginEnd="@dimen/dp10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvChapterName"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#969696"
+            android:textSize="@dimen/sp20"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp1"

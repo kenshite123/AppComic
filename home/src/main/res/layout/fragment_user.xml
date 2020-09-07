@@ -157,6 +157,33 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:ellipsize="end"
+                android:lines="1">
+
+                <ImageView
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:src="@drawable/icon_my_comment" />
+
+                <TextView
+                    style="@style/normal_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:text="@string/CLEAR_CACHE"
+                    android:textColor="@color/cText"
+                    android:textSize="@dimen/sp20" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/llFeedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

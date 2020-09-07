@@ -22,4 +22,8 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     fun logOut(param: HashMap<String, String>) {
         requestLogOut.value = param
     }
+
+    fun clearCacheImageDownload() {
+        userRepository.clearCacheImageDownload()
+    }
 }

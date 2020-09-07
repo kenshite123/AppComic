@@ -53,6 +53,7 @@ class ComicDetailRepository {
                                 chapterModel.lastModified = System.currentTimeMillis()
                             } else {
                                 chapterModel.listImageUrlString = list[0].listImageUrlString
+                                chapterModel.hadDownloaded = list[0].hadDownloaded
                                 chapterModel.comicId = comicId
                                 chapterModel.lastModified = System.currentTimeMillis()
                             }
