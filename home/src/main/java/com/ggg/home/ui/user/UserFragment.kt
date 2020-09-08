@@ -157,7 +157,7 @@ class UserFragment : HomeBaseFragment() {
                 viewModel.clearCacheImageDownload()
                 Glide.get(context!!).clearDiskCache()
             }
-            
+
             Glide.get(context!!).clearMemory()
 
             Handler().postDelayed({

@@ -16,7 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="@dimen/dp10"
-            android:src="@drawable/ic_report"
+            android:src="@drawable/icon_check_downloaded"
             android:padding="@dimen/dp10"/>
         <TextView
             android:id="@+id/tvChapterName"

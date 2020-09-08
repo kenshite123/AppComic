@@ -1,10 +1,12 @@
 package com.ggg.home.ui.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorLong
 import androidx.recyclerview.widget.RecyclerView
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
@@ -39,17 +41,27 @@ class ListChapterDownloadImageAdapter : RecyclerView.Adapter<ListChapterDownload
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chapterModel = listChapters[position]
-        if (chapterModel.isSelected) {
-            holder.tvChapter.setBackgroundResource(R.drawable.bg_chapter_selected)
-        } else {
-            holder.tvChapter.setBackgroundResource(R.drawable.bg_chapter_unselected)
-        }
-
         holder.tvChapter.text = chapterModel.chapterName
-        holder.tvChapter.setOnClickListener {
-            chapterModel.isSelected = !chapterModel.isSelected
-            notifyItemChanged(position)
-            listener.onEvent(Constant.ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE, null, null)
+
+        if (chapterModel.hadDownloaded == Constant.IS_DOWNLOADED) {
+            holder.tvChapter.setOnClickListener {  }
+            holder.tvChapter.setBackgroundResource(R.drawable.bg_chapter_selected)
+            holder.tvChapter.setTextColor(Color.WHITE)
+            holder.tvChapter.setBackgroundColor(Color.parseColor("#128bff"))
+        } else {
+            if (chapterModel.isSelected) {
+                holder.tvChapter.setBackgroundResource(R.drawable.bg_chapter_selected)
+            } else {
+                holder.tvChapter.setBackgroundResource(R.drawable.bg_chapter_unselected)
+            }
+
+            holder.tvChapter.setTextColor(Color.BLACK)
+
+            holder.tvChapter.setOnClickListener {
+                chapterModel.isSelected = !chapterModel.isSelected
+                notifyItemChanged(position)
+                listener.onEvent(Constant.ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE, null, null)
+            }
         }
     }
 

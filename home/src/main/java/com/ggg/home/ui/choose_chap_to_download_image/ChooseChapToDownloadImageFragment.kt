@@ -106,9 +106,9 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         llSelectAll.setOnClickListener {
             if (isSelectAll) {
                 if (!listChapters.isNullOrEmpty()) {
-                    listChapters.map { it.isSelected = true }
+                    listChapters.map { it.isSelected = it.hadDownloaded != Constant.IS_DOWNLOADED }
                     listChapterDownloadImageAdapter.notifyData(listChapters)
-                    tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count().toString())
+                    tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count{it.isSelected}.toString())
                 }
 
                 isSelectAll = false
@@ -116,7 +116,7 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
             } else {
                 listChapters.map { it.isSelected = false }
                 listChapterDownloadImageAdapter.notifyData(listChapters)
-                tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, listChapters.count().toString())
+                tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, "0")
                 isSelectAll = true
                 tvSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
             }
@@ -172,6 +172,14 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                             if (!it.imageUrls.isNullOrEmpty()) {
                                 listImageString.addAll(it.imageUrls)
                             }
+
+                            for (i in 0 until listChapters.count()) {
+                                val chapterModel = listChapters[i]
+                                if (it.chapterId == chapterModel.chapterId) {
+                                    chapterModel.hadDownloaded = Constant.IS_DOWNLOADED
+                                    break
+                                }
+                            }
                         }
 
 //                        GGGAppInterface.gggApp.addComicToDownloaded(comicId)
@@ -205,9 +213,10 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
         when (eventAction) {
             Constant.ACTION_CLICK_ON_CHAPTER_TO_DOWNLOAD_IMAGE -> {
                 val countSelectedChap = listChapters.count { it.isSelected }
+                val totalChapCanDownload = listChapters.count { it.hadDownloaded != Constant.IS_DOWNLOADED }
                 tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countSelectedChap.toString())
 
-                if (countSelectedChap == totalChapter) {
+                if (countSelectedChap == totalChapCanDownload) {
                     isSelectAll = false
                     tvSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
                 } else {
