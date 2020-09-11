@@ -141,6 +141,10 @@ class ComicDetailFragment : HomeBaseFragment() {
 
         tvViews.text = comic?.viewed?.let { Utils.formatNumber(it) }
 
+        if (!comicWithCategoryModel.categories.isNullOrEmpty()) {
+            listCategoryComicDetailAdapter.notifyData(comicWithCategoryModel.categories!!, false)
+        }
+
         val listFollow = GGGAppInterface.gggApp.listFavoriteId
         if (!listFollow.isEmpty()) {
             if (listFollow.contains(comicWithCategoryModel.comicModel!!.id.toString())) {
