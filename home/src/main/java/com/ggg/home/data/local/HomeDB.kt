@@ -8,9 +8,9 @@ import com.ggg.home.data.local.db.*
 import com.ggg.home.data.model.*
 
 @Database(entities = [ComicModel::class, CategoryModel::class, CategoryOfComicModel::class,
-    ChapterModel::class, CCHadReadModel::class, ComicRankModel::class],
+    ChapterModel::class, CCHadReadModel::class, ComicRankModel::class, DownloadComicModel::class],
         version = 3,
-        exportSchema = false)
+        exportSchema = true)
 abstract class HomeDB : RoomDatabase() {
     abstract fun comicDao(): ComicDao
     abstract fun categoryDao(): CategoryDao
@@ -18,6 +18,7 @@ abstract class HomeDB : RoomDatabase() {
     abstract fun chapterDao(): ChapterDao
     abstract fun ccHadReadDao(): CCHadReadDao
     abstract fun comicRankDao(): ComicRankDao
+    abstract fun downloadComicDao(): DownloadComicDao
 
     companion object {
         val migration12 = object : Migration(1, 2) {

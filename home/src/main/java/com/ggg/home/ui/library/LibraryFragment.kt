@@ -179,8 +179,7 @@ class LibraryFragment : HomeBaseFragment() {
     private fun loadDataListComicDownloaded() {
         val data = hashMapOf(
                 "limit" to items,
-                "offset" to pageDownloaded,
-                "listComicId" to GGGAppInterface.gggApp.listDownloadedId
+                "offset" to pageDownloaded
         )
         viewModel.getListComicDownloaded(data)
     }

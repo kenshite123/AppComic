@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -15,6 +16,7 @@ import com.ggg.home.R
 import com.ggg.home.data.model.ComicDownloadedModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.utils.Constant
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import java.lang.ref.WeakReference
 
 class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapter.ViewHolder> {
@@ -48,8 +50,19 @@ class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapt
         holder.tvComicTitle.text = comic.title
         holder.tvChap.text = comic.latestChapter
 
-        holder.ivComic.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
+        if (comic.percent == 100) {
+            holder.ctlProgressDownload.visibility = View.GONE
+            holder.ivComic.setOnClickListener {
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
+            }
+        } else {
+            holder.ctlProgressDownload.visibility = View.VISIBLE
+            holder.tvPercent.text = "${comic.percent}%"
+            holder.circularProgressBar.apply {
+                progressMax = 100F
+                progress = comic.percent.toFloat()
+            }
+            holder.ivComic.setOnClickListener {  }
         }
     }
 
@@ -57,5 +70,8 @@ class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapt
         var ivComic: ImageView = itemView.findViewById(R.id.ivComic)
         var tvComicTitle: TextView = itemView.findViewById(R.id.tvComicTitle)
         var tvChap: TextView = itemView.findViewById(R.id.tvChap)
+        var ctlProgressDownload: ConstraintLayout = itemView.findViewById(R.id.ctlProgressDownload)
+        var circularProgressBar: CircularProgressBar = itemView.findViewById(R.id.circularProgressBar)
+        var tvPercent: TextView = itemView.findViewById(R.id.tvPercent)
     }
 }

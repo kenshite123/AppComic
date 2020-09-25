@@ -5,15 +5,18 @@ import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkOnlyDbResource
 import com.ggg.common.utils.NetworkOnlyResource
+import com.ggg.common.utils.Utils
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.ChapterModel
+import com.ggg.home.data.model.DownloadComicModel
 import com.ggg.home.data.model.post_param.DataGetListImageToDownloadParam
 import com.ggg.home.data.model.response.ChangePassWordResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
 import com.ggg.home.utils.Constant
+import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class ChooseChapToDownloadImageRepository {
@@ -47,8 +50,16 @@ class ChooseChapToDownloadImageRepository {
                     it.comicId = comicId
                     it.lastModified = System.currentTimeMillis()
                     it.listImageUrlString = TextUtils.join(", ", it.imageUrls)
-                    it.hadDownloaded = Constant.IS_DOWNLOADED
+                    it.hadDownloaded = Constant.IS_NOT_DOWNLOAD
                     db.chapterDao().insertChapter(it)
+
+                    it.imageUrls.forEach {src ->
+                        val downloadComicModel = DownloadComicModel(srcImg = src, comicId = comicId,
+                                chapterId = it.chapterId, hadDownloaded = Constant.IS_NOT_DOWNLOAD)
+                        doAsync {
+                            db.downloadComicDao().insertDownloadComic(downloadComicModel = downloadComicModel)
+                        }
+                    }
                 }
             }
 

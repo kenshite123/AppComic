@@ -15,6 +15,7 @@ import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.latest_update.LatestUpdateViewModel
 import com.ggg.home.ui.library.LibraryViewModel
 import com.ggg.home.ui.login.LoginViewModel
+import com.ggg.home.ui.main.MainViewModel
 import com.ggg.home.ui.my_comment.MyCommentViewModel
 import com.ggg.home.ui.rank.RankViewModel
 import com.ggg.home.ui.register.RegisterViewModel
@@ -28,6 +29,10 @@ import dagger.multibindings.IntoMap
 
 @Module
 abstract class HomeViewModelModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -99,13 +99,41 @@ class LibraryRepository {
         return callApi.asLiveData()
     }
 
-    fun getListComicDownloaded(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+    fun getListComicDownloaded(data: HashMap<String, Int>): LiveData<Resource<List<ComicModel>>> {
         val getDataFromDb = object : NetworkOnlyDbResource<List<ComicModel>>(appExecutors = executor){
             override fun loadFromDb(): LiveData<List<ComicModel>> {
-                val limit = data["limit"]!! as Int
-                val offset = data["offset"]!! as Int * limit
-                return db.comicDao().getListComicDownloaded(siteDeploy = GGGAppInterface.gggApp.siteDeploy,
-                        limit = limit, offset = offset)
+                val limit = data["limit"]!!
+                val offset = data["offset"]!! * limit
+                val listDownloadComic = db.downloadComicDao().getListDownloadComicAndProgress(
+                        limit = limit,
+                        offset = offset
+                )
+                if (listDownloadComic.isNullOrEmpty()) {
+                    return MutableLiveData()
+                } else {
+                    val listComicId = mutableListOf<Long>()
+                    listDownloadComic.forEach {
+                        listComicId.add(it.comicId)
+                    }
+                    val listComic = db.comicDao().getListComicDownloaded(
+                            listComicId = listComicId,
+                            siteDeploy = GGGAppInterface.gggApp.siteDeploy
+                    )
+
+                    listComic.forEach {
+                        for (i in 0 until listDownloadComic.count()) {
+                            val downloadComicTotalProgress = listDownloadComic[i]
+                            if (it.id == downloadComicTotalProgress.comicId) {
+                                it.percent = downloadComicTotalProgress.totalDownloaded * 100 / (downloadComicTotalProgress.totalDownloaded + downloadComicTotalProgress.totalNotDownloaded)
+                                break
+                            }
+                        }
+                    }
+
+                    val liveData = MutableLiveData<List<ComicModel>>()
+                    liveData.postValue(listComic)
+                    return liveData
+                }
             }
         }
         return getDataFromDb.asLiveData()

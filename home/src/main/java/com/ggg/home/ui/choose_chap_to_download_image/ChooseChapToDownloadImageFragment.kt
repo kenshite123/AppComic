@@ -167,26 +167,23 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
             if (it.status == Status.SUCCESS) {
                 it.data?.let {
                     if (!it.isNullOrEmpty()) {
-                        val listImageString = mutableListOf<String>()
+                        val listImageDownload = mutableListOf<HashMap<String, Any>>()
                         it.forEach {
                             if (!it.imageUrls.isNullOrEmpty()) {
-                                listImageString.addAll(it.imageUrls)
-                            }
-
-                            for (i in 0 until listChapters.count()) {
-                                val chapterModel = listChapters[i]
-                                if (it.chapterId == chapterModel.chapterId) {
-                                    chapterModel.hadDownloaded = Constant.IS_DOWNLOADED
-                                    break
+                                it.imageUrls.forEach { url ->
+                                    val hmData = hashMapOf(
+                                            "chapterId" to it.chapterId,
+                                            "imageUrl" to url
+                                    )
+                                    listImageDownload.add(hmData)
                                 }
                             }
                         }
 
-//                        GGGAppInterface.gggApp.addComicToDownloaded(comicId)
                         listChapterDownloadImageAdapter.notifyData(listChapters)
                         tvQuantitySelected.text = getString(R.string.TEXT_QUANTITY_CHAP_CHOSEN, countChapterSelected.toString())
                         tvTotalChap.text = getString(R.string.TEXT_TOTAL_CHAP, listChapters.count().toString())
-                        (activity as MainActivity).processDownloadImage(listImageString)
+                        (activity as MainActivity).processDownloadImage(listImageDownload)
                     }
                 }
             } else if (it.status == Status.ERROR) {

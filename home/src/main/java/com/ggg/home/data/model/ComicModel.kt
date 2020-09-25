@@ -67,4 +67,6 @@ class ComicModel : Serializable {
 
         var authorsString: String? = ""
         var lastModified: Long = System.currentTimeMillis()
+        @Ignore
+        var percent: Int = 100
 }

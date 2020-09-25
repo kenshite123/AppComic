@@ -29,4 +29,7 @@ abstract class ChapterDao {
 
     @Query("UPDATE ChapterModel SET hadDownloaded = 0, listImageUrlString = '' where 1 = 1")
     abstract fun clearCacheImageDownload()
+
+    @Query("UPDATE ChapterModel SET hadDownloaded = 1 where 1 = 1 and chapterId = :chapterId")
+    abstract fun updateChapDownloaded(chapterId: Long)
 }

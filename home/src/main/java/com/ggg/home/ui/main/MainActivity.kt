@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
@@ -21,6 +23,7 @@ import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragment
 import com.ggg.home.ui.comic_detail.ComicDetailFragment
 import com.ggg.home.ui.home.HomeFragment
+import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
@@ -56,11 +59,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
     @Inject
     lateinit var navigationController: NavigationController
+    private lateinit var viewModel: MainViewModel
+    var isFirstLoad = true
     var fragNavController: FragNavController = FragNavController(this.supportFragmentManager, R.id.container)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         val isShowComicDetail = intent.getBooleanExtra("isShowComicDetail", false)
         val fragments: List<Fragment>
 
@@ -72,18 +78,18 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
             fragments = listOf(HomeFragment.create())
         }
 
-
         fragNavController.rootFragments = fragments
         fragNavController.initialize(0, savedInstanceState)
         ivLoading.setImageResource(R.drawable.loading)
         rltLoading.bringToFront()
         initEvents()
+
+        viewModel.getListComicNotDownloaded()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         fragNavController.onSaveInstanceState(outState!!)
-
     }
 
     override fun onBackPressed() {
@@ -224,11 +230,39 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         rltLoading.visibility = View.GONE
     }
 
-    fun processDownloadImage(listImageString: MutableList<String>) {
+    override fun onResume() {
+        super.onResume()
+        if (isFirstLoad) {
+            initObserver()
+            isFirstLoad = false
+        }
+    }
+
+    private fun initObserver() {
+        viewModel.getListComicNotDownloadedResult.observe(this, Observer {
+            it.data?.let {
+                val listImageDownload = mutableListOf<HashMap<String, Any>>()
+                it.forEach {
+                    val data = hashMapOf(
+                            "chapterId" to it.chapterId,
+                            "imageUrl" to it.srcImg
+                    )
+                    listImageDownload.add(data)
+                }
+                if (!listImageDownload.isNullOrEmpty()) {
+                    processDownloadImage(listImageDownload = listImageDownload)
+                }
+            }
+        })
+    }
+
+    fun processDownloadImage(listImageDownload: MutableList<HashMap<String, Any>>) {
         doAsync {
-            listImageString.forEach {
+            listImageDownload.forEach {
+                val chapterId = it["chapterId"] as Long
+                val imageUrl = it["imageUrl"] as String
                 Glide.with(GGGAppInterface.gggApp.ctx)
-                        .load(it)
+                        .load(imageUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .downloadOnly(object : SimpleTarget<File?>() {
                             override fun onLoadFailed(errorDrawable: Drawable?) {
@@ -238,6 +272,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
                             override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
                                 Timber.e("download image success: $it")
+                                viewModel.updateDownloadedComic(imageUrl, chapterId)
                             }
                         })
             }

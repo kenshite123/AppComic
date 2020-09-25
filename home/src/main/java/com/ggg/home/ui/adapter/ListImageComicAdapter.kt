@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
@@ -45,6 +48,9 @@ class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHol
         Glide.with(weakContext.get()!!)
                 .load(imageURL)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                .apply(RequestOptions()
+                        .override(Target.SIZE_ORIGINAL)
+                        .format(DecodeFormat.PREFER_ARGB_8888))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivComic)
 
