@@ -43,6 +43,7 @@ class UserRepository {
     fun clearCacheImageDownload() {
         doAsync {
             db.chapterDao().clearCacheImageDownload()
+            db.downloadComicDao().clearCacheImageDownload()
         }
     }
 }

@@ -23,9 +23,15 @@ abstract class DownloadComicDao {
     @Query("SELECT * FROM DownloadComicModel WHERE 1 = 1 AND chapterId = :chapterId")
     abstract fun getListDownloadComic(chapterId: Long) : List<DownloadComicModel>
 
-    @Query("select dcm.comicId, count(case when dcm.hadDownloaded = 1 then 1 else null end) as totalDownloaded, count(case when dcm.hadDownloaded = 0 then 1 else null end) as totalNotDownloaded from DownloadComicModel dcm where 1 = 1 GROUP BY dcm.comicId limit :limit offset :offset")
+    @Query("select dcm.comicId, count(case when dcm.hadDownloaded = 1 then 1 else null end) as totalDownloaded, count(id) as totalNeedToDownload from DownloadComicModel dcm where 1 = 1 GROUP BY dcm.comicId limit :limit offset :offset")
     abstract fun getListDownloadComicAndProgress(limit: Int, offset: Int) : List<DownloadComicTotalProgress>
 
     @Query("select * from DownloadComicModel where 1 = 1 and hadDownloaded = ${Constant.IS_NOT_DOWNLOAD}")
     abstract fun getAllListNotDownloaded() : LiveData<List<DownloadComicModel>>
+
+    @Query("DELETE FROM DownloadComicModel WHERE 1 = 1")
+    abstract fun clearCacheImageDownload()
+
+    @Query("DELETE FROM DownloadComicModel WHERE 1 = 1 AND comicId = :comicId")
+    abstract fun clearCacheImageDownload(comicId: Long)
 }

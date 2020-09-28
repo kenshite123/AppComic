@@ -27,6 +27,7 @@ import com.ggg.home.utils.Constant
 import com.ggg.common.utils.Utils
 import kotlinx.android.synthetic.main.fragment_comic_detail.*
 import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
 
 class ComicDetailFragment : HomeBaseFragment() {
@@ -243,6 +244,25 @@ class ComicDetailFragment : HomeBaseFragment() {
             }
         })
 
+        viewModel.getListChaptersDbResult.observe(this, Observer {
+            if (currentPagePosition == 0) {
+                loading(it)
+            }
+            if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
+                if (it.status == Status.SUCCESS_DB && currentPagePosition == 0 && it.data.isNullOrEmpty()) {
+                    showLoading()
+                }
+
+                it.data?.let {
+                    this.listChapters = it
+                    if (currentPagePosition == 0) {
+                        isLoadLatest = true
+                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                    }
+                }
+            }
+        })
+
         viewModel.getListCommentsResult.observe(this, Observer {
             if (currentPagePosition == 2) {
                 loading(it)
@@ -309,6 +329,13 @@ class ComicDetailFragment : HomeBaseFragment() {
                 }
             }
         })
+
+        val d1 = GGGAppInterface.gggApp.bus().toObservableDownloadImageDone().subscribe({
+            if (comicWithCategoryModel.comicModel?.id == it) {
+                viewModel.getListChaptersDb(it)
+            }
+        }, { Timber.e(it) }, {  })
+        messageEvent.add(d1)
     }
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {

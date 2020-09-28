@@ -124,7 +124,8 @@ class LibraryRepository {
                         for (i in 0 until listDownloadComic.count()) {
                             val downloadComicTotalProgress = listDownloadComic[i]
                             if (it.id == downloadComicTotalProgress.comicId) {
-                                it.percent = downloadComicTotalProgress.totalDownloaded * 100 / (downloadComicTotalProgress.totalDownloaded + downloadComicTotalProgress.totalNotDownloaded)
+                                it.totalDownloaded = downloadComicTotalProgress.totalDownloaded
+                                it.totalNeedToDownload = downloadComicTotalProgress.totalNeedToDownload
                                 break
                             }
                         }

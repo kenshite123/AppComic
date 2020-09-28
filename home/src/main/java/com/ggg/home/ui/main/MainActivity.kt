@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
+import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.ui.category.CategoryFragment
 import com.ggg.home.ui.category_and_latest_update.CategoryAndLatestUpdateFragment
@@ -240,17 +241,20 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
 
     private fun initObserver() {
         viewModel.getListComicNotDownloadedResult.observe(this, Observer {
-            it.data?.let {
-                val listImageDownload = mutableListOf<HashMap<String, Any>>()
-                it.forEach {
-                    val data = hashMapOf(
-                            "chapterId" to it.chapterId,
-                            "imageUrl" to it.srcImg
-                    )
-                    listImageDownload.add(data)
-                }
-                if (!listImageDownload.isNullOrEmpty()) {
-                    processDownloadImage(listImageDownload = listImageDownload)
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    val listImageDownload = mutableListOf<HashMap<String, Any>>()
+                    it.forEach {
+                        val data = hashMapOf(
+                                "comicId" to it.comicId,
+                                "chapterId" to it.chapterId,
+                                "imageUrl" to it.srcImg
+                        )
+                        listImageDownload.add(data)
+                    }
+                    if (!listImageDownload.isNullOrEmpty()) {
+                        processDownloadImage(listImageDownload = listImageDownload)
+                    }
                 }
             }
         })
@@ -259,6 +263,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
     fun processDownloadImage(listImageDownload: MutableList<HashMap<String, Any>>) {
         doAsync {
             listImageDownload.forEach {
+                val comicId = it["comicId"] as Long
                 val chapterId = it["chapterId"] as Long
                 val imageUrl = it["imageUrl"] as String
                 Glide.with(GGGAppInterface.gggApp.ctx)
@@ -268,11 +273,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                             override fun onLoadFailed(errorDrawable: Drawable?) {
                                 super.onLoadFailed(errorDrawable)
                                 Timber.e("download image fail: $it")
+                                viewModel.updateDownloadedComic(comicId, imageUrl, chapterId)
+//                                GGGAppInterface.gggApp.bus().sendDownloadImageSuccess(comicId)
                             }
 
                             override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
                                 Timber.e("download image success: $it")
-                                viewModel.updateDownloadedComic(imageUrl, chapterId)
+                                viewModel.updateDownloadedComic(comicId, imageUrl, chapterId)
+//                                GGGAppInterface.gggApp.bus().sendDownloadImageSuccess(comicId)
                             }
                         })
             }

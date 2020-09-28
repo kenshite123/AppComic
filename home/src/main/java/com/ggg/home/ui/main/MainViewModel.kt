@@ -20,8 +20,8 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
         }
     }
 
-    fun updateDownloadedComic(srcImg: String, chapterId: Long) {
-        mainRepository.updateDownloadedComic(srcImg, chapterId)
+    fun updateDownloadedComic(comicId: Long, srcImg: String, chapterId: Long) {
+        mainRepository.updateDownloadedComic(comicId, srcImg, chapterId)
     }
 
     fun updateDownloadComic(downloadComicModel: DownloadComicModel) {

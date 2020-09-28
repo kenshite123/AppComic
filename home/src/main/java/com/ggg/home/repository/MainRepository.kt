@@ -1,6 +1,7 @@
 package com.ggg.home.repository
 
 import androidx.lifecycle.LiveData
+import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkOnlyDbResource
 import com.ggg.common.utils.Utils
@@ -28,7 +29,7 @@ class MainRepository {
         this.db = db
     }
 
-    fun updateDownloadedComic(srcImg: String, chapterId: Long) {
+    fun updateDownloadedComic(comicId: Long, srcImg: String, chapterId: Long) {
         doAsync {
             db.downloadComicDao().updateDownloadedComic(id = Utils.md5(srcImg))
             val listDownloadComic = db.downloadComicDao().getListDownloadComic(chapterId = chapterId)
@@ -43,6 +44,8 @@ class MainRepository {
 
                 if (totalDownloaded == totalDownload) {
                     db.chapterDao().updateChapDownloaded(chapterId = chapterId)
+//                    db.downloadComicDao().clearCacheImageDownload(comicId = comicId)
+                    GGGAppInterface.gggApp.bus().sendDownloadImageDone(comicId = comicId)
                 }
             }
         }

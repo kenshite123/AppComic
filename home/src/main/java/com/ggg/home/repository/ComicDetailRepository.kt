@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
+import com.ggg.common.utils.NetworkOnlyDbResource
 import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
@@ -72,6 +73,15 @@ class ComicDetailRepository {
 
             override fun shouldFetch(data: List<ChapterHadRead>?): Boolean {
                 return true
+            }
+        }
+        return callApi.asLiveData()
+    }
+
+    fun getListChaptersDb(comicId: Long): LiveData<Resource<List<ChapterHadRead>>> {
+        val callApi = object : NetworkOnlyDbResource<List<ChapterHadRead>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<ChapterHadRead>> {
+                return db.chapterDao().getListChaptersComicHadRead(comicId)
             }
         }
         return callApi.asLiveData()

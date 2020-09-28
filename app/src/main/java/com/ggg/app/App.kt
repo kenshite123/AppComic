@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.facebook.stetho.Stetho
 import com.ggg.app.di.AppInjector
 import com.ggg.common.GGGAppInterface
+import com.ggg.common.utils.RxBus
 import com.ggg.home.data.model.ConfigModel
 import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.utils.PrefsUtil
@@ -35,6 +36,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     private var listFavoriteId: List<String> = listOf()
     private var listDownloadedId: List<String> = listOf()
     private var isFromNotification = false
+    private lateinit var bus: RxBus
 
     override fun getCtx(): Context {
         return this
@@ -64,6 +66,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         DeviceInfo.getBuildBrand()
         DeviceInfo.getAppName(applicationContext)
 
+        bus = RxBus()
         circularProgressDrawable = CircularProgressDrawable(this)
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
@@ -206,5 +209,9 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun getSiteDeploy(): Boolean {
         return this.siteDeploy
+    }
+
+    override fun bus(): RxBus {
+        return bus
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import com.ggg.common.utils.RxBus;
+
 import java.util.List;
 
 /**
@@ -33,6 +35,7 @@ public class GGGAppInterface {
         public boolean isFromNotification();
         public void setSiteDeploy(boolean siteDeploy);
         public boolean getSiteDeploy();
+        public RxBus bus();
     }
     public static AppInterface gggApp = null;
     public static void initInstance(AppInterface appinterface)

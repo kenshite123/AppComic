@@ -14,6 +14,9 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
     private val requestGetListChapters: MutableLiveData<Long> = MutableLiveData()
     var getListChaptersResult: LiveData<Resource<List<ChapterHadRead>>>
 
+    private val requestGetListChaptersDb: MutableLiveData<Long> = MutableLiveData()
+    var getListChaptersDbResult: LiveData<Resource<List<ChapterHadRead>>>
+
     private val requestGetListComments: MutableLiveData<HashMap<String, Long>> = MutableLiveData()
     var getListCommentsResult: LiveData<Resource<List<CommentModel>>>
 
@@ -29,6 +32,10 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
     init {
         getListChaptersResult = Transformations.switchMap(requestGetListChapters) {
             return@switchMap comicDetailRepository.getListChapters(it)
+        }
+
+        getListChaptersDbResult = Transformations.switchMap(requestGetListChaptersDb) {
+            return@switchMap comicDetailRepository.getListChaptersDb(it)
         }
 
         getListCommentsResult = Transformations.switchMap(requestGetListComments) {
@@ -50,6 +57,10 @@ class ComicDetailViewModel @Inject constructor(private val comicDetailRepository
 
     fun getListChapters(comicId: Long) {
         requestGetListChapters.value = comicId
+    }
+
+    fun getListChaptersDb(comicId: Long) {
+        requestGetListChaptersDb.value = comicId
     }
 
     fun insertCCHadRead(ccHadReadModel: CCHadReadModel) {
