@@ -83,14 +83,17 @@ class ItemComicDownloadView : ConstraintLayout {
 //        }, { Timber.e(it) }, {  })
 //        compositeDisposable.add(d)
 
-        val d1 = GGGAppInterface.gggApp.bus().toObservableDownloadImageDone().subscribe({
-            if (comic.id == it) {
-                comic.totalDownloaded = 0
-                comic.totalNeedToDownload = 0
-                weakContext.get()?.runOnUiThread {
-                    reloadProgress()
-                }
-            }
+        val d1 = GGGAppInterface.gggApp.bus()
+                .toObservableDownloadImageDone()
+                .subscribe({
+                    val comicId = it["comicId"]!!
+                    if (comic.id == comicId) {
+                        comic.totalDownloaded = 0
+                        comic.totalNeedToDownload = 0
+                        weakContext.get()?.runOnUiThread {
+                            reloadProgress()
+                        }
+                    }
         }, { Timber.e(it) }, {  })
         compositeDisposable.add(d1)
     }

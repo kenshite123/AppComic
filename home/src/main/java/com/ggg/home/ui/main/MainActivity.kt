@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -32,10 +33,14 @@ import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavController.RootFragmentListener {
@@ -85,7 +90,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         rltLoading.bringToFront()
         initEvents()
 
-        viewModel.getListComicNotDownloaded()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -240,24 +244,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
     }
 
     private fun initObserver() {
-        viewModel.getListComicNotDownloadedResult.observe(this, Observer {
-            if (it.status == Status.SUCCESS) {
-                it.data?.let {
-                    val listImageDownload = mutableListOf<HashMap<String, Any>>()
-                    it.forEach {
-                        val data = hashMapOf(
-                                "comicId" to it.comicId,
-                                "chapterId" to it.chapterId,
-                                "imageUrl" to it.srcImg
-                        )
-                        listImageDownload.add(data)
-                    }
-                    if (!listImageDownload.isNullOrEmpty()) {
-                        processDownloadImage(listImageDownload = listImageDownload)
-                    }
-                }
-            }
-        })
     }
 
     fun processDownloadImage(listImageDownload: MutableList<HashMap<String, Any>>) {
@@ -272,18 +258,38 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                         .downloadOnly(object : SimpleTarget<File?>() {
                             override fun onLoadFailed(errorDrawable: Drawable?) {
                                 super.onLoadFailed(errorDrawable)
-                                Timber.e("download image fail: $it")
-                                viewModel.updateDownloadedComic(comicId, imageUrl, chapterId)
-//                                GGGAppInterface.gggApp.bus().sendDownloadImageSuccess(comicId)
+                                Log.e("MainActivity", it.toString())
+                                processDownloadImageSuccess(imageUrl, chapterId, comicId)
                             }
 
                             override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
-                                Timber.e("download image success: $it")
-                                viewModel.updateDownloadedComic(comicId, imageUrl, chapterId)
-//                                GGGAppInterface.gggApp.bus().sendDownloadImageSuccess(comicId)
+                                Log.d("MainActivity", it.toString())
+                                processDownloadImageSuccess(imageUrl, chapterId, comicId)
                             }
                         })
             }
         }
+    }
+
+    fun processDownloadImageSuccess(imageUrl: String, chapterId: Long, comicId: Long) {
+        doAsync {
+            viewModel.updateDownloadedComic(imageUrl)
+            GGGAppInterface.gggApp.updateDownloadImageComicSuccess(chapterId)
+            val result = GGGAppInterface.gggApp.checkDownloadDone(chapterId)
+            if (result) {
+                GGGAppInterface.gggApp.removeComicDownloadFromHashMap(chapterId)
+                viewModel.updateChapDownloaded(chapterId = chapterId)
+                val hm = hashMapOf(
+                        "comicId" to comicId,
+                        "chapterId" to chapterId
+                )
+                GGGAppInterface.gggApp.bus().sendDownloadImageDone(hm = hm)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.updateListDownloadingToNotDownload()
     }
 }

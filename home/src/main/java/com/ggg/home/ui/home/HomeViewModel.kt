@@ -8,6 +8,7 @@ import com.ggg.common.vo.Resource
 import com.ggg.home.data.model.CategoryModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.data.model.DownloadComicModel
 import com.ggg.home.repository.HomeRepository
 import javax.inject.Inject
 
@@ -18,6 +19,9 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     private val requestGetListLatestUpdate: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
     var getListLatestUpdateResult: LiveData<Resource<List<ComicModel>>>
 
+    private val requestGetListComicNotDownloaded: MutableLiveData<Boolean> = MutableLiveData()
+    var getListComicNotDownloadedResult: LiveData<Resource<List<DownloadComicModel>>>
+
     init {
         getBannersResult = Transformations.switchMap(requestGetBanners) {
             return@switchMap homeRepository.getBanners()
@@ -25,6 +29,10 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
 
         getListLatestUpdateResult = Transformations.switchMap(requestGetListLatestUpdate) {
             return@switchMap homeRepository.getListLatestUpdate(it)
+        }
+
+        getListComicNotDownloadedResult = Transformations.switchMap(requestGetListComicNotDownloaded) {
+            return@switchMap homeRepository.getListComicNotDownloaded()
         }
     }
 
@@ -34,5 +42,29 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
 
     fun getListLatestUpdate(data: HashMap<String, Int>) {
         requestGetListLatestUpdate.value = data
+    }
+
+    fun updateDownloadedComic(srcImg: String) {
+        homeRepository.updateDownloadedComic(srcImg)
+    }
+
+    fun checkDownloadComic(comicId: Long, chapterId: Long) {
+        homeRepository.checkDownloadComic(comicId = comicId, chapterId = chapterId)
+    }
+
+    fun updateDownloadComic(downloadComicModel: DownloadComicModel) {
+        homeRepository.updateDownloadComic(downloadComicModel)
+    }
+
+    fun updateChapDownloaded(chapterId: Long) {
+        homeRepository.updateChapDownloaded(chapterId = chapterId)
+    }
+
+    fun getListComicNotDownloaded() {
+        requestGetListComicNotDownloaded.value = true
+    }
+
+    fun updateListNotDownloadToDownloading() {
+        homeRepository.updateListNotDownloadToDownloading()
     }
 }

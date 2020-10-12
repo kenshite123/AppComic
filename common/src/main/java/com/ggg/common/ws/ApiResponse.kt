@@ -5,6 +5,7 @@ import org.json.JSONObject
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
+import java.net.ConnectException
 
 /**
  * Created by TuanNguyen on 12/12/17.
@@ -18,7 +19,11 @@ class ApiResponse<T> {
     constructor(e: Throwable) {
         this.code = 500
         this.body = null
-        errorMessage = e.message
+        errorMessage = if (e is ConnectException) {
+            "Failed to connect to server"
+        } else {
+            e.message
+        }
     }
 
 

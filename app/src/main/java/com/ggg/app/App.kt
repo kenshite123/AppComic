@@ -22,6 +22,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import io.vrinda.kotlinpermissions.DeviceInfo
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -34,9 +35,9 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     var loginResponse: LoginResponse? = null
     private var siteDeploy = false
     private var listFavoriteId: List<String> = listOf()
-    private var listDownloadedId: List<String> = listOf()
     private var isFromNotification = false
     private lateinit var bus: RxBus
+    private var hashMapDownloadComic = hashMapOf<Long, HashMap<String, Int>>()
 
     override fun getCtx(): Context {
         return this
@@ -99,10 +100,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
             listFavoriteId = favorites.split(",")
         }
 
-        val downloaded = PrefsUtil.instance.getStringValue("downloaded", "")
-        if (!downloaded.isNullOrEmpty()) {
-            listDownloadedId = downloaded.split(",")
-        }
+        hashMapDownloadComic = hashMapOf()
     }
 
     override fun getLoginResponse(): Any? {
@@ -159,42 +157,6 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
         return this.listFavoriteId
     }
 
-    override fun addComicToDownloaded(comicId: Long) {
-        addComicToDownloaded(comicId.toString())
-    }
-
-    override fun addComicToDownloaded(comicId: String) {
-        if (!listDownloadedId.contains(comicId)) {
-            val s = listDownloadedId.toMutableList()
-            s.add(comicId)
-
-            listDownloadedId = s.toList()
-            PrefsUtil.instance.setStringValue("downloaded", TextUtils.join(",", listDownloadedId))
-        }
-    }
-
-    override fun removeComicToDownloaded(comicId: Long) {
-        removeComicToDownloaded(comicId.toString())
-    }
-
-    override fun removeComicToDownloaded(comicId: String) {
-        val s = listDownloadedId.toMutableList()
-        if (s.isNotEmpty()) {
-            s.remove(comicId)
-
-            listDownloadedId = s.toList()
-            PrefsUtil.instance.setStringValue("downloaded", TextUtils.join(",", listDownloadedId))
-        }
-    }
-
-    override fun clearListComicDownloaded() {
-        listDownloadedId = listOf()
-    }
-
-    override fun getListDownloadedId(): List<String> {
-        return this.listDownloadedId
-    }
-
     override fun setFromNotification(isFromNotification: Boolean) {
         this.isFromNotification = isFromNotification
     }
@@ -213,5 +175,61 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
 
     override fun bus(): RxBus {
         return bus
+    }
+
+    override fun getHashMapDownloadComic(): HashMap<Long, HashMap<String, Int>> {
+        return this.hashMapDownloadComic
+    }
+
+    override fun setHashMapDownloadComic(hashMapDownloadComic: HashMap<Long, HashMap<String, Int>>) {
+        this.hashMapDownloadComic = hashMapDownloadComic
+    }
+
+    override fun addNewComicDownloadToHashMap(chapterId: Long, totalNeedToDownload: Int, totalDownloaded: Int) {
+        try {
+            val hm = hashMapOf(
+                    "totalNeedToDownload" to totalNeedToDownload,
+                    "totalDownloaded" to totalDownloaded
+            )
+            hashMapDownloadComic[chapterId] = hm
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+    }
+
+    override fun removeComicDownloadFromHashMap(chapterId: Long) {
+        try {
+            hashMapDownloadComic.remove(chapterId)
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+    }
+
+    override fun updateDownloadImageComicSuccess(chapterId: Long) {
+        try {
+            val hashMap = hashMapDownloadComic[chapterId]!!
+            val totalNeedToDownload = hashMap["totalNeedToDownload"]!!
+            var totalDownloaded = hashMap["totalDownloaded"]!!
+            totalDownloaded++
+            val hm = hashMapOf(
+                    "totalNeedToDownload" to totalNeedToDownload,
+                    "totalDownloaded" to totalDownloaded
+            )
+            hashMapDownloadComic[chapterId] = hm
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+    }
+
+    override fun checkDownloadDone(chapterId: Long): Boolean {
+        return try {
+            val hashMap = hashMapDownloadComic[chapterId]!!
+            val totalNeedToDownload = hashMap["totalNeedToDownload"]!!
+            val totalDownloaded = hashMap["totalDownloaded"]!!
+            totalDownloaded == totalNeedToDownload
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            false
+        }
     }
 }

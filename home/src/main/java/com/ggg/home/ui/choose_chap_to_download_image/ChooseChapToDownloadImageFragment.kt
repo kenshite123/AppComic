@@ -178,6 +178,8 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                                     )
                                     listImageDownload.add(hmData)
                                 }
+
+                                GGGAppInterface.gggApp.addNewComicDownloadToHashMap(it.chapterId, it.imageUrls.count(), 0)
                             }
                         }
 

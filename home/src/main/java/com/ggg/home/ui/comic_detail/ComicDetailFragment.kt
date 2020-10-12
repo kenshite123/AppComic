@@ -245,14 +245,10 @@ class ComicDetailFragment : HomeBaseFragment() {
         })
 
         viewModel.getListChaptersDbResult.observe(this, Observer {
-            if (currentPagePosition == 0) {
-                loading(it)
-            }
+//            if (currentPagePosition == 0) {
+//                loading(it)
+//            }
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
-                if (it.status == Status.SUCCESS_DB && currentPagePosition == 0 && it.data.isNullOrEmpty()) {
-                    showLoading()
-                }
-
                 it.data?.let {
                     this.listChapters = it
                     if (currentPagePosition == 0) {
@@ -330,10 +326,26 @@ class ComicDetailFragment : HomeBaseFragment() {
             }
         })
 
-        val d1 = GGGAppInterface.gggApp.bus().toObservableDownloadImageDone().subscribe({
-            if (comicWithCategoryModel.comicModel?.id == it) {
-                viewModel.getListChaptersDb(it)
-            }
+        val d1 = GGGAppInterface.gggApp.bus()
+                .toObservableDownloadImageDone()
+                .subscribe({
+                    val comicId = it["comicId"]!!
+                    val chapterId = it["chapterId"]!!
+                    if (comicWithCategoryModel.comicModel?.id == comicId) {
+//                        viewModel.getListChaptersDb(it)
+                        for (i in 0 until this.listChapters.count()) {
+                            val chapter = this.listChapters[i]
+                            if (chapter.chapterModel != null) {
+                                if (chapter.chapterModel!!.chapterId == chapterId) {
+                                    chapter.chapterModel!!.hadDownloaded = Constant.IS_DOWNLOADED
+                                    if (currentPagePosition == 0) {
+                                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    }
         }, { Timber.e(it) }, {  })
         messageEvent.add(d1)
     }

@@ -29,6 +29,12 @@ abstract class DownloadComicDao {
     @Query("select * from DownloadComicModel where 1 = 1 and hadDownloaded = ${Constant.IS_NOT_DOWNLOAD}")
     abstract fun getAllListNotDownloaded() : LiveData<List<DownloadComicModel>>
 
+    @Query("update DownloadComicModel set hadDownloaded = ${Constant.IS_DOWNLOADING} where 1 = 1 and hadDownloaded = ${Constant.IS_NOT_DOWNLOAD}")
+    abstract fun updateListNotDownloadToDownloading()
+
+    @Query("update DownloadComicModel set hadDownloaded = ${Constant.IS_NOT_DOWNLOAD} where 1 = 1 and hadDownloaded = ${Constant.IS_DOWNLOADING}")
+    abstract fun updateListDownloadingToNotDownload()
+
     @Query("DELETE FROM DownloadComicModel WHERE 1 = 1")
     abstract fun clearCacheImageDownload()
 

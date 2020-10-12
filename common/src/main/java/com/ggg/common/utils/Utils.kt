@@ -41,5 +41,11 @@ class Utils {
             }
             return ""
         }
+
+        fun freeMemory() {
+            System.runFinalization()
+            Runtime.getRuntime().gc()
+            System.gc()
+        }
     }
 }

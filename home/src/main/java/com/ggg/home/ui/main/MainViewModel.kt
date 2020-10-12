@@ -11,24 +11,18 @@ import com.ggg.home.repository.MainRepository
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
-    private val requestGetListComicNotDownloaded: MutableLiveData<Boolean> = MutableLiveData()
-    var getListComicNotDownloadedResult: LiveData<Resource<List<DownloadComicModel>>>
-
     init {
-        getListComicNotDownloadedResult = Transformations.switchMap(requestGetListComicNotDownloaded) {
-            return@switchMap mainRepository.getListComicNotDownloaded()
-        }
     }
 
-    fun updateDownloadedComic(comicId: Long, srcImg: String, chapterId: Long) {
-        mainRepository.updateDownloadedComic(comicId, srcImg, chapterId)
+    fun updateDownloadedComic(srcImg: String) {
+        mainRepository.updateDownloadedComic(srcImg)
     }
 
-    fun updateDownloadComic(downloadComicModel: DownloadComicModel) {
-        mainRepository.updateDownloadComic(downloadComicModel)
+    fun updateChapDownloaded(chapterId: Long) {
+        mainRepository.updateChapDownloaded(chapterId = chapterId)
     }
 
-    fun getListComicNotDownloaded() {
-        requestGetListComicNotDownloaded.value = true
+    fun updateListDownloadingToNotDownload() {
+        mainRepository.updateListDownloadingToNotDownload()
     }
 }

@@ -28,11 +28,19 @@ import com.ggg.common.ui.utils.BaseInfoCellModel
 import com.ggg.common.ui.utils.BaseSectionData
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
+import com.ggg.common.utils.Utils
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import dmax.dialog.SpotsDialog
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import io.vrinda.kotlinpermissions.PermissionsActivity
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseCellAdapter.ItemCellClickListener, OnEventControlListener {
@@ -48,6 +56,8 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
     private val registry = LifecycleRegistry(this)
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    var compositeDisposable = CompositeDisposable()
+    val subjectFreeMemory: Subject<Boolean> = PublishSubject.create()
     override fun getLifecycle(): LifecycleRegistry {
         return registry
     }
@@ -68,8 +78,25 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
                 .build()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        compositeDisposable = CompositeDisposable()
 
+        initObserve()
     }
+
+    private fun initObserve() {
+        val d = Observable.interval(5, TimeUnit.SECONDS)
+                .observeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe({
+                    Utils.freeMemory()
+                }, {
+                    Timber.e(it)
+                }, {
+
+                })
+        compositeDisposable.add(d)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         dialog = SpotsDialog.Builder()
@@ -79,6 +106,7 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
                 .build()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        compositeDisposable = CompositeDisposable()
     }
 
     fun showActionBar() {
@@ -200,6 +228,7 @@ open class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector, BaseC
     override fun onDestroy() {
         super.onDestroy()
         dialog.dismiss()
+        compositeDisposable.clear()
     }
 //    fun hideLoading(){
 //        if (dialog.isShowing) {

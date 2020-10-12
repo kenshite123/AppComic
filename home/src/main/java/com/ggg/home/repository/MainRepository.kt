@@ -29,40 +29,21 @@ class MainRepository {
         this.db = db
     }
 
-    fun updateDownloadedComic(comicId: Long, srcImg: String, chapterId: Long) {
+    fun updateDownloadedComic(srcImg: String) {
         doAsync {
             db.downloadComicDao().updateDownloadedComic(id = Utils.md5(srcImg))
-            val listDownloadComic = db.downloadComicDao().getListDownloadComic(chapterId = chapterId)
-            if (!listDownloadComic.isNullOrEmpty()) {
-                val totalDownload = listDownloadComic.count()
-                var totalDownloaded = 0
-                listDownloadComic.forEach {
-                    if (it.hadDownloaded == Constant.IS_DOWNLOADED) {
-                        totalDownloaded++
-                    }
-                }
-
-                if (totalDownloaded == totalDownload) {
-                    db.chapterDao().updateChapDownloaded(chapterId = chapterId)
-//                    db.downloadComicDao().clearCacheImageDownload(comicId = comicId)
-                    GGGAppInterface.gggApp.bus().sendDownloadImageDone(comicId = comicId)
-                }
-            }
         }
     }
 
-    fun updateDownloadComic(downloadComicModel: DownloadComicModel) {
+    fun updateChapDownloaded(chapterId: Long) {
         doAsync {
-            db.downloadComicDao().insertDownloadComic(downloadComicModel = downloadComicModel)
+            db.chapterDao().updateChapDownloaded(chapterId = chapterId)
         }
     }
 
-    fun getListComicNotDownloaded(): LiveData<Resource<List<DownloadComicModel>>> {
-        val getDataFromDb = object : NetworkOnlyDbResource<List<DownloadComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<DownloadComicModel>> {
-                return db.downloadComicDao().getAllListNotDownloaded()
-            }
+    fun updateListDownloadingToNotDownload() {
+        doAsync {
+            db.downloadComicDao().updateListDownloadingToNotDownload()
         }
-        return getDataFromDb.asLiveData()
     }
 }

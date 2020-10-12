@@ -9,27 +9,18 @@ import io.reactivex.subjects.PublishSubject
  */
 class RxBus {
     private val publisher = PublishSubject.create<Any>()
-    private var busDownloadImageSuccess = PublishSubject.create<Long>()
-    private var busDownloadImageDone = PublishSubject.create<Long>()
+    private var busDownloadImageDone = PublishSubject.create<HashMap<String, Long>>()
 
     fun publish(event: Any) {
         publisher.onNext(event)
     }
 
-    fun toObservableDownloadImageSuccess() : Observable<Long> {
-        return busDownloadImageSuccess
-    }
-
-    fun sendDownloadImageSuccess(comicId: Long) {
-        busDownloadImageSuccess.onNext(comicId)
-    }
-
-    fun toObservableDownloadImageDone() : Observable<Long> {
+    fun toObservableDownloadImageDone() : Observable<HashMap<String, Long>> {
         return busDownloadImageDone
     }
 
-    fun sendDownloadImageDone(comicId: Long) {
-        busDownloadImageDone.onNext(comicId)
+    fun sendDownloadImageDone(hm: HashMap<String, Long>) {
+        busDownloadImageDone.onNext(hm)
     }
 
     // Listen should return an Observable and not the publisher

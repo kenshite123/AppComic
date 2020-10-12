@@ -19,6 +19,7 @@ import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.ui.adapter.ListComicAdapter
 import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
+import com.ggg.home.ui.main.MainActivity
 import com.ggg.home.utils.Constant
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.bundleOf
@@ -159,6 +160,7 @@ class HomeFragment : HomeBaseFragment() {
                 "offset" to 0
         )
         viewModel.getListLatestUpdate(dataLatestUpdate)
+        viewModel.getListComicNotDownloaded()
     }
 
     override fun onPause() {
@@ -203,6 +205,30 @@ class HomeFragment : HomeBaseFragment() {
                 swipeRefreshLayout.isRefreshing = false
                 it.message?.let {
                     showDialog(it)
+                }
+            }
+        })
+
+        viewModel.getListComicNotDownloadedResult.observe(this, androidx.lifecycle.Observer {
+            if (it.status == Status.SUCCESS) {
+                it.data?.let {
+                    val listImageDownload = mutableListOf<HashMap<String, Any>>()
+                    it.forEach {
+                        val data = hashMapOf(
+                                "comicId" to it.comicId,
+                                "chapterId" to it.chapterId,
+                                "imageUrl" to it.srcImg
+                        )
+                        listImageDownload.add(data)
+                    }
+                    if (!listImageDownload.isNullOrEmpty()) {
+                        val list = it.groupBy { it.chapterId }
+                        list.entries.forEach {
+                            GGGAppInterface.gggApp.addNewComicDownloadToHashMap(it.key, it.value.count(), 0)
+                        }
+                        (activity as MainActivity).processDownloadImage(listImageDownload = listImageDownload)
+                        viewModel.updateListNotDownloadToDownloading()
+                    }
                 }
             }
         })

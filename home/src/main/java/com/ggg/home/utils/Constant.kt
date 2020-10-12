@@ -9,6 +9,7 @@ object Constant {
 
     const val IS_NOT_DOWNLOAD = 0
     const val IS_DOWNLOADED = 1
+    const val IS_DOWNLOADING = 2
 
     const val TYPE_SHOW_COMIC_DETAIL = "SHOW_COMIC_DETAIL"
 

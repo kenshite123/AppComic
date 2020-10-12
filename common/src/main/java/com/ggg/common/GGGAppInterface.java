@@ -6,6 +6,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.ggg.common.utils.RxBus;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,18 +25,18 @@ public class GGGAppInterface {
         public void removeComicToFavorite(String comicId);
         public void clearListComicFavorite();
         public List<String> getListFavoriteId();
-        public void addComicToDownloaded(long comicId);
-        public void addComicToDownloaded(String comicId);
-        public void removeComicToDownloaded(long comicId);
-        public void removeComicToDownloaded(String comicId);
-        public void clearListComicDownloaded();
-        public List<String> getListDownloadedId();
         public boolean checkIsLogin();
         public void setFromNotification(boolean isFromNotification);
         public boolean isFromNotification();
         public void setSiteDeploy(boolean siteDeploy);
         public boolean getSiteDeploy();
         public RxBus bus();
+        public HashMap<Long, HashMap<String, Integer>> getHashMapDownloadComic();
+        public void setHashMapDownloadComic(HashMap<Long, HashMap<String, Integer>> hashMapDownloadComic);
+        public void addNewComicDownloadToHashMap(long chapterId, int totalNeedToDownload, int totalDownloaded);
+        public void removeComicDownloadFromHashMap(long chapterId);
+        public void updateDownloadImageComicSuccess(long chapterId);
+        public boolean checkDownloadDone(long chapterId);
     }
     public static AppInterface gggApp = null;
     public static void initInstance(AppInterface appinterface)

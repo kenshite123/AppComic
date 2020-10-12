@@ -1,27 +1,17 @@
 package com.ggg.home.repository
 
 import android.text.TextUtils
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.ggg.common.GGGAppInterface
-import com.ggg.common.utils.AppExecutors
-import com.ggg.common.utils.NetworkBoundResource
-import com.ggg.common.utils.NetworkOnlyResource
+import com.ggg.common.utils.*
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
-import com.ggg.home.data.model.CategoryModel
-import com.ggg.home.data.model.CategoryOfComicModel
-import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.ComicWithCategoryModel
-import com.ggg.home.data.model.response.LoginResponse
+import com.ggg.home.data.model.*
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
+import com.ggg.home.utils.Constant
 import org.jetbrains.anko.doAsync
-import timber.log.Timber
 import javax.inject.Inject
 
 class HomeRepository {
@@ -85,5 +75,62 @@ class HomeRepository {
             }
         }
         return callApi.asLiveData()
+    }
+
+    fun updateDownloadedComic(srcImg: String) {
+        doAsync {
+            db.downloadComicDao().updateDownloadedComic(id = Utils.md5(srcImg))
+        }
+    }
+
+    fun checkDownloadComic(comicId: Long, chapterId: Long) {
+        doAsync {
+            val listDownloadComic = db.downloadComicDao().getListDownloadComic(chapterId = chapterId)
+            if (!listDownloadComic.isNullOrEmpty()) {
+                val totalDownload = listDownloadComic.count()
+                var totalDownloaded = 0
+                listDownloadComic.forEach {
+                    if (it.hadDownloaded == Constant.IS_DOWNLOADED) {
+                        totalDownloaded++
+                    }
+                }
+
+                if (totalDownloaded == totalDownload) {
+                    db.chapterDao().updateChapDownloaded(chapterId = chapterId)
+                    val hm = hashMapOf(
+                            "comicId" to comicId,
+                            "chapterId" to chapterId
+                    )
+                    GGGAppInterface.gggApp.bus().sendDownloadImageDone(hm = hm)
+                }
+            }
+        }
+    }
+
+    fun updateChapDownloaded(chapterId: Long) {
+        doAsync {
+            db.chapterDao().updateChapDownloaded(chapterId = chapterId)
+        }
+    }
+
+    fun updateDownloadComic(downloadComicModel: DownloadComicModel) {
+        doAsync {
+            db.downloadComicDao().insertDownloadComic(downloadComicModel = downloadComicModel)
+        }
+    }
+
+    fun getListComicNotDownloaded(): LiveData<Resource<List<DownloadComicModel>>> {
+        val getDataFromDb = object : NetworkOnlyDbResource<List<DownloadComicModel>>(appExecutors = executor) {
+            override fun loadFromDb(): LiveData<List<DownloadComicModel>> {
+                return db.downloadComicDao().getAllListNotDownloaded()
+            }
+        }
+        return getDataFromDb.asLiveData()
+    }
+
+    fun updateListNotDownloadToDownloading() {
+        doAsync {
+            db.downloadComicDao().updateListNotDownloadToDownloading()
+        }
     }
 }
