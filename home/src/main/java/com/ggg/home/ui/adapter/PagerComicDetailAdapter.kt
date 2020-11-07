@@ -60,9 +60,10 @@ class PagerComicDetailAdapter : PagerAdapter {
         notifyDataSetChanged()
     }
 
-    fun notifyData(listChapters: List<ChapterHadRead>, isLoadLatest: Boolean, isLoadOldest: Boolean) {
+    fun notifyData(listChapters: List<ChapterHadRead>, isLoadLatest: Boolean, isLoadOldest: Boolean, comicWithCategoryModel: ComicWithCategoryModel?) {
         this.listChapters = listChapters
         this.isLoadLatest = isLoadLatest
+        this.comicWithCategoryModel = comicWithCategoryModel
         notifyDataSetChanged()
     }
 
@@ -88,7 +89,7 @@ class PagerComicDetailAdapter : PagerAdapter {
                     tvOldest.setTextColor(Color.parseColor("#d75c3b"))
                 }
 
-                val listChapterAdapter = ListChapterAdapter(weakContext.get()!!, listener, listChapters)
+                val listChapterAdapter = ListChapterAdapter(weakContext.get()!!, listener, listChapters, comicWithCategoryModel)
                 rvListChapter.setHasFixedSize(false)
                 rvListChapter.layoutManager = LinearLayoutManager(weakContext.get()!!, RecyclerView.VERTICAL, false)
                 rvListChapter.adapter = listChapterAdapter

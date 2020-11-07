@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.bumptech.glide.signature.ObjectKey
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.ui.BaseActivity
 import com.ggg.common.vo.Status
@@ -29,6 +30,7 @@ import com.ggg.home.ui.home.HomeViewModel
 import com.ggg.home.ui.library.LibraryFragment
 import com.ggg.home.ui.search.SearchFragment
 import com.ggg.home.ui.user.UserFragment
+import com.ggg.home.utils.Constant
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -255,6 +257,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                 Glide.with(GGGAppInterface.gggApp.ctx)
                         .load(imageUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
                         .downloadOnly(object : SimpleTarget<File?>() {
                             override fun onLoadFailed(errorDrawable: Drawable?) {
                                 super.onLoadFailed(errorDrawable)

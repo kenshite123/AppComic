@@ -11,6 +11,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.signature.ObjectKey
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
@@ -51,6 +52,7 @@ class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHol
                 .apply(RequestOptions()
                         .override(Target.SIZE_ORIGINAL)
                         .format(DecodeFormat.PREFER_ARGB_8888))
+                .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivComic)
 

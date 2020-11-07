@@ -176,7 +176,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                 currentPagePosition = position
                 when (position) {
                     0 -> { // list chapters
-                        pagerComicDetailAdapter.notifyData(listChapters, isLoadLatest, !isLoadLatest)
+                        pagerComicDetailAdapter.notifyData(listChapters, isLoadLatest, !isLoadLatest, comicWithCategoryModel)
                     }
 
                     1 -> { // description
@@ -238,7 +238,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                     this.listChapters = it
                     if (currentPagePosition == 0) {
                         isLoadLatest = true
-                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest, comicWithCategoryModel)
                     }
                 }
             }
@@ -253,7 +253,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                     this.listChapters = it
                     if (currentPagePosition == 0) {
                         isLoadLatest = true
-                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest, comicWithCategoryModel)
                     }
                 }
             }
@@ -325,29 +325,6 @@ class ComicDetailFragment : HomeBaseFragment() {
                 }
             }
         })
-
-        val d1 = GGGAppInterface.gggApp.bus()
-                .toObservableDownloadImageDone()
-                .subscribe({
-                    val comicId = it["comicId"]!!
-                    val chapterId = it["chapterId"]!!
-                    if (comicWithCategoryModel.comicModel?.id == comicId) {
-//                        viewModel.getListChaptersDb(it)
-                        for (i in 0 until this.listChapters.count()) {
-                            val chapter = this.listChapters[i]
-                            if (chapter.chapterModel != null) {
-                                if (chapter.chapterModel!!.chapterId == chapterId) {
-                                    chapter.chapterModel!!.hadDownloaded = Constant.IS_DOWNLOADED
-                                    if (currentPagePosition == 0) {
-                                        pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
-                                    }
-                                    break
-                                }
-                            }
-                        }
-                    }
-        }, { Timber.e(it) }, {  })
-        messageEvent.add(d1)
     }
 
     override fun onEvent(eventAction: Int, control: View?, data: Any?) {
@@ -382,7 +359,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                 if (!isLoadLatest) {
                     isLoadLatest = true
                     this.listChapters = this.listChapters.reversed()
-                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest, comicWithCategoryModel)
                 }
             }
 
@@ -390,7 +367,7 @@ class ComicDetailFragment : HomeBaseFragment() {
                 if (isLoadLatest) {
                     isLoadLatest = false
                     this.listChapters = this.listChapters.reversed()
-                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest)
+                    pagerComicDetailAdapter.notifyData(this.listChapters, isLoadLatest, !isLoadLatest, comicWithCategoryModel)
                 }
             }
 

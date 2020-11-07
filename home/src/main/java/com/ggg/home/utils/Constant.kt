@@ -11,6 +11,8 @@ object Constant {
     const val IS_DOWNLOADED = 1
     const val IS_DOWNLOADING = 2
 
+    const val SIGNATURE_IMAGE_CACHE = "HeavenToon"
+
     const val TYPE_SHOW_COMIC_DETAIL = "SHOW_COMIC_DETAIL"
 
     const val TOPIC_TYPE_COMMENT = "comment"

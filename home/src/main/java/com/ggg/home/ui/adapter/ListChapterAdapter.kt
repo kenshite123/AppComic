@@ -13,6 +13,8 @@ import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
+import com.ggg.home.data.model.ComicWithCategoryModel
+import com.ggg.home.ui.custom.ItemChapterView
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
 
@@ -20,11 +22,13 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     lateinit var listChapters: List<ChapterHadRead>
+    var comicWithCategoryModel: ComicWithCategoryModel? = null
 
-    constructor(context: Context, listener: OnEventControlListener, listChapters: List<ChapterHadRead>){
+    constructor(context: Context, listener: OnEventControlListener, listChapters: List<ChapterHadRead>, comicWithCategoryModel: ComicWithCategoryModel?){
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listChapters = listChapters
+        this.comicWithCategoryModel = comicWithCategoryModel
     }
 
     fun notifyData(listChapters: List<ChapterHadRead>) {
@@ -33,7 +37,7 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_list_chapter, parent, false)
+        val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_bound_item_list_chapters, parent, false)
         return ViewHolder(view)
     }
 
@@ -43,31 +47,12 @@ class ListChapterAdapter : RecyclerView.Adapter<ListChapterAdapter.ViewHolder> {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chapterHadRead = listChapters[position]
-        val chapterModel = chapterHadRead.chapterModel!!
-        holder.tvChapterName.text = chapterModel.chapterName
-        holder.tvUpdateDate.text = chapterModel.dateUpdate
-
-        if (chapterHadRead.ccHadReadModel.isNullOrEmpty()) {
-            holder.tvChapterName.setTextColor(Color.parseColor("#161616"))
-        } else {
-            holder.tvChapterName.setTextColor(Color.parseColor("#949494"))
-        }
-
-        if (chapterModel.hadDownloaded == Constant.IS_DOWNLOADED) {
-            holder.ivDownloaded.visibility = View.VISIBLE
-        } else {
-            holder.ivDownloaded.visibility = View.GONE
-        }
-
-        holder.llChapters.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_CHAPTER, it, position)
-        }
+        holder.itemChapterView.setData(chapterHadRead = chapterHadRead,
+                comicId = comicWithCategoryModel?.comicModel?.id ?: -1, position = position,
+                listener = listener)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvChapterName: TextView = itemView.findViewById(R.id.tvChapterName)
-        var tvUpdateDate: TextView = itemView.findViewById(R.id.tvUpdateDate)
-        var ivDownloaded: ImageView = itemView.findViewById(R.id.ivDownloaded)
-        var llChapters: LinearLayout = itemView.findViewById(R.id.llChapters)
+        var itemChapterView: ItemChapterView = itemView.findViewById(R.id.itemChapterView)
     }
 }
