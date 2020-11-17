@@ -14,7 +14,7 @@ class LibraryViewModel @Inject constructor(private val libraryRepository: Librar
     var getListHistoryResult: LiveData<Resource<List<HistoryModel>>>
 
     private val requestGetListComicFollow: MutableLiveData<HashMap<String, Any>> = MutableLiveData()
-    var getListComicFollowResult: LiveData<Resource<List<ComicWithCategoryModel>>>
+    var getListComicFollowResult: LiveData<Resource<List<ComicModel>>>
 
     private val requestGetListComicDownloaded: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
     var getListComicDownloadedResult: LiveData<Resource<List<ComicModel>>>

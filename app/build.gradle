@@ -104,3 +104,8 @@ dependencies {
 }
 //apply plugin: 'com.google.gms.google-services'
 
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+        outputFileName = "app.apk"
+    }
+}

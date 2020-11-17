@@ -103,7 +103,8 @@ class ViewComicFragment : HomeBaseFragment() {
         layoutManagerForVertical = LinearLayoutManager(context!!, RecyclerView.VERTICAL, false)
         layoutManagerForHorizontal = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
 
-        listImageComicAdapter = ListImageComicAdapter(context!!, this, listOf())
+        listImageComicAdapter = ListImageComicAdapter(context!!, this, listOf(),
+                false, 0, 0)
         rvListImageComic.setHasFixedSize(false)
         rvListImageComic.layoutManager = layoutManagerForVertical
         rvListImageComic.adapter = listImageComicAdapter
@@ -130,7 +131,12 @@ class ViewComicFragment : HomeBaseFragment() {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
                 val listImageComic: List<String> = chapterSelected.chapterModel!!.listImageUrlString.split(", ")
-                listImageComicAdapter.notifyData(listImageComic)
+                if (chapterSelected.chapterModel!!.hadDownloaded == Constant.IS_DOWNLOADED) {
+                    listImageComicAdapter.notifyData(listImageComic = listImageComic, isDownloaded = true,
+                            comicId = comicWithCategoryModel.comicModel!!.id, chapterId = chapterSelected.chapterModel!!.chapterId)
+                } else {
+                    listImageComicAdapter.notifyData(listImageComic = listImageComic, isDownloaded = false, comicId = 0, chapterId = 0)
+                }
                 rvListImageComic.scrollToPosition(currentPagePosition)
 
                 if (it.status == Status.ERROR) {

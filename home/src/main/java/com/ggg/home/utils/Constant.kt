@@ -61,4 +61,5 @@ object Constant {
     const val ACTION_SEND_REPORT = 27
     const val ACTION_LOAD_MORE_LIST_COMIC_DOWNLOADED = 28
     const val ACTION_CLICK_ON_COMIC_DOWNLOADED = 29
+    const val ACTION_LOAD_MORE_LIST_COMIC_FOLLOW = 30
 }

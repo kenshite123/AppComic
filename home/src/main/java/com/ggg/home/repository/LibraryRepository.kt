@@ -7,6 +7,7 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.AppExecutors
 import com.ggg.common.utils.NetworkBoundResource
 import com.ggg.common.utils.NetworkOnlyDbResource
+import com.ggg.common.utils.NetworkOnlyResource
 import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
@@ -54,21 +55,53 @@ class LibraryRepository {
         return callApi.asLiveData()
     }
 
-    fun getListComicFollow(data: HashMap<String, Any>): LiveData<Resource<List<ComicWithCategoryModel>>> {
-        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
-            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                val listComicId = data["listComicId"] as List<String>
-                return db.comicDao().getListComicFollow(GGGAppInterface.gggApp.siteDeploy, listComicId)
-            }
+//    fun getListComicFollow(data: HashMap<String, Any>): LiveData<Resource<List<ComicWithCategoryModel>>> {
+//        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
+//            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
+//                val listComicId = data["listComicId"] as List<String>
+//                return db.comicDao().getListComicFollow(GGGAppInterface.gggApp.siteDeploy, listComicId)
+//            }
+//
+//            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+//                return api.getListComicFollow(
+//                        data["token"].toString(),
+//                        data["limit"]!! as Int,
+//                        data["offset"]!! as Int
+//                )
+//            }
+//
+//            override fun saveCallResult(item: List<ComicModel>) {
+//                if (item.isNotEmpty()) {
+//                    item.forEach { comicModel ->
+//                        run {
+//                            comicModel.categories.forEach {
+//                                val categoryOfComicModel = CategoryOfComicModel()
+//                                categoryOfComicModel.categoryId = it.id
+//                                categoryOfComicModel.categoryName = it.name
+//                                categoryOfComicModel.comicId = comicModel.id
+//                                db.categoryOfComicDao().insertCategoryOfComic(categoryOfComicModel)
+//                            }
+//
+//                            GGGAppInterface.gggApp.addComicToFavorite(comicModel.id)
+//
+//                            comicModel.authorsString = TextUtils.join(", ", comicModel.authors)
+//                            comicModel.lastModified = System.currentTimeMillis()
+//                        }
+//                    }
+//                    db.comicDao().insertListComic(item)
+//                }
+//            }
+//
+//            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
+//                return true
+//            }
+//        }
+//
+//        return callApi.asLiveData()
+//    }
 
-            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
-                return api.getListComicFollow(
-                        data["token"].toString(),
-                        data["limit"]!! as Int,
-                        data["offset"]!! as Int
-                )
-            }
-
+    fun getListComicFollow(data: HashMap<String, Any>): LiveData<Resource<List<ComicModel>>> {
+        val callApi = object : NetworkOnlyResource<List<ComicModel>>(appExecutors = executor) {
             override fun saveCallResult(item: List<ComicModel>) {
                 if (item.isNotEmpty()) {
                     item.forEach { comicModel ->
@@ -91,8 +124,12 @@ class LibraryRepository {
                 }
             }
 
-            override fun shouldFetch(data: List<ComicWithCategoryModel>?): Boolean {
-                return true
+            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
+                return api.getListComicFollow(
+                        data["token"].toString(),
+                        data["limit"]!! as Int,
+                        data["offset"]!! as Int
+                )
             }
         }
 

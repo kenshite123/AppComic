@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_user.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
+import java.io.File
 import java.lang.StringBuilder
 import java.util.LinkedHashSet
 
@@ -156,6 +157,10 @@ class UserFragment : HomeBaseFragment() {
             doAsync {
                 viewModel.clearCacheImageDownload()
                 Glide.get(context!!).clearDiskCache()
+
+                val downloadPath = "${context!!.filesDir.absolutePath}/DownloadComic"
+                val downloadFolder = File(downloadPath)
+                downloadFolder.deleteRecursively()
             }
 
             Glide.get(context!!).clearMemory()

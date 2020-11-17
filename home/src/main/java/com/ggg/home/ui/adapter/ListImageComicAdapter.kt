@@ -16,21 +16,32 @@ import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
 import com.ggg.home.utils.Constant
+import java.io.File
 import java.lang.ref.WeakReference
 
 class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHolder> {
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
     lateinit var listImageComic: List<String>
+    var isDownloaded: Boolean = false
+    var comicId: Long = 0
+    var chapterId: Long = 0
 
-    constructor(context: Context, listener: OnEventControlListener, listImageComic: List<String>) {
+    constructor(context: Context, listener: OnEventControlListener, listImageComic: List<String>,
+                isDownloaded: Boolean, comicId: Long, chapterId: Long) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listImageComic = listImageComic
+        this.isDownloaded = isDownloaded
+        this.comicId = comicId
+        this.chapterId = chapterId
     }
 
-    fun notifyData(listImageComic: List<String>) {
+    fun notifyData(listImageComic: List<String>, isDownloaded: Boolean, comicId: Long, chapterId: Long) {
         this.listImageComic = listImageComic
+        this.isDownloaded = isDownloaded
+        this.comicId = comicId
+        this.chapterId = chapterId
         notifyDataSetChanged()
     }
 
@@ -46,15 +57,40 @@ class ListImageComicAdapter : RecyclerView.Adapter<ListImageComicAdapter.ViewHol
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageURL = listImageComic[position]
 
-        Glide.with(weakContext.get()!!)
-                .load(imageURL)
-                .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
-                .apply(RequestOptions()
-                        .override(Target.SIZE_ORIGINAL)
-                        .format(DecodeFormat.PREFER_ARGB_8888))
-                .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivComic)
+        if (!isDownloaded) {
+            Glide.with(weakContext.get()!!)
+                    .load(imageURL)
+                    .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                    .apply(RequestOptions()
+                            .override(Target.SIZE_ORIGINAL)
+                            .format(DecodeFormat.PREFER_ARGB_8888))
+                    .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.ivComic)
+        } else {
+            val imgSplit = imageURL.split("/")
+            val fileName = "${weakContext.get()!!.filesDir.absolutePath}/DownloadComic/${comicId}/${chapterId}/${imgSplit[imgSplit.count() - 1]}"
+            val file = File(fileName)
+            if (file.exists()) {
+                Glide.with(weakContext.get()!!)
+                        .load(file)
+                        .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                        .apply(RequestOptions()
+                                .override(Target.SIZE_ORIGINAL)
+                                .format(DecodeFormat.PREFER_ARGB_8888))
+                        .into(holder.ivComic)
+            } else {
+                Glide.with(weakContext.get()!!)
+                        .load(imageURL)
+                        .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
+                        .apply(RequestOptions()
+                                .override(Target.SIZE_ORIGINAL)
+                                .format(DecodeFormat.PREFER_ARGB_8888))
+                        .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.ivComic)
+            }
+        }
 
         holder.ivComic.setOnClickListener {
             listener.onEvent(Constant.ACTION_CLICK_ON_IMAGE_COMIC_TO_SHOW_NAVIGATION, it, null)

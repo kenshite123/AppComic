@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.DownloadListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
@@ -91,7 +94,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
         ivLoading.setImageResource(R.drawable.loading)
         rltLoading.bringToFront()
         initEvents()
-
+        AndroidNetworking.initialize(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -254,22 +257,42 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                 val comicId = it["comicId"] as Long
                 val chapterId = it["chapterId"] as Long
                 val imageUrl = it["imageUrl"] as String
-                Glide.with(GGGAppInterface.gggApp.ctx)
-                        .load(imageUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
-                        .downloadOnly(object : SimpleTarget<File?>() {
-                            override fun onLoadFailed(errorDrawable: Drawable?) {
-                                super.onLoadFailed(errorDrawable)
-                                Log.e("MainActivity", it.toString())
+                val imgSplit = imageUrl.split("/")
+                val fileName = imgSplit[imgSplit.count() - 1]
+
+                val downloadPath = "${filesDir.absolutePath}/DownloadComic/${comicId}/${chapterId}/"
+                val downloadFolder = File(downloadPath)
+                downloadFolder.mkdirs()
+//                val file = File(downloadPath, fileName)
+
+                AndroidNetworking.download(imageUrl, downloadPath, fileName)
+                        .build()
+                        .startDownload(object : DownloadListener {
+                            override fun onDownloadComplete() {
+                                Log.d("MainActivity", "Download Success ${it.toString()}")
                                 processDownloadImageSuccess(imageUrl, chapterId, comicId)
                             }
 
-                            override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
-                                Log.d("MainActivity", it.toString())
-                                processDownloadImageSuccess(imageUrl, chapterId, comicId)
+                            override fun onError(anError: ANError?) {
+                                Log.d("MainActivity", "Download fail: ${anError?.errorBody} - ${anError?.errorDetail}")
                             }
                         })
+//                Glide.with(GGGAppInterface.gggApp.ctx)
+//                        .load(imageUrl)
+//                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                        .signature(ObjectKey(Constant.SIGNATURE_IMAGE_CACHE))
+//                        .downloadOnly(object : SimpleTarget<File?>() {
+//                            override fun onLoadFailed(errorDrawable: Drawable?) {
+//                                super.onLoadFailed(errorDrawable)
+//                                Log.e("MainActivity", it.toString())
+//                                processDownloadImageSuccess(imageUrl, chapterId, comicId)
+//                            }
+//
+//                            override fun onResourceReady(resource: File, transition: Transition<in File?>?) {
+//                                Log.d("MainActivity", it.toString())
+//                                processDownloadImageSuccess(imageUrl, chapterId, comicId)
+//                            }
+//                        })
             }
         }
     }

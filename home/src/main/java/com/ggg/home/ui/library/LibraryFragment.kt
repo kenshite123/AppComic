@@ -1,7 +1,6 @@
 package com.ggg.home.ui.library
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.ggg.common.GGGAppInterface
 import com.ggg.home.R
-import com.ggg.home.data.model.ComicDownloadedModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.HistoryModel
@@ -26,15 +24,18 @@ class LibraryFragment : HomeBaseFragment() {
     lateinit var pagerLibraryAdapter: PagerLibraryAdapter
     private var isFirstLoad = true
     private var listHistoryModel: List<HistoryModel> = listOf()
-    private var listComicFollow: List<ComicWithCategoryModel> = listOf()
+    private var listComicFollow: List<ComicModel> = listOf()
     private var listComicDownloadedModel: List<ComicModel> = listOf()
     private var currentPagePosition = 0
-    private var items = 60
+    private var items = 90
     private var page = 0
     private var pageHistory = 0
+    private var pageFollow = 0
     private var pageDownloaded = 0
     private var isLoadAllDataHistory = false
     private var isLoadMoreHistory = false
+    private var isLoadAllDataFollow = false
+    private var isLoadMoreFollow = false
     private var isLoadAllDataDownloaded = false
     private var isLoadMoreDownloaded = false
 
@@ -79,10 +80,10 @@ class LibraryFragment : HomeBaseFragment() {
                     this.listHistoryModel = list.toList()
 
                     isLoadMoreHistory = false
-                    isLoadAllDataHistory = it.count() >= items
                 } else {
                     this.listHistoryModel = it
                 }
+                isLoadAllDataHistory = it.count() < items
 
                 if (currentPagePosition == 0) {
                     pagerLibraryAdapter.notifyData(this.listHistoryModel)
@@ -95,7 +96,17 @@ class LibraryFragment : HomeBaseFragment() {
                 loading(it)
             }
             it.data?.let {
-                this.listComicFollow = it
+                if (isLoadMoreFollow) {
+                    val list = this.listComicFollow.toMutableList()
+                    list.addAll(it)
+                    this.listComicFollow = list.toList()
+
+                    isLoadMoreFollow = false
+                } else {
+                    this.listComicFollow = it
+                }
+                isLoadAllDataFollow = it.count() < items
+
                 if (currentPagePosition == 1) {
                     pagerLibraryAdapter.notifyData(listComicFollow, true)
                 }
@@ -114,10 +125,10 @@ class LibraryFragment : HomeBaseFragment() {
                     this.listComicDownloadedModel = list.toList()
 
                     isLoadMoreDownloaded = false
-                    isLoadAllDataDownloaded = it.count() >= items
                 } else {
                     this.listComicDownloadedModel = it
                 }
+                isLoadAllDataDownloaded = it.count() < items
 
                 if (currentPagePosition == 2) {
                     pagerLibraryAdapter.notifyDataListComicDownloaded(this.listComicDownloadedModel)
@@ -169,9 +180,8 @@ class LibraryFragment : HomeBaseFragment() {
         val token = loginResponse?.tokenType + loginResponse?.accessToken
         val data = hashMapOf(
                 "token" to token,
-                "listComicId" to GGGAppInterface.gggApp.listFavoriteId,
-                "limit" to 900,
-                "offset" to 0
+                "limit" to items,
+                "offset" to pageFollow
         )
         viewModel.getListComicFollow(data)
     }
@@ -215,6 +225,19 @@ class LibraryFragment : HomeBaseFragment() {
                     pageDownloaded++
                     loadDataListComicDownloaded()
                 }
+            }
+
+            Constant.ACTION_LOAD_MORE_LIST_COMIC_FOLLOW -> {
+                if (!isLoadAllDataFollow && !isLoadMoreFollow) {
+                    isLoadMoreFollow = true
+                    pageFollow++
+                    loadDataListComicFollow()
+                }
+            }
+
+            Constant.ACTION_CLICK_ON_COMIC -> {
+                val comicId = data as Long
+                navigationController.showComicDetail(comicId.toString())
             }
 
             else -> super.onEvent(eventAction, control, data)
