@@ -21,19 +21,22 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
     lateinit var listener: OnEventControlListener
     lateinit var listHistoryModel: List<HistoryModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listHistoryModel: List<HistoryModel>) {
+    private var isEdit = false
+
+    constructor(context: Context, listener: OnEventControlListener, listHistoryModel: List<HistoryModel>, isEdit: Boolean = false) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listHistoryModel = listHistoryModel
+        this.isEdit = isEdit
     }
 
-    fun notifyData(listHistoryModel: List<HistoryModel>) {
-        this.listHistoryModel = listHistoryModel
-        notifyDataSetChanged()
-    }
+//    fun notifyData(listHistoryModel: List<HistoryModel>) {
+//        this.listHistoryModel = listHistoryModel
+//        notifyDataSetChanged()
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_comic, parent, false)
+        val view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_comic_library, parent, false)
         return ViewHolder(view)
     }
 
@@ -54,13 +57,32 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
         holder.tvComicTitle.text = comic.title
         holder.tvChap.text = comic.latestChapter
 
+        if (this.isEdit) {
+            holder.ivChecked.visibility = View.VISIBLE
+            if (comic.isSelected) {
+                holder.ivChecked.setImageResource(R.drawable.icon_checked)
+            } else {
+                holder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+            }
+        } else {
+            holder.ivChecked.visibility = View.GONE
+        }
+
+//        icon_checked
+//        icon_uncheck
         holder.ivComic.setOnClickListener {
-            listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_HISTORY, it, historyModel)
+            if (this.isEdit) {
+                comic.isSelected = !comic.isSelected
+                notifyItemChanged(position)
+            } else {
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_HISTORY, it, historyModel)
+            }
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ivComic: ImageView = itemView.findViewById(R.id.ivComic)
+        var ivChecked: ImageView = itemView.findViewById(R.id.ivChecked)
         var tvComicTitle: TextView = itemView.findViewById(R.id.tvComicTitle)
         var tvChap: TextView = itemView.findViewById(R.id.tvChap)
     }

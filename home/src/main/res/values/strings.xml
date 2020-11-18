@@ -109,4 +109,6 @@
     <string name="TEXT_REPORT_6">Wrong translation</string>
     <string name="TEXT_SUBMIT">Submit</string>
     <string name="TEXT_THANK_FOR_YOUR_REPORT">Thank for your report. We will review soon.</string>
+    <string name="TEXT_EDIT">Edit</string>
+    <string name="TEXT_DELETE">Delete</string>
 </resources>

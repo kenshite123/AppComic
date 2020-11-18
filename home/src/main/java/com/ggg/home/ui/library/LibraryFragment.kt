@@ -86,7 +86,7 @@ class LibraryFragment : HomeBaseFragment() {
                 isLoadAllDataHistory = it.count() < items
 
                 if (currentPagePosition == 0) {
-                    pagerLibraryAdapter.notifyData(this.listHistoryModel)
+                    pagerLibraryAdapter.notifyDataListHistory(this.listHistoryModel)
                 }
             }
         })
@@ -108,7 +108,7 @@ class LibraryFragment : HomeBaseFragment() {
                 isLoadAllDataFollow = it.count() < items
 
                 if (currentPagePosition == 1) {
-                    pagerLibraryAdapter.notifyData(listComicFollow, true)
+                    pagerLibraryAdapter.notifyDataListFollow(listComicFollow, false)
                 }
             }
         })
@@ -138,6 +138,32 @@ class LibraryFragment : HomeBaseFragment() {
     }
 
     override fun initEvent() {
+        tvEdit.setOnClickListener {
+            tvEdit.visibility = View.GONE
+            tvSelectAndUnSelectAll.visibility = View.VISIBLE
+            tvDeleteAndCancel.visibility = View.VISIBLE
+            tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+            tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
+        }
+
+        tvSelectAndUnSelectAll.setOnClickListener {
+            if (tvSelectAndUnSelectAll.text == getString(R.string.TEXT_SELECT_ALL)) {
+                tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
+                tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
+            } else {
+                tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+                tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
+            }
+        }
+
+        tvDeleteAndCancel.setOnClickListener {
+            if (tvDeleteAndCancel.text == getString(R.string.TEXT_DELETE)) {
+
+            } else {
+
+            }
+        }
+
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -147,13 +173,14 @@ class LibraryFragment : HomeBaseFragment() {
 
             override fun onPageSelected(position: Int) {
                 currentPagePosition = position
+                resetAction()
                 when (position) {
                     0 -> {
-                        pagerLibraryAdapter.notifyData(listHistoryModel)
+                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel)
                     }
 
                     1 -> {
-                        pagerLibraryAdapter.notifyData(listComicFollow, true)
+                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow, false)
                     }
 
                     else -> {
@@ -162,6 +189,14 @@ class LibraryFragment : HomeBaseFragment() {
                 }
             }
         })
+    }
+
+    private fun resetAction() {
+        tvEdit.visibility = View.VISIBLE
+        tvSelectAndUnSelectAll.visibility = View.GONE
+        tvDeleteAndCancel.visibility = View.GONE
+        tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+        tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
     }
 
     private fun loadDataHistory() {

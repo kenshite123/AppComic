@@ -71,4 +71,6 @@ class ComicModel : Serializable {
         var totalDownloaded = 0
         @Ignore
         var totalNeedToDownload = 0
+        @Ignore
+        var isSelected = false
 }

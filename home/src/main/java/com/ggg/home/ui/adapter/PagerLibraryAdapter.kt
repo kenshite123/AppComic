@@ -31,6 +31,10 @@ class PagerLibraryAdapter : PagerAdapter {
     private var listComicFollow: List<ComicModel> = listOf()
     private var listComicDownloaded: List<ComicModel> = listOf()
 
+    private var isEditHistory = false
+    private var isEditFollow = false
+    private var isEditDownloaded = false
+
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_HISTORY),
             StringUtil.getString(R.string.TEXT_FOLLOW), StringUtil.getString(R.string.TEXT_DOWNLOADED))
 
@@ -55,18 +59,21 @@ class PagerLibraryAdapter : PagerAdapter {
         return listTitle.count()
     }
 
-    fun notifyData(listHistoryModel: List<HistoryModel>) {
+    fun notifyDataListHistory(listHistoryModel: List<HistoryModel>, isEdit: Boolean = false) {
         this.listHistoryModel = listHistoryModel
+        this.isEditHistory = isEdit
         notifyDataSetChanged()
     }
 
-    fun notifyData(listComicFollow: List<ComicModel>, isFollow: Boolean) {
+    fun notifyDataListFollow(listComicFollow: List<ComicModel>, isEdit: Boolean = false) {
         this.listComicFollow = listComicFollow
+        this.isEditFollow = isEdit
         notifyDataSetChanged()
     }
 
-    fun notifyDataListComicDownloaded(listComicDownloaded: List<ComicModel>) {
+    fun notifyDataListComicDownloaded(listComicDownloaded: List<ComicModel>, isEdit: Boolean = false) {
         this.listComicDownloaded = listComicDownloaded
+        this.isEditDownloaded = isEdit
         notifyDataSetChanged()
     }
 
@@ -77,8 +84,9 @@ class PagerLibraryAdapter : PagerAdapter {
                 view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_history, container, false)
                 val gridLayoutManager = GridLayoutManager(weakContext.get()!!, 3)
                 val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
-                val listComicHistoryAdapter = ListComicHistoryAdapter(weakContext.get()!!, listener, listHistoryModel)
+                val listComicHistoryAdapter = ListComicHistoryAdapter(weakContext.get()!!, listener, listHistoryModel, isEditHistory)
                 rvListComic.setHasFixedSize(false)
+                rvListComic.itemAnimator?.changeDuration = 0L
                 rvListComic.layoutManager = gridLayoutManager
                 rvListComic.adapter = listComicHistoryAdapter
 
@@ -105,8 +113,8 @@ class PagerLibraryAdapter : PagerAdapter {
                 val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
                 val listComicAdapter = ListComicAdapter(weakContext.get()!!, listener, listComicFollow, true)
                 val gridLayoutManager = GridLayoutManager(weakContext.get()!!, 3)
-
                 rvListComic.setHasFixedSize(false)
+                rvListComic.itemAnimator?.changeDuration = 0L
                 rvListComic.layoutManager = gridLayoutManager
                 rvListComic.adapter = listComicAdapter
 
