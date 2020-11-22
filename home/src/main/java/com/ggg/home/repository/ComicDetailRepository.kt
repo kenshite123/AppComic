@@ -151,7 +151,7 @@ class ComicDetailRepository {
             override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
                 return api.favoriteComic(
                         data["token"].toString(),
-                        data["comicId"]!! as Long
+                        (data["comicId"]!! as Long).toString()
                 )
             }
 
@@ -169,7 +169,7 @@ class ComicDetailRepository {
             override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
                 return api.unFavoriteComic(
                         data["token"].toString(),
-                        data["comicId"]!! as Long
+                        (data["comicId"]!! as Long).toString()
                 )
             }
 

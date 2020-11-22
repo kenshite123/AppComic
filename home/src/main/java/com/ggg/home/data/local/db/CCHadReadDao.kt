@@ -1,9 +1,6 @@
 package com.ggg.home.data.local.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
+import androidx.room.*
 import com.ggg.home.data.model.CCHadReadModel
 
 @Dao
@@ -16,4 +13,7 @@ abstract class CCHadReadDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     abstract fun updateCCHadRead(ccHadRead: CCHadReadModel)
+
+    @Query("DELETE FROM CCHadReadModel WHERE 1 = 1 AND comicId in (:listComicId)")
+    abstract fun deleteListHistory(listComicId: List<Long>)
 }

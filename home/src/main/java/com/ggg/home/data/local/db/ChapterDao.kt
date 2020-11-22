@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ChapterModel
+import com.ggg.home.utils.Constant
 
 @Dao
 abstract class ChapterDao {
@@ -27,9 +28,12 @@ abstract class ChapterDao {
     @Query("SELECT chap.* FROM ChapterModel chap LEFT JOIN CCHadReadModel cchrm on chap.chapterId = cchrm.chapterId and chap.comicId = cchrm.comicId WHERE 1 = 1 AND chap.chapterId = :chapterId ORDER BY chap.chapterId DESC")
     abstract fun getChapterHadRead(chapterId: Long): LiveData<ChapterHadRead>
 
-    @Query("UPDATE ChapterModel SET hadDownloaded = 0, listImageUrlString = '' where 1 = 1")
+    @Query("UPDATE ChapterModel SET hadDownloaded = ${Constant.IS_NOT_DOWNLOAD}, listImageUrlString = '' where 1 = 1")
     abstract fun clearCacheImageDownload()
 
-    @Query("UPDATE ChapterModel SET hadDownloaded = 1 where 1 = 1 and chapterId = :chapterId")
+    @Query("UPDATE ChapterModel SET hadDownloaded = ${Constant.IS_DOWNLOADED} where 1 = 1 and chapterId = :chapterId")
     abstract fun updateChapDownloaded(chapterId: Long)
+
+    @Query("UPDATE ChapterModel SET hadDownloaded = ${Constant.IS_NOT_DOWNLOAD} where 1 = 1 and comicId in (:listComicId)")
+    abstract fun updateChapNotDownloaded(listComicId: List<Long>)
 }

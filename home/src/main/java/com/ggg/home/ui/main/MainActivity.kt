@@ -263,9 +263,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, FragNavControll
                 val downloadPath = "${filesDir.absolutePath}/DownloadComic/${comicId}/${chapterId}/"
                 val downloadFolder = File(downloadPath)
                 downloadFolder.mkdirs()
-//                val file = File(downloadPath, fileName)
 
                 AndroidNetworking.download(imageUrl, downloadPath, fileName)
+                        .setTag(comicId.toString())
                         .build()
                         .startDownload(object : DownloadListener {
                             override fun onDownloadComplete() {

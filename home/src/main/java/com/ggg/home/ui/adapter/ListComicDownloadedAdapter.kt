@@ -26,10 +26,13 @@ class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapt
     lateinit var listener: OnEventControlListener
     lateinit var listComic: List<ComicModel>
 
-    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>) {
+    private var isEdit = false
+
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>, isEdit: Boolean = false) {
         this.weakContext = WeakReference(context)
         this.listener = listener
         this.listComic = listComic
+        this.isEdit = isEdit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,7 +46,7 @@ class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comic = listComic[position]
-        holder.itemComicDownloadView.setData(comicModel = comic, listener = listener)
+        holder.itemComicDownloadView.setData(comicModel = comic, listener = listener, isEdit = this.isEdit)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

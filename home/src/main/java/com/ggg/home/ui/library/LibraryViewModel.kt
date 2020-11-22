@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ggg.common.vo.Resource
 import com.ggg.home.data.model.*
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.repository.LibraryRepository
 import javax.inject.Inject
 
@@ -19,6 +20,9 @@ class LibraryViewModel @Inject constructor(private val libraryRepository: Librar
     private val requestGetListComicDownloaded: MutableLiveData<HashMap<String, Int>> = MutableLiveData()
     var getListComicDownloadedResult: LiveData<Resource<List<ComicModel>>>
 
+    private val requestUnFavoriteComic: MutableLiveData<HashMap<String, String>> = MutableLiveData()
+    var unFavoriteComicResult: LiveData<Resource<NoneResponse>>
+
     init {
         getListHistoryResult = Transformations.switchMap(requestGetListHistory) {
             return@switchMap libraryRepository.getListHistory(it)
@@ -30,6 +34,10 @@ class LibraryViewModel @Inject constructor(private val libraryRepository: Librar
 
         getListComicDownloadedResult = Transformations.switchMap(requestGetListComicDownloaded) {
             return@switchMap libraryRepository.getListComicDownloaded(it)
+        }
+
+        unFavoriteComicResult = Transformations.switchMap(requestUnFavoriteComic) {
+            return@switchMap libraryRepository.unFavoriteComic(it)
         }
     }
 
@@ -43,5 +51,17 @@ class LibraryViewModel @Inject constructor(private val libraryRepository: Librar
 
     fun getListComicDownloaded(data: HashMap<String, Int>) {
         requestGetListComicDownloaded.value = data
+    }
+
+    fun unFavoriteComic(data: HashMap<String, String>) {
+        requestUnFavoriteComic.value = data
+    }
+
+    fun deleteListHistory(listComicId: List<Long>) {
+        libraryRepository.deleteListHistory(listComicId = listComicId)
+    }
+
+    fun deleteListDownloaded(listComicId: List<Long>) {
+        libraryRepository.deleteListDownloaded(listComicId = listComicId)
     }
 }

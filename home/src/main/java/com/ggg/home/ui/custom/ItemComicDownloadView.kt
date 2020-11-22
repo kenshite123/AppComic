@@ -13,6 +13,13 @@ import com.ggg.home.data.model.ComicModel
 import com.ggg.home.utils.Constant
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.item_comic.view.*
+import kotlinx.android.synthetic.main.item_comic.view.circularProgressBar
+import kotlinx.android.synthetic.main.item_comic.view.ctlProgressDownload
+import kotlinx.android.synthetic.main.item_comic.view.ivComic
+import kotlinx.android.synthetic.main.item_comic.view.tvChap
+import kotlinx.android.synthetic.main.item_comic.view.tvComicTitle
+import kotlinx.android.synthetic.main.item_comic.view.tvPercent
+import kotlinx.android.synthetic.main.item_comic_library.view.*
 import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
 import java.lang.ref.WeakReference
@@ -22,17 +29,19 @@ class ItemComicDownloadView : ConstraintLayout {
     lateinit var listener: OnEventControlListener
     var comic: ComicModel = ComicModel()
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var isEdit = false
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         weakContext = WeakReference(context)
-        View.inflate(context, R.layout.item_comic, this)
+        View.inflate(context, R.layout.item_comic_library, this)
         initObserve()
         addEvents()
     }
 
-    fun setData(comicModel: ComicModel, listener: OnEventControlListener) {
+    fun setData(comicModel: ComicModel, listener: OnEventControlListener, isEdit: Boolean = false) {
         this.comic = comicModel
         this.listener = listener
+        this.isEdit = isEdit
         this.reloadViews()
     }
 
@@ -51,9 +60,6 @@ class ItemComicDownloadView : ConstraintLayout {
     private fun reloadProgress() {
         if (comic.totalNeedToDownload == 0) {
             ctlProgressDownload.visibility = View.GONE
-            ivComic.setOnClickListener {
-                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
-            }
         } else {
             val percent = comic.totalDownloaded * 100 / comic.totalNeedToDownload
             if (percent == 100) {
@@ -68,7 +74,6 @@ class ItemComicDownloadView : ConstraintLayout {
                     progressMax = 100F
                     progress = percent.toFloat()
                 }
-                ivComic.setOnClickListener {  }
             }
         }
     }
@@ -99,7 +104,20 @@ class ItemComicDownloadView : ConstraintLayout {
     }
 
     private fun addEvents() {
-
+        ivComic.setOnClickListener {
+            if (this.isEdit) {
+                ivChecked.visibility = View.VISIBLE
+                if (comic.isSelected) {
+                    ivChecked.setImageResource(R.drawable.icon_checked)
+                } else {
+                    ivChecked.setImageResource(R.drawable.icon_uncheck)
+                }
+            } else {
+                if (comic.totalNeedToDownload == 0) {
+                    listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
+                }
+            }
+        }
     }
 
     override fun onDetachedFromWindow() {

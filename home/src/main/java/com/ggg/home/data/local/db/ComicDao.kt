@@ -2,7 +2,6 @@ package com.ggg.home.data.local.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.ggg.home.data.model.ComicDownloadedModel
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.HistoryModel

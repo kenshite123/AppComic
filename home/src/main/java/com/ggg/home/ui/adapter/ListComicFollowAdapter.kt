@@ -12,21 +12,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.home.R
-import com.ggg.home.data.model.HistoryModel
+import com.ggg.home.data.model.ComicModel
+import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.utils.Constant
 import java.lang.ref.WeakReference
+import kotlin.collections.ArrayList
 
-class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.ViewHolder> {
+class ListComicFollowAdapter : RecyclerView.Adapter<ListComicFollowAdapter.ViewHolder> {
+
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
-    lateinit var listHistoryModel: List<HistoryModel>
+    lateinit var listComic: List<ComicModel>
 
     private var isEdit = false
 
-    constructor(context: Context, listener: OnEventControlListener, listHistoryModel: List<HistoryModel>, isEdit: Boolean = false) {
+    constructor(context: Context, listener: OnEventControlListener, listComic: List<ComicModel>, isEdit: Boolean = false) {
         this.weakContext = WeakReference(context)
         this.listener = listener
-        this.listHistoryModel = listHistoryModel
+        this.listComic = listComic
         this.isEdit = isEdit
     }
 
@@ -36,45 +39,43 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
     }
 
     override fun getItemCount(): Int {
-        return listHistoryModel.count()
+        return listComic.count()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val historyModel = listHistoryModel[position]
-        val comic = historyModel.comicModel!!
-
+    override fun onBindViewHolder(itemViewHolder: ViewHolder, position: Int) {
+        val comic = listComic[position]
         Glide.with(weakContext.get()!!)
                 .load(comic.imageUrl)
                 .placeholder(GGGAppInterface.gggApp.circularProgressDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivComic)
+                .into(itemViewHolder.ivComic)
 
-        holder.tvComicTitle.text = comic.title
-        holder.tvChap.text = comic.latestChapter
+        itemViewHolder.tvComicTitle.text = comic.title
+        itemViewHolder.tvChap.text = comic.latestChapter
 
         if (this.isEdit) {
-            holder.ivChecked.visibility = View.VISIBLE
+            itemViewHolder.ivChecked.visibility = View.VISIBLE
             if (comic.isSelected) {
-                holder.ivChecked.setImageResource(R.drawable.icon_checked)
+                itemViewHolder.ivChecked.setImageResource(R.drawable.icon_checked)
             } else {
-                holder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+                itemViewHolder.ivChecked.setImageResource(R.drawable.icon_uncheck)
             }
         } else {
-            holder.ivChecked.visibility = View.GONE
+            itemViewHolder.ivChecked.visibility = View.GONE
         }
 
-        holder.ivComic.setOnClickListener {
+        itemViewHolder.ivComic.setOnClickListener {
             if (this.isEdit) {
                 comic.isSelected = !comic.isSelected
                 notifyItemChanged(position)
-                listener.onEvent(Constant.ACTION_SELECT_OR_DESELECT_COMIC_TO_EDIT, it, position)
+                listener.onEvent(Constant.ACTION_SELECT_OR_DESELECT_COMIC_TO_EDIT, null, position)
             } else {
-                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_HISTORY, it, historyModel)
+                listener.onEvent(Constant.ACTION_CLICK_ON_COMIC, null, comic.id)
             }
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {
         var ivComic: ImageView = itemView.findViewById(R.id.ivComic)
         var ivChecked: ImageView = itemView.findViewById(R.id.ivChecked)
         var tvComicTitle: TextView = itemView.findViewById(R.id.tvComicTitle)

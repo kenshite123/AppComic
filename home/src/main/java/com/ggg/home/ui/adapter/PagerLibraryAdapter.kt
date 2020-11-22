@@ -4,23 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.OnEventControlListener
 import com.ggg.common.utils.StringUtil
 import com.ggg.home.R
-import com.ggg.home.data.model.ComicDownloadedModel
 import com.ggg.home.data.model.ComicModel
-import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.HistoryModel
 import com.ggg.home.utils.Constant
-import kotlinx.android.synthetic.main.fragment_category.*
 import java.lang.ref.WeakReference
 
 class PagerLibraryAdapter : PagerAdapter {
@@ -111,7 +103,8 @@ class PagerLibraryAdapter : PagerAdapter {
             1 -> {
                 view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_follow, container, false)
                 val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
-                val listComicAdapter = ListComicAdapter(weakContext.get()!!, listener, listComicFollow, true)
+                val listComicAdapter = ListComicFollowAdapter(context = weakContext.get()!!, listener = listener,
+                        listComic = listComicFollow, isEdit = this.isEditFollow)
                 val gridLayoutManager = GridLayoutManager(weakContext.get()!!, 3)
                 rvListComic.setHasFixedSize(false)
                 rvListComic.itemAnimator?.changeDuration = 0L

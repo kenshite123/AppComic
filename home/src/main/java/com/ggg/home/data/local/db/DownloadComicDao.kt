@@ -40,4 +40,7 @@ abstract class DownloadComicDao {
 
     @Query("DELETE FROM DownloadComicModel WHERE 1 = 1 AND comicId = :comicId")
     abstract fun clearCacheImageDownload(comicId: Long)
+
+    @Query("DELETE FROM DownloadComicModel WHERE 1 = 1 AND comicId in (:listComicId)")
+    abstract fun clearCacheImageDownload(listComicId: List<Long>)
 }

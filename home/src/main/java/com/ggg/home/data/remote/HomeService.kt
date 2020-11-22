@@ -106,13 +106,13 @@ interface HomeService {
     @POST(ServerPath.FAVORITE_COMIC)
     fun favoriteComic(
             @Header("Authorization") accessToken: String,
-            @Path("comicId") comicId: Long
+            @Path("listComicId") listComicId: String
     ) : LiveData<ApiResponse<NoneResponse>>
 
     @PATCH(ServerPath.UNFAVORITE_COMIC)
     fun unFavoriteComic(
             @Header("Authorization") accessToken: String,
-            @Path("comicId") comicId: Long
+            @Path("listComicId") listComicId: String
     ) : LiveData<ApiResponse<NoneResponse>>
 
     @GET(ServerPath.LIST_COMIC_FOLLOW)

@@ -21,7 +21,7 @@
         android:layout_height="@dimen/dp30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/icon_checked"/>
+        android:src="@drawable/icon_uncheck"/>
     <TextView
         android:id="@+id/tvChap"
         style="@style/normal_text"

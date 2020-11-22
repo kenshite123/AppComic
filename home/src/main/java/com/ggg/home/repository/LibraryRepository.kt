@@ -12,8 +12,10 @@ import com.ggg.common.vo.Resource
 import com.ggg.common.ws.ApiResponse
 import com.ggg.home.data.local.HomeDB
 import com.ggg.home.data.model.*
+import com.ggg.home.data.model.response.NoneResponse
 import com.ggg.home.data.remote.HomeRetrofitProvider
 import com.ggg.home.data.remote.HomeService
+import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class LibraryRepository {
@@ -175,5 +177,36 @@ class LibraryRepository {
             }
         }
         return getDataFromDb.asLiveData()
+    }
+
+    fun unFavoriteComic(data: HashMap<String, String>): LiveData<Resource<NoneResponse>> {
+        val callApi = object : NetworkOnlyResource<NoneResponse> (appExecutors = executor) {
+            override fun saveCallResult(item: NoneResponse) {
+
+            }
+
+            override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
+                return api.unFavoriteComic(
+                        data["token"].toString(),
+                        data["comicId"].toString()
+                )
+            }
+
+        }
+
+        return callApi.asLiveData()
+    }
+
+    fun deleteListHistory(listComicId: List<Long>) {
+        doAsync {
+            db.ccHadReadDao().deleteListHistory(listComicId = listComicId)
+        }
+    }
+
+    fun deleteListDownloaded(listComicId: List<Long>) {
+        doAsync {
+            db.chapterDao().updateChapNotDownloaded(listComicId = listComicId)
+            db.downloadComicDao().clearCacheImageDownload(listComicId = listComicId)
+        }
     }
 }
