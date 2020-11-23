@@ -54,11 +54,12 @@ class ListComicFollowAdapter : RecyclerView.Adapter<ListComicFollowAdapter.ViewH
         itemViewHolder.tvChap.text = comic.latestChapter
 
         if (this.isEdit) {
-            itemViewHolder.ivChecked.visibility = View.VISIBLE
             if (comic.isSelected) {
+                itemViewHolder.ivChecked.visibility = View.VISIBLE
                 itemViewHolder.ivChecked.setImageResource(R.drawable.icon_checked)
             } else {
-                itemViewHolder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+//                itemViewHolder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+                itemViewHolder.ivChecked.visibility = View.GONE
             }
         } else {
             itemViewHolder.ivChecked.visibility = View.GONE

@@ -53,11 +53,12 @@ class ListComicHistoryAdapter : RecyclerView.Adapter<ListComicHistoryAdapter.Vie
         holder.tvChap.text = comic.latestChapter
 
         if (this.isEdit) {
-            holder.ivChecked.visibility = View.VISIBLE
             if (comic.isSelected) {
+                holder.ivChecked.visibility = View.VISIBLE
                 holder.ivChecked.setImageResource(R.drawable.icon_checked)
             } else {
-                holder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+//                holder.ivChecked.setImageResource(R.drawable.icon_uncheck)
+                holder.ivChecked.visibility = View.GONE
             }
         } else {
             holder.ivChecked.visibility = View.GONE

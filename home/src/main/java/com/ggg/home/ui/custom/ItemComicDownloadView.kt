@@ -54,6 +54,11 @@ class ItemComicDownloadView : ConstraintLayout {
 
         tvComicTitle.text = comic.title
         tvChap.text = comic.latestChapter
+        if (isEdit) {
+            ivChecked.visibility = View.VISIBLE
+        } else {
+            ivChecked.visibility = View.GONE
+        }
         this.reloadProgress()
     }
 
@@ -106,11 +111,12 @@ class ItemComicDownloadView : ConstraintLayout {
     private fun addEvents() {
         ivComic.setOnClickListener {
             if (this.isEdit) {
-                ivChecked.visibility = View.VISIBLE
                 if (comic.isSelected) {
+                    ivChecked.visibility = View.VISIBLE
                     ivChecked.setImageResource(R.drawable.icon_checked)
                 } else {
-                    ivChecked.setImageResource(R.drawable.icon_uncheck)
+//                    ivChecked.setImageResource(R.drawable.icon_uncheck)
+                    ivChecked.visibility = View.GONE
                 }
             } else {
                 if (comic.totalNeedToDownload == 0) {

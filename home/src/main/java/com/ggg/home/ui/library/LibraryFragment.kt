@@ -185,9 +185,60 @@ class LibraryFragment : HomeBaseFragment() {
             if (tvSelectAndUnSelectAll.text == getString(R.string.TEXT_SELECT_ALL)) {
                 tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
                 tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
+                when (currentPagePosition) {
+                    0 -> {
+                        // history
+                        this.listHistoryModel.forEach {
+                            it.comicModel?.isSelected = true
+                        }
+                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = this.listHistoryModel, isEdit = true)
+                    }
+
+                    1 -> {
+                        // follow
+                        this.listComicFollow.forEach {
+                            it.isSelected = true
+                        }
+                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = this.listComicFollow, isEdit = true)
+                    }
+
+                     2 -> {
+                         // downloaded
+                         this.listComicDownloadedModel.forEach {
+                             it.isSelected = true
+                         }
+                         pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = this.listComicDownloadedModel, isEdit = true)
+                     }
+                }
             } else {
                 tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
                 tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
+
+                when (currentPagePosition) {
+                    0 -> {
+                        // history
+                        this.listHistoryModel.forEach {
+                            it.comicModel?.isSelected = false
+                        }
+                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = this.listHistoryModel, isEdit = true)
+                    }
+
+                    1 -> {
+                        // follow
+                        this.listComicFollow.forEach {
+                            it.isSelected = false
+                        }
+                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = this.listComicFollow, isEdit = true)
+                    }
+
+                    2 -> {
+                        // downloaded
+                        this.listComicDownloadedModel.forEach {
+                            it.isSelected = false
+                        }
+                        pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = this.listComicDownloadedModel, isEdit = true)
+                    }
+                }
             }
         }
 
@@ -322,6 +373,17 @@ class LibraryFragment : HomeBaseFragment() {
         tvDeleteAndCancel.visibility = View.GONE
         tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
         tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
+        this.listHistoryModel.forEach {
+            it.comicModel?.isSelected = false
+        }
+
+        this.listComicFollow.forEach {
+            it.isSelected = false
+        }
+
+        this.listComicDownloadedModel.forEach {
+            it.isSelected = false
+        }
     }
 
     private fun loadDataHistory() {
