@@ -46,7 +46,7 @@ class ListComicDownloadedAdapter : RecyclerView.Adapter<ListComicDownloadedAdapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comic = listComic[position]
-        holder.itemComicDownloadView.setData(comicModel = comic, listener = listener, isEdit = this.isEdit)
+        holder.itemComicDownloadView.setData(comicModel = comic, listener = listener, position = position, isEdit = this.isEdit)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

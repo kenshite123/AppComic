@@ -133,7 +133,7 @@ class PagerLibraryAdapter : PagerAdapter {
                 view = LayoutInflater.from(weakContext.get()).inflate(R.layout.item_tab_downloaded, container, false)
                 val gridLayoutManager = GridLayoutManager(weakContext.get()!!, 3)
                 val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
-                val listComicDownloadedAdapter = ListComicDownloadedAdapter(weakContext.get()!!, listener, listComicDownloaded)
+                val listComicDownloadedAdapter = ListComicDownloadedAdapter(weakContext.get()!!, listener, listComicDownloaded, isEditDownloaded)
                 rvListComic.setHasFixedSize(false)
                 rvListComic.itemAnimator?.changeDuration = 0L
                 rvListComic.layoutManager = gridLayoutManager

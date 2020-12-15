@@ -145,9 +145,14 @@ class LibraryFragment : HomeBaseFragment() {
         viewModel.unFavoriteComicResult.observe(this, Observer {
             loading(it)
             if (it.status == Status.SUCCESS) {
+                val listSelected = this.listComicFollow.filter { it.isSelected }
+                listSelected.forEach {
+                    GGGAppInterface.gggApp.removeComicToFavorite(it.id)
+                }
                 val list = this.listComicFollow.filter { !it.isSelected }
                 this.listComicFollow = list.toList()
                 pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = false)
+                resetAction()
             } else {
                 it.message?.let {
                     showDialog(it)
@@ -157,26 +162,48 @@ class LibraryFragment : HomeBaseFragment() {
     }
 
     override fun initEvent() {
-        tvEdit.setOnClickListener {
-            tvEdit.visibility = View.GONE
-            tvSelectAndUnSelectAll.visibility = View.VISIBLE
-            tvDeleteAndCancel.visibility = View.VISIBLE
-            tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-            tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
-            when (currentPagePosition) {
-                0 -> {
-                    // history
-                    pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = listHistoryModel, isEdit = true)
-                }
+        tvEditAndCancel.setOnClickListener {
+            if (tvEditAndCancel.text == getString(R.string.TEXT_EDIT)) {
+                tvEditAndCancel.text = getString(R.string.TEXT_CANCEL)
+                v1.visibility = View.VISIBLE
+                llAction.visibility = View.VISIBLE
+                tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+                when (currentPagePosition) {
+                    0 -> {
+                        // history
+                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = listHistoryModel, isEdit = true)
+                    }
 
-                1 -> {
-                    // follow
-                    pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = true)
-                }
+                    1 -> {
+                        // follow
+                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = true)
+                    }
 
-                2 -> {
-                    // downloaded
-                    pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = true)
+                    2 -> {
+                        // downloaded
+                        pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = true)
+                    }
+                }
+            } else {
+                tvEditAndCancel.text = getString(R.string.TEXT_EDIT)
+                v1.visibility = View.GONE
+                llAction.visibility = View.GONE
+                tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
+                when (currentPagePosition) {
+                    0 -> {
+                        // history
+                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = listHistoryModel, isEdit = false)
+                    }
+
+                    1 -> {
+                        // follow
+                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = false)
+                    }
+
+                    2 -> {
+                        // downloaded
+                        pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = false)
+                    }
                 }
             }
         }
@@ -184,7 +211,6 @@ class LibraryFragment : HomeBaseFragment() {
         tvSelectAndUnSelectAll.setOnClickListener {
             if (tvSelectAndUnSelectAll.text == getString(R.string.TEXT_SELECT_ALL)) {
                 tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
-                tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
                 when (currentPagePosition) {
                     0 -> {
                         // history
@@ -212,8 +238,6 @@ class LibraryFragment : HomeBaseFragment() {
                 }
             } else {
                 tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-                tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
-
                 when (currentPagePosition) {
                     0 -> {
                         // history
@@ -242,12 +266,12 @@ class LibraryFragment : HomeBaseFragment() {
             }
         }
 
-        tvDeleteAndCancel.setOnClickListener {
-            if (tvDeleteAndCancel.text == getString(R.string.TEXT_DELETE)) {
-                when (currentPagePosition) {
-                    0 -> {
-                        // history
-                        val listSelected = listHistoryModel.filter { it.comicModel?.isSelected == true }
+        llDelete.setOnClickListener {
+            when (currentPagePosition) {
+                0 -> {
+                    // history
+                    val listSelected = listHistoryModel.filter { it.comicModel?.isSelected == true }
+                    if (!listSelected.isNullOrEmpty()) {
                         val listComicId = mutableListOf<Long>()
                         listSelected.forEach {
                             listComicId.add(it.comicModel!!.id)
@@ -256,13 +280,16 @@ class LibraryFragment : HomeBaseFragment() {
                         val list = listHistoryModel.filter { it.comicModel?.isSelected == false }
                         this.listHistoryModel = list.toList()
                         pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = listHistoryModel, isEdit = false)
+                        resetAction()
                     }
+                }
 
-                    1 -> {
-                        // follow
-                        if (GGGAppInterface.gggApp.checkIsLogin()) {
+                1 -> {
+                    // follow
+                    if (GGGAppInterface.gggApp.checkIsLogin()) {
+                        val listSelected = this.listComicFollow.filter { it.isSelected }
+                        if (!listSelected.isNullOrEmpty()) {
                             val listComicId = mutableListOf<String>()
-                            val listSelected = this.listComicFollow.filter { it.isSelected }
                             listSelected.forEach {
                                 listComicId.add(it.id.toString())
                             }
@@ -274,27 +301,29 @@ class LibraryFragment : HomeBaseFragment() {
                             )
 
                             viewModel.unFavoriteComic(data)
-                        } else {
-                            showConfirmDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_UNFOLLOW_COMIC,
-                                    R.string.TEXT_CANCEL, DialogInterface.OnClickListener { dialogInterface, _ -> dialogInterface.dismiss() },
-                                    R.string.TEXT_REGISTER, DialogInterface.OnClickListener { dialogInterface, _ -> run {
-                                dialogInterface.dismiss()
-                                navigationController.showRegister()
-                            }},
-                                    R.string.TEXT_LOGIN, DialogInterface.OnClickListener { dialogInterface, _ -> run {
-                                dialogInterface.dismiss()
-                                navigationController.showLogin()
-                            }})
                         }
-//                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = false)
+                    } else {
+                        showConfirmDialog(R.string.TEXT_ERROR_NO_LOGIN_TO_UNFOLLOW_COMIC,
+                                R.string.TEXT_CANCEL, DialogInterface.OnClickListener { dialogInterface, _ -> dialogInterface.dismiss() },
+                                R.string.TEXT_REGISTER, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                            dialogInterface.dismiss()
+                            navigationController.showRegister()
+                        }},
+                                R.string.TEXT_LOGIN, DialogInterface.OnClickListener { dialogInterface, _ -> run {
+                            dialogInterface.dismiss()
+                            navigationController.showLogin()
+                        }})
                     }
+//                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = false)
+                }
 
-                    2 -> {
-                        // downloaded
-                        doAsync {
-                            val listSelected = listComicDownloadedModel.filter { it.isSelected }
-                            val listComicId = mutableListOf<Long>()
-                            listSelected.forEach {
+                2 -> {
+                    // downloaded
+                    val listSelected = listComicDownloadedModel.filter { it.isSelected }
+                    if (!listSelected.isNullOrEmpty()) {
+                        val listComicId = mutableListOf<Long>()
+                        listSelected.forEach {
+                            doAsync {
                                 AndroidNetworking.forceCancel(it.id.toString())
                                 listComicId.add(it.id)
                                 val file = File("${context!!.filesDir.absolutePath}/DownloadComic/${it.id}")
@@ -302,42 +331,15 @@ class LibraryFragment : HomeBaseFragment() {
                                     file.deleteRecursively()
                                 }
                             }
-                            viewModel.deleteListDownloaded(listComicId)
                         }
-                        val list = this.listComicDownloadedModel.filter { !it.isSelected }
-                        this.listComicDownloadedModel = list.toList()
-                        pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = false)
+                        viewModel.deleteListDownloaded(listComicId)
                     }
-                }
-            } else {
-                when (currentPagePosition) {
-                    0 -> {
-                        // history
-                        this.listHistoryModel.map {
-                            it.comicModel?.isSelected = false
-                        }
-                        pagerLibraryAdapter.notifyDataListHistory(listHistoryModel = listHistoryModel, isEdit = false)
-                    }
-
-                    1 -> {
-                        // follow
-                        this.listComicFollow.map {
-                            it.isSelected = false
-                        }
-                        pagerLibraryAdapter.notifyDataListFollow(listComicFollow = listComicFollow, isEdit = false)
-                    }
-
-                    2 -> {
-                        // downloaded
-                        this.listComicDownloadedModel.map {
-                            it.isSelected = false
-                        }
-                        pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = false)
-                    }
+                    val list = this.listComicDownloadedModel.filter { !it.isSelected }
+                    this.listComicDownloadedModel = list.toList()
+                    pagerLibraryAdapter.notifyDataListComicDownloaded(listComicDownloaded = listComicDownloadedModel, isEdit = false)
+                    resetAction()
                 }
             }
-
-            resetAction()
         }
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -368,11 +370,10 @@ class LibraryFragment : HomeBaseFragment() {
     }
 
     private fun resetAction() {
-        tvEdit.visibility = View.VISIBLE
-        tvSelectAndUnSelectAll.visibility = View.GONE
-        tvDeleteAndCancel.visibility = View.GONE
+        tvEditAndCancel.text = getString(R.string.TEXT_EDIT)
+        v1.visibility = View.GONE
+        llAction.visibility = View.GONE
         tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-        tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
         this.listHistoryModel.forEach {
             it.comicModel?.isSelected = false
         }
@@ -470,10 +471,8 @@ class LibraryFragment : HomeBaseFragment() {
                         val count = this.listHistoryModel.count { it.comicModel?.isSelected == true }
                         if (count > 0) {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
                         } else {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
                         }
                     }
 
@@ -482,10 +481,8 @@ class LibraryFragment : HomeBaseFragment() {
                         val count = this.listComicFollow.count { it.isSelected }
                         if (count > 0) {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
                         } else {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
                         }
                     }
 
@@ -494,10 +491,8 @@ class LibraryFragment : HomeBaseFragment() {
                         val count = this.listComicDownloadedModel.count { it.isSelected }
                         if (count > 0) {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_DESELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_DELETE)
                         } else {
                             tvSelectAndUnSelectAll.text = getString(R.string.TEXT_SELECT_ALL)
-                            tvDeleteAndCancel.text = getString(R.string.TEXT_CANCEL)
                         }
                     }
                 }

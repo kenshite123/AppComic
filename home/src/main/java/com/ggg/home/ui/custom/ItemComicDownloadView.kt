@@ -12,13 +12,6 @@ import com.ggg.home.R
 import com.ggg.home.data.model.ComicModel
 import com.ggg.home.utils.Constant
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.item_comic.view.*
-import kotlinx.android.synthetic.main.item_comic.view.circularProgressBar
-import kotlinx.android.synthetic.main.item_comic.view.ctlProgressDownload
-import kotlinx.android.synthetic.main.item_comic.view.ivComic
-import kotlinx.android.synthetic.main.item_comic.view.tvChap
-import kotlinx.android.synthetic.main.item_comic.view.tvComicTitle
-import kotlinx.android.synthetic.main.item_comic.view.tvPercent
 import kotlinx.android.synthetic.main.item_comic_library.view.*
 import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
@@ -30,6 +23,7 @@ class ItemComicDownloadView : ConstraintLayout {
     var comic: ComicModel = ComicModel()
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var isEdit = false
+    private var position = -1
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         weakContext = WeakReference(context)
@@ -38,9 +32,10 @@ class ItemComicDownloadView : ConstraintLayout {
         addEvents()
     }
 
-    fun setData(comicModel: ComicModel, listener: OnEventControlListener, isEdit: Boolean = false) {
+    fun setData(comicModel: ComicModel, listener: OnEventControlListener, position: Int = -1, isEdit: Boolean = false) {
         this.comic = comicModel
         this.listener = listener
+        this.position = position
         this.isEdit = isEdit
         this.reloadViews()
     }
@@ -55,7 +50,11 @@ class ItemComicDownloadView : ConstraintLayout {
         tvComicTitle.text = comic.title
         tvChap.text = comic.latestChapter
         if (isEdit) {
-            ivChecked.visibility = View.VISIBLE
+            if (comic.isSelected) {
+                ivChecked.visibility = View.VISIBLE
+            } else {
+                ivChecked.visibility = View.GONE
+            }
         } else {
             ivChecked.visibility = View.GONE
         }
@@ -69,9 +68,6 @@ class ItemComicDownloadView : ConstraintLayout {
             val percent = comic.totalDownloaded * 100 / comic.totalNeedToDownload
             if (percent == 100) {
                 ctlProgressDownload.visibility = View.GONE
-                ivComic.setOnClickListener {
-                    listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
-                }
             } else {
                 ctlProgressDownload.visibility = View.VISIBLE
                 tvPercent.text = "${percent}%"
@@ -111,16 +107,35 @@ class ItemComicDownloadView : ConstraintLayout {
     private fun addEvents() {
         ivComic.setOnClickListener {
             if (this.isEdit) {
+                comic.isSelected = !comic.isSelected
                 if (comic.isSelected) {
                     ivChecked.visibility = View.VISIBLE
-                    ivChecked.setImageResource(R.drawable.icon_checked)
+//                    ivChecked.setImageResource(R.drawable.icon_checked)
+                } else {
+                    ivChecked.visibility = View.GONE
+                }
+
+                listener.onEvent(Constant.ACTION_SELECT_OR_DESELECT_COMIC_TO_EDIT, null, position)
+            } else {
+                if (comic.totalNeedToDownload == comic.totalDownloaded) {
+                    listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
+                }
+            }
+        }
+
+        ctlProgressDownload.setOnClickListener {
+            if (this.isEdit) {
+                comic.isSelected = !comic.isSelected
+                if (comic.isSelected) {
+                    if (comic.isSelected) {
+                        ivChecked.visibility = View.VISIBLE
+//                    ivChecked.setImageResource(R.drawable.icon_checked)
+                    } else {
+                        ivChecked.visibility = View.GONE
+                    }
                 } else {
 //                    ivChecked.setImageResource(R.drawable.icon_uncheck)
                     ivChecked.visibility = View.GONE
-                }
-            } else {
-                if (comic.totalNeedToDownload == 0) {
-                    listener.onEvent(Constant.ACTION_CLICK_ON_COMIC_DOWNLOADED, it, comic.id)
                 }
             }
         }

@@ -188,7 +188,7 @@ class LibraryRepository {
             override fun createCall(): LiveData<ApiResponse<NoneResponse>> {
                 return api.unFavoriteComic(
                         data["token"].toString(),
-                        data["comicId"].toString()
+                        data["listComicId"].toString()
                 )
             }
 
