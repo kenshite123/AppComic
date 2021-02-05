@@ -21,6 +21,23 @@ android {
 
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'HeavenManga'
+            keyPassword 'heavenmanga'
+            storeFile file('../heavenmanga.jks')
+            storePassword 'heavenmanga'
+//            project.ext.set("archivesBaseName", "Nanobook_" + getDate() + "_" + defaultConfig.versionCode + "(" + defaultConfig.versionName + ")")
+        }
+        debug {
+            keyAlias 'HeavenManga'
+            keyPassword 'heavenmanga'
+            storeFile file('../heavenmanga.jks')
+            storePassword 'heavenmanga'
+//            project.ext.set("archivesBaseName", "Nanobook_DEV_" + getDate() + "_" + defaultConfig.versionCode + "(" + defaultConfig.versionName + ")")
+        }
+    }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
