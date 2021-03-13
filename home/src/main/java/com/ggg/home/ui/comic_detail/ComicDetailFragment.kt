@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.utils.CommonUtils
 import com.ggg.common.utils.StringUtil
+import com.ggg.common.utils.Utils
 import com.ggg.common.vo.Status
 import com.ggg.home.R
 import com.ggg.home.data.model.*
@@ -24,10 +25,11 @@ import com.ggg.home.ui.adapter.ListCategoryComicDetailAdapter
 import com.ggg.home.ui.adapter.PagerComicDetailAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
-import com.ggg.common.utils.Utils
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import kotlinx.android.synthetic.main.fragment_comic_detail.*
 import org.jetbrains.anko.bundleOf
-import org.jetbrains.anko.runOnUiThread
 import timber.log.Timber
 
 class ComicDetailFragment : HomeBaseFragment() {
@@ -105,6 +107,35 @@ class ComicDetailFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener() {
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+        }
+
         listCategoryComicDetailAdapter = ListCategoryComicDetailAdapter(context!!, this, comicWithCategoryModel.categories ?: listOf(), false)
         rvListCategory.setHasFixedSize(true)
 //        rvListCategory.layoutManager = GridLayoutManager(context!!, 3)
@@ -397,7 +428,7 @@ class ComicDetailFragment : HomeBaseFragment() {
         if (GGGAppInterface.gggApp.checkIsLogin()) {
             val loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
             val token = "${loginResponse.tokenType}${loginResponse.accessToken}"
-            val data = hashMapOf(
+            val data = hashMapOf<String, Any>(
                     "token" to token,
                     "comicId" to comicWithCategoryModel.comicModel!!.id
             )
@@ -423,7 +454,7 @@ class ComicDetailFragment : HomeBaseFragment() {
         if (GGGAppInterface.gggApp.checkIsLogin()) {
             val loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
             val token = "${loginResponse.tokenType}${loginResponse.accessToken}"
-            val data = hashMapOf(
+            val data = hashMapOf<String, Any>(
                     "token" to token,
                     "comicId" to comicWithCategoryModel.comicModel!!.id
             )

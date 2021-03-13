@@ -149,7 +149,7 @@ class SearchFragment : HomeBaseFragment() {
         if (!isLoadMore) {
             page = 0
         }
-        val data = hashMapOf(
+        val data = hashMapOf<String, Any>(
                 "keywords" to edtSearch.text.toString(),
                 "limit" to items,
                 "offset" to page

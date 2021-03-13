@@ -20,6 +20,7 @@ import com.ggg.home.data.model.response.LoginResponse
 import com.ggg.home.ui.adapter.PagerLibraryAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
+import com.google.android.gms.ads.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
@@ -72,6 +73,35 @@ class LibraryFragment : HomeBaseFragment() {
         pagerLibraryAdapter = PagerLibraryAdapter(context!!, this)
         viewPager.adapter = pagerLibraryAdapter
         tabLayout.setupWithViewPager(viewPager)
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener() {
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun initObserver() {
@@ -401,7 +431,7 @@ class LibraryFragment : HomeBaseFragment() {
             loginResponse = GGGAppInterface.gggApp.loginResponse as LoginResponse
         }
         val token = loginResponse?.tokenType + loginResponse?.accessToken
-        val data = hashMapOf(
+        val data = hashMapOf<String, Any>(
                 "token" to token,
                 "limit" to items,
                 "offset" to pageFollow

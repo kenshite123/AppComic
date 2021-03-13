@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.ggg.common.GGGAppInterface
 import com.ggg.common.vo.Status
 import com.ggg.home.R
@@ -214,7 +213,7 @@ class HomeFragment : HomeBaseFragment() {
                 it.data?.let {
                     val listImageDownload = mutableListOf<HashMap<String, Any>>()
                     it.forEach {
-                        val data = hashMapOf(
+                        val data = hashMapOf<String, Any>(
                                 "comicId" to it.comicId,
                                 "chapterId" to it.chapterId,
                                 "imageUrl" to it.srcImg

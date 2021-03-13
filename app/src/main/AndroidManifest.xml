@@ -31,6 +31,15 @@
             </intent-filter>
         </service>
 
+        <receiver
+            android:name="NetworkChangeReceiver"
+            android:label="NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <uses-library android:name="com.google.android.maps" /> <!-- <meta-data android:name="com.google.android.maps.V2.API_KEY" android:value="AIzaSyBGdUKnXANtJBeGlbQfoVldVbBc3z72Yxg" /> -->
         <!-- <meta-data -->
         <!-- android:name="com.google.android.geo.API_KEY" -->
@@ -50,6 +59,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9389462918807647~5177253950"/>
 
         <activity
             android:name=".ui.init.InitialActivity"

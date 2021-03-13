@@ -22,12 +22,18 @@ import com.ggg.home.data.view.StatusTypeFilterItemView
 import com.ggg.home.ui.custom.CategoryFilterView
 import com.ggg.home.ui.custom.StatusTypeFilterView
 import com.ggg.home.utils.Constant
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import kotlinx.android.synthetic.main.fragment_library.*
 import java.lang.ref.WeakReference
 
 class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener {
 
     lateinit var weakContext: WeakReference<Context>
     lateinit var listener: OnEventControlListener
+    lateinit var adRequest: AdRequest
     var listTitle: ArrayList<String> = arrayListOf(StringUtil.getString(R.string.TEXT_LATEST_UPDATE), StringUtil.getString(R.string.TEXT_ALL))
 
     var pageLatestUpdate = 0
@@ -63,9 +69,10 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
     private lateinit var ctlType: ConstraintLayout
     private lateinit var tvType: TextView
 
-    constructor(context: Context, listener: OnEventControlListener) {
+    constructor(context: Context, listener: OnEventControlListener, adRequest: AdRequest) {
         this.weakContext = WeakReference(context)
         this.listener = listener
+        this.adRequest = adRequest
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
@@ -84,7 +91,8 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         return listTitle.count()
     }
 
-    fun notifyDataLatestUpdate(listComicLatestUpdate: List<ComicModel>, isLoadAllDataLatestUpdate: Boolean, pastVisibleItemsLatestUpdate: Int) {
+    fun notifyDataLatestUpdate(listComicLatestUpdate: List<ComicModel>,
+                               isLoadAllDataLatestUpdate: Boolean, pastVisibleItemsLatestUpdate: Int) {
         this.listComicLatestUpdate = listComicLatestUpdate
         if (isLoadMoreLatestUpdate) {
             isLoadMoreLatestUpdate = false
@@ -227,6 +235,36 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
 
         val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
+        val adView: AdView = view.findViewById(R.id.adView)
+
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener() {
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+        }
+
         rvListComic.setHasFixedSize(false)
         rvListComic.layoutManager = gridLayoutManager
         rvListComic.adapter = listComicAdapter
@@ -280,6 +318,35 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         ctlType = view.findViewById(R.id.ctlType)
         tvType = view.findViewById(R.id.tvType)
         val rvListComic: RecyclerView = view.findViewById(R.id.rvListComic)
+        val adView: AdView = view.findViewById(R.id.adView)
+
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener() {
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+        }
 
         listStatusFilterItemView = listOf(
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_STATUS_ALL, isSelected = currentPositionStatusSelected == 0, isType = false),
@@ -435,7 +502,7 @@ class PagerCategoryAndLatestUpdateAdapter : PagerAdapter, OnEventControlListener
         }
     }
 
-    fun loadListComicFilter() {
+    private fun loadListComicFilter() {
         val dataLoadApi = hashMapOf(
                 "isLoadMore" to false,
                 "statusSelected" to listStatusFilterItemView[currentPositionStatusSelected].statusType,

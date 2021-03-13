@@ -96,7 +96,7 @@ class RankFragment : HomeBaseFragment() {
             else -> Constant.RANK_TYPE_ALL
         }
 
-        val data = hashMapOf(
+        val data = hashMapOf<String, Any>(
                 "type" to type,
                 "limit" to 20,
                 "offset" to 0

@@ -171,7 +171,7 @@ class ChooseChapToDownloadImageFragment : HomeBaseFragment() {
                         it.forEach {
                             if (!it.imageUrls.isNullOrEmpty()) {
                                 it.imageUrls.forEach { url ->
-                                    val hmData = hashMapOf(
+                                    val hmData = hashMapOf<String, Any>(
                                             "comicId" to it.comicId,
                                             "chapterId" to it.chapterId,
                                             "imageUrl" to url

@@ -4,7 +4,7 @@ class ServerPath {
     companion object {
 //        var baseUri = "http://46.4.89.54:8080/"
 //        var baseUri = "http://138.201.53.201:8080/"
-        var baseUri = "http://161.97.118.88:8080/"
+        var baseUri = "http://138.201.20.167:8080/"
         const val CONFIG = "api/app/config"
         const val LOGIN = "api/auth/login"
         const val REGISTER = "api/auth/register"

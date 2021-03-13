@@ -110,7 +110,7 @@ class MyCommentFragment : HomeBaseFragment() {
     }
 
     private fun loadDataMyComment() {
-        val data = hashMapOf(
+        val data = hashMapOf<String, Any>(
                 "token" to token,
                 "limit" to items,
                 "offset" to page
@@ -151,7 +151,7 @@ class MyCommentFragment : HomeBaseFragment() {
                     val position = data as Int
                     this.positionCommentDeleted = position
                     val commentModel = listComment.get(position)
-                    val data = hashMapOf(
+                    val data = hashMapOf<String, Any>(
                             "token" to token,
                             "commentId" to commentModel.commentId
                     )

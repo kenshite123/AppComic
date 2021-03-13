@@ -47,6 +47,16 @@ class NavigationController @Inject constructor(activity: MainActivity) {
         fragNavController.pushFragment(fragment)
     }
 
+    fun showLatestUpdateNew() {
+        val fragment = com.ggg.home.ui.category_and_latest_update.LatestUpdateFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
+    fun showCategoryFragmentNew() {
+        val fragment = com.ggg.home.ui.category_and_latest_update.CategoryFragment.create()
+        fragNavController.pushFragment(fragment)
+    }
+
     fun showLibrary(){
         val fragment = LibraryFragment.create()
         fragNavController.pushFragment(fragment)

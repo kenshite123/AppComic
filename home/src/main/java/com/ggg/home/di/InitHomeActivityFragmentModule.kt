@@ -85,4 +85,10 @@ abstract class InitHomeActivityFragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeChooseChapToDownloadImageFragmentInjector(): ChooseChapToDownloadImageFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeLatestUpdateFragmentNewInjector(): com.ggg.home.ui.category_and_latest_update.LatestUpdateFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCategoryFragmentNewInjector(): com.ggg.home.ui.category_and_latest_update.CategoryFragment
 }
