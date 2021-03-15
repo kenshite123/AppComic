@@ -33,7 +33,7 @@ class App : MultiDexApplication(), HasActivityInjector, GGGAppInterface.AppInter
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     @Inject lateinit var dispatching: DispatchingAndroidInjector<Activity>
     var loginResponse: LoginResponse? = null
-    private var siteDeploy = false
+    private var siteDeploy: Boolean = true
     private var listFavoriteId: List<String> = listOf()
     private var isFromNotification = false
     private lateinit var bus: RxBus

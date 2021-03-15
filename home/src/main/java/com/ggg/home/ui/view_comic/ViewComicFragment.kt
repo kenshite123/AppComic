@@ -17,10 +17,12 @@ import com.ggg.home.data.model.ChapterHadRead
 import com.ggg.home.data.model.ComicWithCategoryModel
 import com.ggg.home.data.model.post_param.DataSendReportParam
 import com.ggg.home.data.model.response.LoginResponse
+import com.ggg.home.data.view.DataImageAndAdsView
 import com.ggg.home.ui.adapter.ListImageComicAdapter
 import com.ggg.home.ui.custom.ReportComicView
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.utils.Constant
+import com.google.android.gms.ads.AdRequest
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_view_comic.*
@@ -47,6 +49,7 @@ class ViewComicFragment : HomeBaseFragment() {
     lateinit var reportComicView: ReportComicView
     var loginResponse: LoginResponse? = null
     var token: String? = null
+    private var listImageUrl = mutableListOf<String>()
 
     companion object {
         val TAG = "ViewComicFragment"
@@ -103,8 +106,9 @@ class ViewComicFragment : HomeBaseFragment() {
         layoutManagerForVertical = LinearLayoutManager(context!!, RecyclerView.VERTICAL, false)
         layoutManagerForHorizontal = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
 
+        val adRequest = AdRequest.Builder().build()
         listImageComicAdapter = ListImageComicAdapter(context!!, this, listOf(),
-                false, 0, 0)
+                false, 0, 0, adRequest)
         rvListImageComic.setHasFixedSize(false)
         rvListImageComic.layoutManager = layoutManagerForVertical
         rvListImageComic.adapter = listImageComicAdapter
@@ -131,12 +135,8 @@ class ViewComicFragment : HomeBaseFragment() {
             loading(it)
             if (it.status == Status.SUCCESS || it.status == Status.SUCCESS_DB || it.status == Status.ERROR) {
                 val listImageComic: List<String> = chapterSelected.chapterModel!!.listImageUrlString.split(", ")
-                if (chapterSelected.chapterModel!!.hadDownloaded == Constant.IS_DOWNLOADED) {
-                    listImageComicAdapter.notifyData(listImageComic = listImageComic, isDownloaded = true,
-                            comicId = comicWithCategoryModel.comicModel!!.id, chapterId = chapterSelected.chapterModel!!.chapterId)
-                } else {
-                    listImageComicAdapter.notifyData(listImageComic = listImageComic, isDownloaded = false, comicId = 0, chapterId = 0)
-                }
+                listImageUrl = listImageComic.toMutableList()
+                notifyDataListImageComic()
                 rvListImageComic.scrollToPosition(currentPagePosition)
 
                 if (it.status == Status.ERROR) {
@@ -213,15 +213,17 @@ class ViewComicFragment : HomeBaseFragment() {
                 ivChangeScrollDirection.setImageResource(R.drawable.icon_read_vertical)
                 rvListImageComic.layoutManager = layoutManagerForHorizontal
                 pagerSnapHelper.attachToRecyclerView(rvListImageComic)
-                rvListImageComic.scrollToPosition(currentPagePosition)
+//                rvListImageComic.scrollToPosition(currentPagePosition)
                 isShowVertical = false
             } else {
                 ivChangeScrollDirection.setImageResource(R.drawable.icon_read_horizontal)
                 rvListImageComic.layoutManager = layoutManagerForVertical
                 pagerSnapHelper.attachToRecyclerView(null)
-                rvListImageComic.scrollToPosition(currentPagePosition)
+//                rvListImageComic.scrollToPosition(currentPagePosition)
                 isShowVertical = true
             }
+
+            notifyDataListImageComic()
         }
 
         ivComment.setOnClickListener {
@@ -335,6 +337,45 @@ class ViewComicFragment : HomeBaseFragment() {
         if (isFirstLoad) {
             initObserver()
             isFirstLoad = false
+        }
+    }
+
+    private fun notifyDataListImageComic() {
+        val listImageComic = listImageUrl.toList()
+        val listDataImageAndAds = mutableListOf<DataImageAndAdsView>()
+        for (i in 0 until listImageComic.size) {
+            if (isShowVertical) {
+                val dataImageView = DataImageAndAdsView()
+                dataImageView.image = listImageComic[i]
+                dataImageView.isAds = false
+                dataImageView.isShowVertical = isShowVertical
+                listDataImageAndAds.add(dataImageView)
+
+                if (i == 2 ||
+                        (i == listImageComic.size / 2 && listImageComic.size >= 20) ||
+                        (i == listImageComic.size - 3 && listImageComic.size >= 8)) {
+                    val dataAdsView = DataImageAndAdsView()
+                    dataAdsView.isAds = true
+                    dataAdsView.isShowVertical = isShowVertical
+                    listDataImageAndAds.add(dataAdsView)
+                }
+            } else {
+                val dataImageAndAdsView = DataImageAndAdsView()
+                dataImageAndAdsView.isShowVertical = isShowVertical
+                dataImageAndAdsView.isAds = i == 2 ||
+                        (i == listImageComic.size / 2 && listImageComic.size >= 20) ||
+                        (i == listImageComic.size - 3 && listImageComic.size >= 8)
+                dataImageAndAdsView.image = listImageComic[i]
+                listDataImageAndAds.add(dataImageAndAdsView)
+            }
+        }
+
+        if (chapterSelected.chapterModel!!.hadDownloaded == Constant.IS_DOWNLOADED) {
+            listImageComicAdapter.notifyData(listDataImageAndAds = listDataImageAndAds, isDownloaded = true,
+                    comicId = comicWithCategoryModel.comicModel!!.id, chapterId = chapterSelected.chapterModel!!.chapterId)
+        } else {
+            listImageComicAdapter.notifyData(listDataImageAndAds = listDataImageAndAds,
+                    isDownloaded = false, comicId = 0, chapterId = 0)
         }
     }
 }

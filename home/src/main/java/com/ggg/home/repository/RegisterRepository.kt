@@ -34,12 +34,12 @@ class RegisterRepository {
             }
 
             override fun createCall(): LiveData<ApiResponse<RegisterResponse>> {
-                var registeBody : RegisterBody = RegisterBody()
-                registeBody.fullName = data["fullName"].toString()
-                registeBody.userName = data["userName"].toString()
-                registeBody.email = data["email"].toString()
-                registeBody.password = data["password"].toString()
-                return api.register(registeBody)
+                val registerBody = RegisterBody()
+                registerBody.fullName = data["fullName"].toString()
+                registerBody.userName = data["userName"].toString()
+                registerBody.email = data["email"].toString()
+                registerBody.password = data["password"].toString()
+                return api.register(registerBody)
             }
         }
         return callApi.asLiveData()

@@ -35,7 +35,7 @@ class FavoriteRepository {
                 val limit = data["limit"]!!
                 val offset = data["offset"]!! * limit
                 return db.comicDao().getListFavoriteComic(
-                        GGGAppInterface.gggApp.siteDeploy,
+                        GGGAppInterface.gggApp.siteDeploy.toString(),
                         limit,
                         offset
                 )

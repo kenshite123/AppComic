@@ -10,11 +10,23 @@ import com.ggg.home.data.model.HistoryModel
 abstract class ComicDao {
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.bigImageUrl IS NOT NULL and bigImageUrl <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id")
+    abstract fun getListBanners(siteDeploy: String) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.bigImageUrl IS NOT NULL and bigImageUrl <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id")
     abstract fun getListBanners(siteDeploy: Boolean) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListLatestUpdate(siteDeploy: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
     abstract fun getListLatestUpdate(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.id DESC limit :limit offset :offset")
+    abstract fun getListComicByCategory(siteDeploy: String, listCategoryId: List<Long>, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.id DESC limit :limit offset :offset")
@@ -31,6 +43,10 @@ abstract class ComicDao {
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.rate, comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListFavoriteComic(siteDeploy: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.rate, comic.lastModified DESC limit :limit offset :offset")
     abstract fun getListFavoriteComic(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
@@ -39,7 +55,15 @@ abstract class ComicDao {
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CCHadReadModel ccHadRead on comic.id = ccHadRead.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY ccHadRead.lastModified DESC limit :limit offset :offset")
+    abstract fun getListHistory(siteDeploy: String, limit: Int, offset: Int) : LiveData<List<HistoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CCHadReadModel ccHadRead on comic.id = ccHadRead.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY ccHadRead.lastModified DESC limit :limit offset :offset")
     abstract fun getListHistory(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<HistoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 /*and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '')*/ and comic.id in (:data) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY cate.lastModified DESC, comic.lastModified DESC")
+    abstract fun getListComicFollow(siteDeploy: String, data: List<String>) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 /*and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '')*/ and comic.id in (:data) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY cate.lastModified DESC, comic.lastModified DESC")
@@ -47,7 +71,15 @@ abstract class ComicDao {
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) DESC limit :limit offset :offset")
+    abstract fun getAllListComic(siteDeploy: String, listCategoryId: List<Long>, status: String, type: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) DESC limit :limit offset :offset")
     abstract fun getAllListComic(siteDeploy: Boolean, listCategoryId: List<Long>, status: String, type: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) DESC limit :limit offset :offset")
+    abstract fun getAllListComic(siteDeploy: String, status: String, type: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) GROUP BY comic.id ORDER BY (case :type  when 'New' then comic.id else comic.viewed end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) DESC limit :limit offset :offset")
@@ -55,17 +87,29 @@ abstract class ComicDao {
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListLatestUpdateByFilter(siteDeploy: String, listCategoryId: List<Long>, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and cate.categoryId in (:listCategoryId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
     abstract fun getListLatestUpdateByFilter(siteDeploy: Boolean, listCategoryId: List<Long>, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+    abstract fun getListLatestUpdateByFilter(siteDeploy: String, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join CategoryOfComicModel cate on comic.id = cate.comicId where 1 = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :status when 'All' then  comic.status in (0,1) when 'Updating' then  comic.status = 0 else comic.status = 1  end) and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
     abstract fun getListLatestUpdateByFilter(siteDeploy: Boolean, status: String, limit: Int, offset: Int) : LiveData<List<ComicWithCategoryModel>>
 
-//    @Transaction
-//    @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and chap.hadDownloaded = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
-//    abstract fun getListComicDownloaded(siteDeploy: Boolean, limit: Int, offset: Int) : LiveData<List<ComicDownloadedModel>>
+    @Transaction
+    @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and comic.id in (:listComicId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY chap.lastModified DESC")
+    abstract fun getListComicDownloaded(listComicId: List<Long>, siteDeploy: String) : List<ComicModel>
 
     @Transaction
     @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and comic.id in (:listComicId) and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY chap.lastModified DESC")
-    abstract fun getListComicDownloaded(listComicId: List<Long>, siteDeploy: Boolean) : List<ComicModel>
+    abstract fun getListComicDownloaded(siteDeploy: Boolean, listComicId: List<Long>) : List<ComicModel>
+
+//    @Transaction
+//    @Query("SELECT comic.* FROM ComicModel comic join ChapterModel chap on comic.id = chap.comicId where 1 = 1 and chap.hadDownloaded = 1 and (comic.latestChapter IS NOT NULL and comic.latestChapter <> '') and (case :siteDeploy when 'false' then  comic.deploy in (0,1) else comic.deploy = 0  end) GROUP BY comic.id ORDER BY comic.lastModified DESC limit :limit offset :offset")
+//    abstract fun getListComicDownloaded(siteDeploy: String, limit: Int, offset: Int) : LiveData<List<ComicDownloadedModel>>
 }

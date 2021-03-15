@@ -70,7 +70,7 @@
             ads:layout_constraintStart_toStartOf="parent"
             ads:layout_constraintEnd_toEndOf="parent"
             ads:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            ads:adSize="SMART_BANNER"
+            ads:adSize="BANNER"
             ads:adUnitId="@string/app_ads_id" />
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"

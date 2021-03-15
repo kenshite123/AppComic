@@ -37,7 +37,10 @@ class LibraryRepository {
             override fun loadFromDb(): LiveData<List<HistoryModel>> {
                 val limit = data["limit"]!!
                 val offset = data["offset"]!! * limit
-                return db.comicDao().getListHistory(GGGAppInterface.gggApp.siteDeploy, limit, offset)
+                return db.comicDao().getListHistory(
+                        GGGAppInterface.gggApp.siteDeploy.toString(),
+                        limit,
+                        offset)
             }
 
             override fun createCall(): LiveData<ApiResponse<List<HistoryModel>>> {
@@ -61,7 +64,7 @@ class LibraryRepository {
 //        val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
 //            override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
 //                val listComicId = data["listComicId"] as List<String>
-//                return db.comicDao().getListComicFollow(GGGAppInterface.gggApp.siteDeploy, listComicId)
+//                return db.comicDao().getListComicFollow(GGGAppInterface.gggApp.siteDeploy.toString(), listComicId)
 //            }
 //
 //            override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {
@@ -156,7 +159,7 @@ class LibraryRepository {
                     }
                     val listComic = db.comicDao().getListComicDownloaded(
                             listComicId = listComicId,
-                            siteDeploy = GGGAppInterface.gggApp.siteDeploy
+                            siteDeploy = GGGAppInterface.gggApp.siteDeploy.toString()
                     )
 
                     listComic.forEach {

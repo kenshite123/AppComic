@@ -31,7 +31,7 @@ class RankRepository {
         val callApi = object : NetworkBoundResource<List<ComicRankWithCategoryModel>, List<ComicRankModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicRankWithCategoryModel>> {
                 return db.comicRankDao().getListRankByType(
-                        GGGAppInterface.gggApp.siteDeploy,
+                        GGGAppInterface.gggApp.siteDeploy.toString(),
                         data["type"]!! as String,
                         data["limit"]!! as Int,
                         data["offset"]!! as Int

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Heaven Toon</string>
-    <string name="app_ads_id">ca-app-pub-9389462918807647/6398836288</string>
+    <string name="app_ads_id">ca-app-pub-9389462918807647/6398836288</string> <!-- release -->
+<!--    <string name="app_ads_id">ca-app-pub-3940256099942544/6300978111</string> &lt;!&ndash; dev &ndash;&gt; -->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

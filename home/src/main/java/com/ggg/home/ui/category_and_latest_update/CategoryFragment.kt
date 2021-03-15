@@ -72,6 +72,7 @@ class CategoryFragment : HomeBaseFragment() {
         @JvmStatic
         fun create() : CategoryFragment {
             val fragment = CategoryFragment()
+            fragment.isFirstLoad = true
             return fragment
         }
     }
@@ -102,34 +103,34 @@ class CategoryFragment : HomeBaseFragment() {
         val intentFilter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
         context!!.registerReceiver(NetworkChangeReceiver(networkChange), intentFilter)
 
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-        adView.adListener = object : AdListener() {
-            override fun onAdImpression() {
-                super.onAdImpression()
-            }
-
-            override fun onAdClicked() {
-                super.onAdClicked()
-            }
-
-            override fun onAdFailedToLoad(p0: LoadAdError?) {
-                super.onAdFailedToLoad(p0)
-            }
-
-            override fun onAdClosed() {
-                super.onAdClosed()
-            }
-
-            override fun onAdOpened() {
-                super.onAdOpened()
-            }
-
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                adView.visibility = View.VISIBLE
-            }
-        }
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
+//        adView.adListener = object : AdListener() {
+//            override fun onAdImpression() {
+//                super.onAdImpression()
+//            }
+//
+//            override fun onAdClicked() {
+//                super.onAdClicked()
+//            }
+//
+//            override fun onAdFailedToLoad(p0: LoadAdError?) {
+//                super.onAdFailedToLoad(p0)
+//            }
+//
+//            override fun onAdClosed() {
+//                super.onAdClosed()
+//            }
+//
+//            override fun onAdOpened() {
+//                super.onAdOpened()
+//            }
+//
+//            override fun onAdLoaded() {
+//                super.onAdLoaded()
+//                adView.visibility = View.VISIBLE
+//            }
+//        }
 
         listStatusFilterItemView = mutableListOf(
                 StatusTypeFilterItemView(Constant.FILTER_COMIC_STATUS_ALL, isSelected = currentPositionStatusSelected == 0, isType = false),

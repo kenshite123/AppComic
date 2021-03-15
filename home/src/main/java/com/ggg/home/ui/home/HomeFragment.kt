@@ -20,7 +20,11 @@ import com.ggg.home.ui.adapter.PagerSlideAdapter
 import com.ggg.home.ui.main.HomeBaseFragment
 import com.ggg.home.ui.main.MainActivity
 import com.ggg.home.utils.Constant
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.adView
 import org.jetbrains.anko.bundleOf
 import timber.log.Timber
 import java.util.*
@@ -98,6 +102,35 @@ class HomeFragment : HomeBaseFragment() {
     }
 
     private fun initViews() {
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener() {
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+        }
+
         pagerSlideAdapter = PagerSlideAdapter(context!!, this, listBanners)
         rvSlide.setHasFixedSize(false)
         val layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)

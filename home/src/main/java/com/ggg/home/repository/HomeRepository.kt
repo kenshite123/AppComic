@@ -31,7 +31,7 @@ class HomeRepository {
     fun getBanners(): LiveData<Resource<List<ComicWithCategoryModel>>> {
         val callApi = object : NetworkBoundResource<List<ComicWithCategoryModel>, List<ComicModel>>(appExecutors = executor) {
             override fun loadFromDb(): LiveData<List<ComicWithCategoryModel>> {
-                return db.comicDao().getListBanners(GGGAppInterface.gggApp.siteDeploy)
+                return db.comicDao().getListBanners(GGGAppInterface.gggApp.siteDeploy.toString())
             }
 
             override fun createCall(): LiveData<ApiResponse<List<ComicModel>>> {

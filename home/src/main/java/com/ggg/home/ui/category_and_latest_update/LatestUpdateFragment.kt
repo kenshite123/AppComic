@@ -37,6 +37,7 @@ class LatestUpdateFragment : HomeBaseFragment() {
         @JvmStatic
         fun create() : LatestUpdateFragment {
             val fragment = LatestUpdateFragment()
+            fragment.isFirstLoad = true
             return fragment
         }
     }
@@ -70,34 +71,34 @@ class LatestUpdateFragment : HomeBaseFragment() {
         gridLayoutManager = GridLayoutManager(context, 3)
         listComicAdapter = ListComicAdapter(context!!, this, listComicLatestUpdate, true)
 
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-        adView.adListener = object : AdListener() {
-            override fun onAdImpression() {
-                super.onAdImpression()
-            }
-
-            override fun onAdClicked() {
-                super.onAdClicked()
-            }
-
-            override fun onAdFailedToLoad(p0: LoadAdError?) {
-                super.onAdFailedToLoad(p0)
-            }
-
-            override fun onAdClosed() {
-                super.onAdClosed()
-            }
-
-            override fun onAdOpened() {
-                super.onAdOpened()
-            }
-
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                adView.visibility = View.VISIBLE
-            }
-        }
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
+//        adView.adListener = object : AdListener() {
+//            override fun onAdImpression() {
+//                super.onAdImpression()
+//            }
+//
+//            override fun onAdClicked() {
+//                super.onAdClicked()
+//            }
+//
+//            override fun onAdFailedToLoad(p0: LoadAdError?) {
+//                super.onAdFailedToLoad(p0)
+//            }
+//
+//            override fun onAdClosed() {
+//                super.onAdClosed()
+//            }
+//
+//            override fun onAdOpened() {
+//                super.onAdOpened()
+//            }
+//
+//            override fun onAdLoaded() {
+//                super.onAdLoaded()
+//                adView.visibility = View.VISIBLE
+//            }
+//        }
 
         rvListComic.setHasFixedSize(false)
         rvListComic.layoutManager = gridLayoutManager

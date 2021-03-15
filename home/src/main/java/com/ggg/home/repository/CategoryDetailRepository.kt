@@ -36,7 +36,7 @@ class CategoryDetailRepository {
                 val offset = data["offset"]!! as Long * limit
 
                 return db.comicDao().getListComicByCategory(
-                        GGGAppInterface.gggApp.siteDeploy,
+                        GGGAppInterface.gggApp.siteDeploy.toString(),
                         data["listCategoryId"] as List<Long>,
                         limit.toInt(),
                         offset.toInt()
